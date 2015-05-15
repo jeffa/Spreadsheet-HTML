@@ -15,12 +15,10 @@ WriteMakefile(
         'ExtUtils::MakeMaker' => 0,
     },
     BUILD_REQUIRES => {
-        'Test::More' => 0,
+        'Test::More'        => 0,
+        'HTML::Entities'    => 0,
     },
-    PREREQ_PM => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
-    },
+    PREREQ_PM => { },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Spreadsheet-HTML-*' },
 );
