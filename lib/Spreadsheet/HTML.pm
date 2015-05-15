@@ -17,17 +17,24 @@ sub get_data {
     if (ref($_[0]) eq __PACKAGE__) {
         # called as method
         $self = shift;
-        @data = @{ $self->{data} };
+        @data = @{ $self->{data} || [ [] ] };
         return @data if $self->{__processed_data__}++;
     } else {
         # called as function
         @data = @_ > 1 ? @_ : @{+shift};
     }
 
+    # padding is determined by first row (the header)
+    my $max_cols = scalar @{ $data[0] };
+    for my $row (@data[1 .. $#data]) {
+        push @$row, undef for 1 .. ($max_cols - scalar @$row);
+    }
+
     # we don't care if we are an object or not
     $self->{data} = [ map { [ map {
+        do { no warnings; s/^\s*$/&nbsp;/g };
+        decode_entities( $_ );    
         encode_entities( $_ );    
-        s/^\s*$/&nbsp;/g;
         s/\n/<br \/>/g;
         $_
     } @$_ ] } @data ];
