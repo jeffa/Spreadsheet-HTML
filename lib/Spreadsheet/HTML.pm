@@ -14,6 +14,7 @@ sub new {
 
 sub get_data {
     my ($self, @data);
+
     if (ref($_[0]) eq __PACKAGE__) {
         # called as method
         $self = shift;
@@ -21,23 +22,29 @@ sub get_data {
         return @data if $self->{__processed_data__}++;
     } else {
         # called as function
-        @data = @_ > 1 ? @_ : @{+shift};
+        @data = @_ > 1 ? @_ : @{ +shift || [ [] ] };
     }
 
+    @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
+
     # padding is determined by first row (the header)
-    my $max_cols = scalar @{ $data[0] };
+    my $max_cols = scalar @{ $data[0] || [] };
     for my $row (@data[1 .. $#data]) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
     }
 
     # we don't care if we are an object or not
-    $self->{data} = [ map { [ map {
-        do { no warnings; s/^\s*$/&nbsp;/g };
-        decode_entities( $_ );    
-        encode_entities( $_ );    
-        s/\n/<br \/>/g;
-        $_
-    } @$_ ] } @data ];
+    $self->{data} = [
+        map { [
+            map {
+                do { no warnings; s/^\s*$/&nbsp;/g };
+                decode_entities( $_ );    
+                encode_entities( $_ );    
+                s/\n/<br \/>/g;
+                $_
+            } @$_
+        ] } @data
+    ];
 
     return @{ $self->{data} };
 }

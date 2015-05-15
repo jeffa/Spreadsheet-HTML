@@ -1,13 +1,31 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 4;
+use Test::More tests => 17;
 use Data::Dumper;
 
 use Spreadsheet::HTML;
 
-my $no_list = new_ok 'Spreadsheet::HTML';
-is_deeply [ $no_list->get_data ], [ [] ],  "correct data from interface for no_list";
+my $no_data = new_ok 'Spreadsheet::HTML';
+is_deeply [ $no_data->get_data ], [ [] ],  "correct data from interface for no args";
+is_deeply [ Spreadsheet::HTML::get_data() ], [ [] ],  "correct data from function for no args";
+
+my $oned_empty = new_ok 'Spreadsheet::HTML', [ data => [] ];
+is_deeply [ $oned_empty->get_data ], [ [] ],  "correct data from interface for empty 1d array ref";
+is_deeply [ Spreadsheet::HTML::get_data( [] ) ], [ [] ],  "correct data from function for empty 1d array ref";
+
+my $oned_one_element = new_ok 'Spreadsheet::HTML', [ data => [1] ];
+is_deeply [ $oned_one_element->get_data ], [ [1] ],  "correct data from interface for 1d array ref with 1 element";
+is_deeply [ Spreadsheet::HTML::get_data( [1] ) ], [ [1] ],  "correct data from function for 1d array ref with 1 element";
+
+my $twod_empty = new_ok 'Spreadsheet::HTML', [ data => [ [] ] ];
+is_deeply [ $twod_empty->get_data ], [ [] ],  "correct data from interface for empty 2d array ref";
+is_deeply [ Spreadsheet::HTML::get_data( [ [] ] ) ], [ [] ],  "correct data from function for empty 2d array ref";
+
+my $one_element = new_ok 'Spreadsheet::HTML', [ data => [ [1] ] ];
+is_deeply [ $one_element->get_data ], [ [1] ],  "correct data from interface for 2d array ref with one element";
+is_deeply [ Spreadsheet::HTML::get_data( [ [1] ] ) ], [ [1] ],  "correct data from function for 2d array ref with one element";
+
 
 my $data = [
     [ qw( a b c d ) ],
