@@ -4,4 +4,5 @@ lib/Spreadsheet/HTML.pm
 Makefile.PL
 MANIFEST			This list of files
 README
-t/00-load.t
+t/install.t
+t/unit/01-get-data.t

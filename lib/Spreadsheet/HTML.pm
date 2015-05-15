@@ -13,17 +13,26 @@ sub new {
 }
 
 sub get_data {
-    my @data;
-
+    my ($self, @data);
     if (ref($_[0]) eq __PACKAGE__) {
         # called as method
-        @data = @{ shift->{data} };
+        $self = shift;
+        @data = @{ $self->{data} };
+        return @data if $self->{__processed_data__}++;
     } else {
         # called as function
         @data = @_ > 1 ? @_ : @{+shift};
     }
 
-    return @data;     
+    # we don't care if we are an object or not
+    $self->{data} = [ map {
+        encode_entities( $_ );    
+        s/^\s*$/&nbsp;/g;
+        s/\n/<br \/>/g;
+        $_
+    } @data ];
+
+    return @{ $self->{data} };
 }
 
 1;
