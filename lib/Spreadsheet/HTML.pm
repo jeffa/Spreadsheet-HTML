@@ -25,6 +25,14 @@ sub get_data {
         @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
     }
 
+    $self->{data} = _process_data( @data );
+    return @{ $self->{data} };
+}
+
+
+sub _process_data {
+    my @data = @_;
+
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
 
     # padding is determined by first row (the header)
@@ -33,8 +41,7 @@ sub get_data {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
     }
 
-    # we don't care if we are an object or not
-    $self->{data} = [
+    return [
         map { [
             map {
                 do { no warnings; s/^\s*$/&nbsp;/g };
@@ -45,8 +52,6 @@ sub get_data {
             } @$_
         ] } @data
     ];
-
-    return @{ $self->{data} };
 }
 
 1;
