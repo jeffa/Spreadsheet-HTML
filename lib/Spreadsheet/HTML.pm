@@ -18,11 +18,11 @@ sub get_data {
     if (ref($_[0]) eq __PACKAGE__) {
         # called as method
         $self = shift;
-        @data = @{ $self->{data} || [ [] ] };
+        @data = @{ ref($self->{data}) ? $self->{data} : [[ $self->{data} ]] };
         return @data if $self->{__processed_data__}++;
     } else {
         # called as function
-        @data = @_ > 1 ? @_ : @{ +shift || [ [] ] };
+        @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
     }
 
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';

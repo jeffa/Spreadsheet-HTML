@@ -1,14 +1,18 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 17;
+use Test::More tests => 20;
 use Data::Dumper;
 
 use Spreadsheet::HTML;
 
 my $no_data = new_ok 'Spreadsheet::HTML';
-is_deeply [ $no_data->get_data ], [ [] ],  "correct data from interface for no args";
-is_deeply [ Spreadsheet::HTML::get_data() ], [ [] ],  "correct data from function for no args";
+is_deeply [ $no_data->get_data ], [ ['&nbsp;'] ],  "correct data from interface for no args";
+is_deeply [ Spreadsheet::HTML::get_data() ], [ ['&nbsp;'] ],  "correct data from function for no args";
+
+my $one_string = new_ok 'Spreadsheet::HTML', [ data => 1 ];
+is_deeply [ $one_string->get_data ], [ [1] ],  "correct data from interface for one scalar string";
+is_deeply [ Spreadsheet::HTML::get_data( 1 ) ], [ [1] ],  "correct data from function for one scalar string";
 
 my $oned_empty = new_ok 'Spreadsheet::HTML', [ data => [] ];
 is_deeply [ $oned_empty->get_data ], [ [] ],  "correct data from interface for empty 1d array ref";
