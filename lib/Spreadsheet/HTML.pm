@@ -12,6 +12,30 @@ sub new {
     return bless { %attrs }, $class;
 }
 
+sub table {
+    my ($self, @data);
+
+    if (ref($_[0]) eq __PACKAGE__) {
+        $self = shift;
+        @data = @{ $self->{data} };
+    } else {
+        @data = get_data( @_ );
+    }
+
+    my $header = '<tr>';
+    $header .= qq{<th>$_</th>} for @{ shift @data }; 
+    $header .= '</tr>';
+
+    my $rows = '';
+    for (@data) {
+        $rows .= '<tr>';
+        $rows .= qq{<td>$_</td>} for @$_;
+        $rows .= '</tr>';
+    }
+
+    return '<table>' . $header . $rows . '</table>';
+}
+
 sub get_data {
     my ($self, @data);
 
@@ -25,6 +49,8 @@ sub get_data {
         @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
     }
 
+    @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
+
     $self->{data} = _process_data( @data );
     return @{ $self->{data} };
 }
@@ -32,8 +58,6 @@ sub get_data {
 
 sub _process_data {
     my @data = @_;
-
-    @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
 
     # padding is determined by first row (the header)
     my $max_cols = scalar @{ $data[0] || [] };
@@ -73,9 +97,11 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
 =over 4
 
-=item new
+=item new()
 
-=item get_data
+=item get_data()
+
+=item table()
 
 =back
 
