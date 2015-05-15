@@ -60,7 +60,9 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
   use Spreadsheet::HTML;
 
-  my $table = Spreadsheet::HTML->new();
+  my $table = Spreadsheet::HTML->new( data => 'AoA' );
+
+  print $table->generate;
 
 =head1 METHODS
 
@@ -78,9 +80,9 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-spreadsheet-html at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to C<bug-spreadsheet-html at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>.
+I will be notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 

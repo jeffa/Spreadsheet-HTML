@@ -3,7 +3,8 @@ Spreadsheet-HTML
 
 HTML tables from arrays.
 
-INSTALLATION
+Installation
+------------
 
 To install this module, run the following commands:
 ```
@@ -22,17 +23,10 @@ perldoc Spreadsheet::HTML
 ```
 You can also look for information at:
 
-* RT, CPAN's request tracker (report bugs here)
-    http://rt.cpan.org/NoAuth/Bugs.html?Dist=Spreadsheet-HTML
-
-* AnnoCPAN, Annotated CPAN documentation
-    http://annocpan.org/dist/Spreadsheet-HTML
-
-* CPAN Ratings
-    http://cpanratings.perl.org/d/Spreadsheet-HTML
-
-* Search CPAN
-    http://search.cpan.org/dist/Spreadsheet-HTML/
+* [RT](http://rt.cpan.org/NoAuth/Bugs.html?Dist=Spreadsheet-HTML) CPAN's request tracker (report bugs here)
+* [AnnoCPAN](http://annocpan.org/dist/Spreadsheet-HTML) Annotated CPAN documentation
+* [CPAN Ratings](http://cpanratings.perl.org/d/Spreadsheet-HTML)
+* [Search CPAN](http://search.cpan.org/dist/Spreadsheet-HTML/)
 
 License and Copyright
 ---------------------
