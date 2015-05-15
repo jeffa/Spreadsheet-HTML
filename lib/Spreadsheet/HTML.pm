@@ -25,12 +25,12 @@ sub get_data {
     }
 
     # we don't care if we are an object or not
-    $self->{data} = [ map {
+    $self->{data} = [ map { [ map {
         encode_entities( $_ );    
         s/^\s*$/&nbsp;/g;
         s/\n/<br \/>/g;
         $_
-    } @data ];
+    } @$_ ] } @data ];
 
     return @{ $self->{data} };
 }
