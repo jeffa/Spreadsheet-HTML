@@ -14,11 +14,11 @@ my $data = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 my $expected = [
-    [{th=>{}},qw(header1 header2 header3 header4 )],
-    [{td=>{}},qw(foo1 bar1 baz1 qux1)],
-    [{td=>{}},qw(foo2 bar2 baz2 qux2)],
-    [{td=>{}},qw(foo3 bar3 baz3 qux3)],
-    [{td=>{}},qw(foo4 bar4 baz4 qux4)],
+    [['header1'],['header2'],['header3'],['header4']],
+    [qw(foo1 bar1 baz1 qux1)],
+    [qw(foo2 bar2 baz2 qux2)],
+    [qw(foo3 bar3 baz3 qux3)],
+    [qw(foo4 bar4 baz4 qux4)],
 ];
 
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];

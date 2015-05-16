@@ -5,6 +5,7 @@ our $VERSION = '0.02';
 
 use Data::Dumper;
 use HTML::Entities;
+use Math::Matrix;
 
 sub new {
     my $class = shift;
@@ -25,6 +26,19 @@ sub generate {
     return _make_table( @data );
 }
 
+sub transpose {
+    my ($self, @data);
+
+    if (ref($_[0]) eq __PACKAGE__) {
+        $self = shift;
+        @data = $self->get_data;
+    } else {
+        @data = get_data( @_ );
+    }
+
+    return _make_table( @{ Math::Matrix::transpose(\@data) } );
+}
+
 sub get_data {
     my ($self, @data);
 
@@ -41,36 +55,31 @@ sub get_data {
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
 
     $self->{data} = _encode( @data );
-    $self->{data} = _mark( $self->{data} );
+    $self->{data} = _mark_headers( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
 }
 
 sub _make_table {
-    my @data = @_;
-    my ($attr, @headers) = @{ shift @data };
-    my ($tag) = keys %$attr;
-    my $header  = '<tr>';
-    $header    .= sprintf( '<%s>%s</%s>', $tag, $_, $tag ) for @headers; 
-    $header    .= '</tr>';
-
     my $rows = '';
-    for my $row (@data) {
-        my $attr = shift @$row;
-        my ($tag) = keys %$attr;
+    for my $row (@_) {
         $rows .= '<tr>';
-        $rows .= sprintf( '<%s>%s</%s>', $tag, $row->[$_], $tag ) for 0 .. $#headers;
+        for my $cell (@$row) {
+            if (ref($cell)) {
+                $rows .= sprintf( '<th>%s</th>', $cell->[0] );
+            } else {
+                $rows .= sprintf( '<td>%s</td>', $cell );
+            }
+        }
         $rows .= '</tr>';
     }
 
-    return '<table>' . $header . $rows . '</table>';
+    return "<table>$rows</table>";
 }
 
-# TODO: here is where class attrs can be assigned
-sub _mark {
+sub _mark_headers {
     my $data = shift;
-    unshift @{ $data->[0] }, { th => {} };
-    unshift @{ $data->[$_] }, { td => {} } for 1 .. $#$data;
+    $data->[0] = [ map [$_], @{ $data->[0] } ];
     return $data;
 }
 

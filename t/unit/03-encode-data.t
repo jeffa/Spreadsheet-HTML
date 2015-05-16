@@ -16,12 +16,12 @@ my $spaces = [
 ];
 
 my $expected_encodes = [
-    [ {th=>{}}, qw( &lt; = &amp; &gt; ) ],
-    [ {td=>{}}, qw( &lt; = &amp; &gt; ) ],
+    [ ['&lt;'], ['='], ['&amp;'], ['&gt;'] ],
+    [ qw( &lt; = &amp; &gt; ) ],
 ];
 my $expected_spaces = [
-    [ {th=>{}}, '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
-    [ {td=>{}}, '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
+    [ ['&nbsp;'], ['foo<br />'], ['&nbsp;'], ['&nbsp;'] ],
+    [ '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
 ];
 
 my $table = new_ok 'Spreadsheet::HTML', [ data => $encodes ];
