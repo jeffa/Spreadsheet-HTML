@@ -17,9 +17,11 @@ my $data = [
 my $table = Spreadsheet::HTML->new( data => $data );
 print $table->generate;
 print $table->transpose;
+print $table->reverse;
 
 print Spreadsheet::HTML::generate( $data );
 print Spreadsheet::HTML::transpose( $data );
+print Spreadsheet::HTML::reverse( $data );
 ```
 
 Installation

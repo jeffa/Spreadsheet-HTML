@@ -17,6 +17,8 @@ sub generate { _make_table( _data( @_ ) ) }
 
 sub transpose { _make_table( @{ Math::Matrix::transpose( [ _data( @_ ) ] ) } ) }
 
+sub reverse { _make_table( reverse _data( @_ ) ) }
+
 sub process_data {
     my ($self, @data);
 
@@ -130,9 +132,11 @@ Used to transpose data from portrait to landscape.
     my $table = Spreadsheet::HTML->new( data => $data );
     print $table->generate;
     print $table->transpose;
+    print $table->reverse;
 
     print Spreadsheet::HTML::generate( $data );
     print Spreadsheet::HTML::transpose( $data );
+    print Spreadsheet::HTML::reverse( $data );
 
 =head1 METHODS
 
@@ -170,8 +174,13 @@ The first row of the data will have columns wrapped with
 
 =item transpose()
 
-Uses Math::Matrix to transpose the data and then returns
-a string containing the rendered HTML table.
+Uses Math::Matrix to rotate the data 90 degrees and
+then returns a string containing the rendered HTML table.
+
+=item reverse()
+
+Uses Math::Matrix to rotate the data 180 degrees and
+then returns a string containing the rendered HTML table.
 
 =item process_data()
 
