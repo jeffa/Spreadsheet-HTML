@@ -17,19 +17,23 @@ sub generate {
 
     if (ref($_[0]) eq __PACKAGE__) {
         $self = shift;
-        @data = @{ $self->{data} };
+        @data = $self->get_data;
     } else {
         @data = get_data( @_ );
     }
 
-    my $header = '<tr>';
-    $header .= qq{<th>$_</th>} for @{ shift @data }; 
-    $header .= '</tr>';
+    my ($attr, @headers) = @{ shift @data };
+    my ($tag) = keys %$attr;
+    my $header  = '<tr>';
+    $header    .= sprintf( '<%s>%s</%s>', $tag, $_, $tag ) for @headers; 
+    $header    .= '</tr>';
 
     my $rows = '';
-    for (@data) {
+    for my $row (@data) {
+        my $attr = shift @$row;
+        my ($tag) = keys %$attr;
         $rows .= '<tr>';
-        $rows .= qq{<td>$_</td>} for @$_;
+        $rows .= sprintf( '<%s>%s</%s>', $tag, $row->[$_], $tag ) for 0 .. $#headers;
         $rows .= '</tr>';
     }
 
@@ -51,12 +55,21 @@ sub get_data {
 
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
 
-    $self->{data} = _process_data( @data );
+    $self->{data} = _encode( @data );
+    $self->{data} = _mark( $self->{data} );
     return @{ $self->{data} };
 }
 
+# TODO: here is where class attrs can be assigned
+sub _mark {
+    my $data = shift;
+    unshift @{ $data->[0] }, { th => {} };
+    unshift @{ $data->[$_] }, { td => {} } for 1 .. $#$data;
+    return $data;
+}
 
-sub _process_data {
+
+sub _encode {
     my @data = @_;
 
     # padding is determined by first row (the header)
