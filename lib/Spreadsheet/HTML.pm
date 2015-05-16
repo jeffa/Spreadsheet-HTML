@@ -12,7 +12,7 @@ sub new {
     return bless { %attrs }, $class;
 }
 
-sub table {
+sub generate {
     my ($self, @data);
 
     if (ref($_[0]) eq __PACKAGE__) {
@@ -101,7 +101,7 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
 =item get_data()
 
-=item table()
+=item generate()
 
 =back
 
