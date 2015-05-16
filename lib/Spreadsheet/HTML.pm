@@ -22,7 +22,7 @@ sub reverse { _make_table( reverse _data( @_ ) ) }
 sub process_data {
     my ($self, @data);
 
-    if (ref($_[0]) eq __PACKAGE__) {
+    if (ref($_[0]) =~ /(?:Spreadsheet|DBIx)::HTML/) {
         # called as method
         $self = shift;
         return @{ $self->{data} } if $self->{__processed_data__};
