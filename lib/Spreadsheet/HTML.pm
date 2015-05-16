@@ -46,8 +46,8 @@ sub get_data {
     if (ref($_[0]) eq __PACKAGE__) {
         # called as method
         $self = shift;
+        return @{ $self->{data} } if $self->{__processed_data__};
         @data = @{ ref($self->{data}) ? $self->{data} : [[ $self->{data} ]] };
-        return @data if $self->{__processed_data__}++;
     } else {
         # called as function
         @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
@@ -57,6 +57,7 @@ sub get_data {
 
     $self->{data} = _encode( @data );
     $self->{data} = _mark( $self->{data} );
+    $self->{__processed_data__} = 1;
     return @{ $self->{data} };
 }
 
@@ -112,9 +113,11 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
 =item new()
 
-=item get_data()
-
 =item generate()
+
+=item transpose()
+
+=item get_data()
 
 =back
 
