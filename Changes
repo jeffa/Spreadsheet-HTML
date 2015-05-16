@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
-0.03    
+0.05
+
+0.04    Temporarily allowing DBIx::HTML to subclass.
 
 0.03    Major refactoring, able to transpose.
 
