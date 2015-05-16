@@ -22,22 +22,7 @@ sub generate {
         @data = get_data( @_ );
     }
 
-    my ($attr, @headers) = @{ shift @data };
-    my ($tag) = keys %$attr;
-    my $header  = '<tr>';
-    $header    .= sprintf( '<%s>%s</%s>', $tag, $_, $tag ) for @headers; 
-    $header    .= '</tr>';
-
-    my $rows = '';
-    for my $row (@data) {
-        my $attr = shift @$row;
-        my ($tag) = keys %$attr;
-        $rows .= '<tr>';
-        $rows .= sprintf( '<%s>%s</%s>', $tag, $row->[$_], $tag ) for 0 .. $#headers;
-        $rows .= '</tr>';
-    }
-
-    return '<table>' . $header . $rows . '</table>';
+    return _make_table( @data );
 }
 
 sub get_data {
@@ -59,6 +44,26 @@ sub get_data {
     $self->{data} = _mark( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
+}
+
+sub _make_table {
+    my @data = @_;
+    my ($attr, @headers) = @{ shift @data };
+    my ($tag) = keys %$attr;
+    my $header  = '<tr>';
+    $header    .= sprintf( '<%s>%s</%s>', $tag, $_, $tag ) for @headers; 
+    $header    .= '</tr>';
+
+    my $rows = '';
+    for my $row (@data) {
+        my $attr = shift @$row;
+        my ($tag) = keys %$attr;
+        $rows .= '<tr>';
+        $rows .= sprintf( '<%s>%s</%s>', $tag, $row->[$_], $tag ) for 0 .. $#headers;
+        $rows .= '</tr>';
+    }
+
+    return '<table>' . $header . $rows . '</table>';
 }
 
 # TODO: here is where class attrs can be assigned
