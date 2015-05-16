@@ -195,8 +195,20 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-spreadsheet-html at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>.
+Please report any bugs or feature requests to either
+
+=over 4
+
+=item * C<bug-spreadsheet-html at rt.cpan.org>
+
+  Send an email.
+
+=item * L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>.
+
+  Use the web interface.
+
+=back
+
 I will be notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT

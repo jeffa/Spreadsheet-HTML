@@ -11,3 +11,4 @@ t/unit/03-encode-data.t
 t/unit/04-padding.t
 t/unit/05-html.t
 t/unit/06-transpose.t
+t/unit/07-reverse.t
