@@ -45,4 +45,4 @@ You can also look for information at
 
 License and Copyright
 ---------------------
-See (/lib/Spreadsheet/HTML.pm).
+See [source POD](/lib/Spreadsheet/HTML.pm).

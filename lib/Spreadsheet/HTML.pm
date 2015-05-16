@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Data::Dumper;
 use HTML::Entities;
