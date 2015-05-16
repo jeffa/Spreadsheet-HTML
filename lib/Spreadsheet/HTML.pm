@@ -13,33 +13,11 @@ sub new {
     return bless { %attrs }, $class;
 }
 
-sub generate {
-    my ($self, @data);
+sub generate { _make_table( _data( @_ ) ) }
 
-    if (ref($_[0]) eq __PACKAGE__) {
-        $self = shift;
-        @data = $self->get_data;
-    } else {
-        @data = get_data( @_ );
-    }
+sub transpose { _make_table( @{ Math::Matrix::transpose( [ _data( @_ ) ] ) } ) }
 
-    return _make_table( @data );
-}
-
-sub transpose {
-    my ($self, @data);
-
-    if (ref($_[0]) eq __PACKAGE__) {
-        $self = shift;
-        @data = $self->get_data;
-    } else {
-        @data = get_data( @_ );
-    }
-
-    return _make_table( @{ Math::Matrix::transpose(\@data) } );
-}
-
-sub get_data {
+sub process_data {
     my ($self, @data);
 
     if (ref($_[0]) eq __PACKAGE__) {
@@ -58,6 +36,17 @@ sub get_data {
     $self->{data} = _mark_headers( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
+}
+
+sub _data {
+    my ($self, @data);
+    if (ref($_[0]) eq __PACKAGE__) {
+        $self = shift;
+        @data = $self->process_data;
+    } else {
+        @data = process_data( @_ );
+    }
+    return @data;
 }
 
 sub _make_table {
@@ -113,6 +102,20 @@ __END__
 
 Spreadsheet::HTML - Tabular data to HTML tables.
 
+=head1 REQUIRES
+
+=over 4
+
+=item HTML::Entities
+
+Used to encode values with HTML entities.
+
+=item Math::Matrix
+
+Used to transpose data from portrait to landscape.
+
+=back
+
 =head1 SYNOPSIS
 
     use Spreadsheet::HTML;
@@ -146,16 +149,34 @@ of <td> tags).
 =item generate()
 
 Returns a string that contains the rendered HTML table.
+Currently (and subject to change if better ideas arise),
+all data will:
+
+=over 8
+
+=item - be converted to &nbsp; if empty
+
+=item - be HTML entity decoded
+
+=item - be HTML entity encoded
+
+=item - have any newlines converted to <br> tags
+
+=back
+
+The first row of the data will have columns wrapped with
+<tr> tags and the remaining rows will be wraped with 
+<td> tags.
 
 =item transpose()
 
 Uses Math::Matrix to transpose the data and then returns
 a string containing the rendered HTML table.
 
-=item get_data()
+=item process_data()
 
-Should be an internal private method, but returns the 
-munged data before it is used to generate the HTML table.
+Returns the munged data before it is used to generate
+a rendered HTML table.
 
 =back
 
@@ -174,6 +195,8 @@ I will be notified, and then you'll automatically be notified of progress on you
 You can find documentation for this module with the perldoc command.
 
     perldoc Spreadsheet::HTML
+
+The Github project is L<https://github.com/jeffa/Spreadsheet-HTML>
 
 You can also look for information at:
 

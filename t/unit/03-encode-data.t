@@ -25,9 +25,9 @@ my $expected_spaces = [
 ];
 
 my $table = new_ok 'Spreadsheet::HTML', [ data => $encodes ];
-is_deeply [ $table->get_data ], $expected_encodes,  "correctly encoded data";
-is_deeply [ $table->get_data ], $expected_encodes,  "only processes once";
+is_deeply [ $table->process_data ], $expected_encodes,  "correctly encoded data";
+is_deeply [ $table->process_data ], $expected_encodes,  "only processes once";
 
 $table = new_ok 'Spreadsheet::HTML', [ data => $spaces ];
-is_deeply [ $table->get_data ], $expected_spaces,  "correctly substituted spaces";
-is_deeply [ $table->get_data ], $expected_spaces,  "only processes once";
+is_deeply [ $table->process_data ], $expected_spaces,  "correctly substituted spaces";
+is_deeply [ $table->process_data ], $expected_spaces,  "only processes once";

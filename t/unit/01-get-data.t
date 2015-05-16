@@ -22,12 +22,12 @@ my $expected = [
 ];
 
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
-is_deeply [ $construct_with_list->get_data ], $expected,  "expected data from interface for construct_with_list";
+is_deeply [ $construct_with_list->process_data ], $expected,  "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $expected,  "expected data from internal for construct_with_list";
 
 my $construct_with_ref = new_ok 'Spreadsheet::HTML', [ { data => $data } ];
-is_deeply [ $construct_with_ref->get_data ], $expected,  "expected data from interface for construct_with_ref";
+is_deeply [ $construct_with_ref->process_data ], $expected,  "expected data from interface for construct_with_ref";
 is_deeply $construct_with_ref->{data}, $expected,  "expected data from internal for construct_with_ref";
 
-is_deeply [ Spreadsheet::HTML::get_data( $data ) ], $expected,  "expected output for array ref";
-is_deeply [ Spreadsheet::HTML::get_data( @$data ) ], $expected,  "expected output for array";
+is_deeply [ Spreadsheet::HTML::process_data( $data ) ], $expected,  "expected output for array ref";
+is_deeply [ Spreadsheet::HTML::process_data( @$data ) ], $expected,  "expected output for array";
