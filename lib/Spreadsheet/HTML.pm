@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Data::Dumper;
 use HTML::Entities;
@@ -115,11 +115,21 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
 =head1 SYNOPSIS
 
-  use Spreadsheet::HTML;
+    use Spreadsheet::HTML;
 
-  my $table = Spreadsheet::HTML->new( data => 'AoA' );
+    my $data = [
+        [qw(header1 header2 header3)],
+        [qw(foo bar baz)],
+        [qw(one two three)],
+        [qw(col1 col2 col3)],
+    ];
 
-  print $table->generate;
+    my $table = Spreadsheet::HTML->new( data => $data );
+    print $table->generate;
+    print $table->transpose;
+
+    print Spreadsheet::HTML::generate( $data );
+    print Spreadsheet::HTML::transpose( $data );
 
 =head1 METHODS
 
@@ -127,11 +137,25 @@ Spreadsheet::HTML - Tabular data to HTML tables.
 
 =item new()
 
+Constructs object. Currently accepts one parameter: data.
+Data should be a two dimensional array and you should 
+expect the first row to be treated as the header (which
+means each cell will be wrapped with <th> tags instead 
+of <td> tags).
+
 =item generate()
+
+Returns a string that contains the rendered HTML table.
 
 =item transpose()
 
+Uses Math::Matrix to transpose the data and then returns
+a string containing the rendered HTML table.
+
 =item get_data()
+
+Should be an internal private method, but returns the 
+munged data before it is used to generate the HTML table.
 
 =back
 
