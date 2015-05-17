@@ -22,7 +22,7 @@ sub reverse { _make_table( reverse _data( @_ ) ) }
 sub process_data {
     my ($self, @data);
 
-    if (ref($_[0]) =~ /(?:Spreadsheet|DBIx)::HTML/) {
+	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
         # called as method
         $self = shift;
         return @{ $self->{data} } if $self->{__processed_data__};
@@ -42,7 +42,7 @@ sub process_data {
 
 sub _data {
     my ($self, @data);
-    if (ref($_[0]) eq __PACKAGE__) {
+	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
         $self = shift;
         @data = $self->process_data;
     } else {
@@ -203,13 +203,14 @@ Please report any bugs or feature requests to either
 
   Send an email.
 
-=item * L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>.
+=item * L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>
 
   Use the web interface.
 
 =back
 
-I will be notified, and then you'll automatically be notified of progress on your bug as I make changes.
+I will be notified, and then you'll automatically be notified of progress
+on your bug as I make changes.
 
 =head1 SUPPORT
 
