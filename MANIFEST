@@ -1,0 +1,16 @@
+Changes
+lib/Spreadsheet/HTML.pm
+Makefile.PL
+MANIFEST
+readme.md
+t/author/manifest.t
+t/author/pod-coverage.t
+t/author/pod.t
+t/install.t
+t/unit/01-get-data.t
+t/unit/02-process-once.t
+t/unit/03-encode-data.t
+t/unit/04-padding.t
+t/unit/05-html.t
+t/unit/06-transpose.t
+t/unit/07-reverse.t
