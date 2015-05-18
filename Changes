@@ -1,9 +1,11 @@
 Revision history for Perl module Spreadsheet::HTML
 
-0.05 2015-05-??
+0.05 2015-05-?? JEFFA
     - Added github repo to the dist's metadata
     - Changed license metadata setting from 'Artistic_2_0' to 'artistic_2',
       which is what CPAN::Meta::Spec expects.
+    - Set PREREQ_PM, TEST_REQUIRES, CONFIGURE_REQUIRES appropriately
+      depending on local version of ExtUtils::MakeMaker.
     - Adjusted formatting of this file to match CPAN::Changes::Spec
 
 0.04 2015-05-16 JEFFA

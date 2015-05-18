@@ -10,6 +10,20 @@ if ($mm_ver =~ /_/) {
     die $@ if $@;
 }
 
+my @REQUIRES = (
+    'strict'            => 0,
+    'warnings'          => 0,
+    'Data::Dumper'      => 0,
+    'HTML::Entities'    => 0,
+    'Math::Matrix'      => 0,
+);
+
+my @TEST_REQUIRES = (
+    'Test::More'        => 0.88,
+);
+
+push(@REQUIRES, @TEST_REQUIRES) if $mm_ver < 6.64;
+
 WriteMakefile(
     NAME             => 'Spreadsheet::HTML',
     AUTHOR           => q{Jeff Anderson <jeffa@cpan.org>},
@@ -18,17 +32,23 @@ WriteMakefile(
     LICENSE          => 'artistic_2',
     PL_FILES         => {},
     MIN_PERL_VERSION => 5.006,
-    CONFIGURE_REQUIRES => {
-        'ExtUtils::MakeMaker' => 0,
-    },
-    BUILD_REQUIRES => {
-        'Test::More'        => 0,
-        'HTML::Entities'    => 0,
-        'Math::Matrix'      => 0,
-    },
-    PREREQ_PM => { },
+
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Spreadsheet-HTML-*' },
+
+    PREREQ_PM   => { @REQUIRES },
+
+    ($mm_ver >= 6.52
+        ? (CONFIGURE_REQUIRES => {
+                'ExtUtils::MakeMaker' => 0,
+          })
+        : ()
+    ),
+
+    ($mm_ver >= 6.64
+        ? (TEST_REQUIRES => { @TEST_REQUIRES })
+        : ()
+    ),
 
     ($mm_ver <= 6.45
         ? ()
