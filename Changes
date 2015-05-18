@@ -2,6 +2,8 @@ Revision history for Perl module Spreadsheet::HTML
 
 0.05 2015-05-??
     - Added github repo to the dist's metadata
+    - Changed license metadata setting from 'Artistic_2_0' to 'artistic_2',
+      which is what CPAN::Meta::Spec expects.
     - Adjusted formatting of this file to match CPAN::Changes::Spec
 
 0.04 2015-05-16 JEFFA
