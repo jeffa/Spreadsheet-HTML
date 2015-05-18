@@ -1,10 +1,14 @@
-Revision history for Spreadsheet-HTML
+Revision history for Perl module Spreadsheet::HTML
 
-0.05
+0.05 2015-05-??
+    - Adjusted formatting of this file to match CPAN::Changes::Spec
 
-0.04    Temporarily allowing DBIx::HTML to subclass.
+0.04 2015-05-16 JEFFA
+    - Temporarily allowing DBIx::HTML to subclass.
 
-0.03    Major refactoring, able to transpose.
+0.03 2015-05-16 JEFFA
+    - Major refactoring, able to transpose.
 
-0.02    First version, released on an unsuspecting world.
+0.02 2015-05-16 JEFFA
+    - First version, released on an unsuspecting world.
 
