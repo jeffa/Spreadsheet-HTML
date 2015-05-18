@@ -1,6 +1,7 @@
 Revision history for Perl module Spreadsheet::HTML
 
 0.05 2015-05-??
+    - Added github repo to the dist's metadata
     - Adjusted formatting of this file to match CPAN::Changes::Spec
 
 0.04 2015-05-16 JEFFA
