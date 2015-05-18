@@ -23,3 +23,13 @@ WriteMakefile(
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Spreadsheet-HTML-*' },
 );
+
+# replace standard test harness with our own when 'make test' is invoked
+# this is the only way i know to force 'make test' to run recursively
+package MY;
+sub test {
+    my $inherited = shift->SUPER::test(@_);
+    # replace line *after* with our script -----V
+    $inherited =~ s{(test_dynamic :: pure_all\n).*\n}{$1\tprove -lrv\n}m;
+    return $inherited;
+}
