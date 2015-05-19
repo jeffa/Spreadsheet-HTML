@@ -30,8 +30,9 @@ sub process_data {
 
     @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
+    @data = [ undef ] unless @{ $data[0] };
 
-    $self->{data} = _encode( @data );
+    $self->{data} = _process( @data );
     $self->{data} = _mark_headers( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
@@ -61,11 +62,11 @@ sub _mark_headers {
 }
 
 
-sub _encode {
+sub _process {
     my @data = @_;
 
     # padding is determined by first row (the header)
-    my $max_cols = scalar @{ $data[0] || [] };
+    my $max_cols = scalar @{ $data[0] };
     for my $row (@data[1 .. $#data]) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
     }
