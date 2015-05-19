@@ -28,7 +28,7 @@ sub process_data {
         @_ = $self->{data};
     }
 
-    @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
+    @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [ $_[0] ] };
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
     @data = [ undef ] unless @{ $data[0] };
 
