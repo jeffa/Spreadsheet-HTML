@@ -13,11 +13,26 @@ sub new {
     return bless { %attrs }, $class;
 }
 
-sub generate { _make_table( process_data( @_ ) ) }
+sub generate {
+    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
+    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
+    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
+    return _make_table( $attrs, @data );
+}
 
-sub transpose { _make_table( @{ Math::Matrix::transpose( [ process_data( @_ ) ] ) } ) }
+sub transpose {
+    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
+    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
+    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
+    return _make_table( $attrs, @{ Math::Matrix::transpose( [@data] ) } );
+}
 
-sub reverse { _make_table( reverse process_data( @_ ) ) }
+sub reverse {
+    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
+    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
+    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
+    return _make_table( $attrs, reverse @data );
+}
 
 sub process_data {
     my ($self, @data);
@@ -25,6 +40,7 @@ sub process_data {
 	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
         $self = shift;
         return @{ $self->{data} } if exists $self->{__processed_data__};
+        $self->{table_attrs} = shift if ref($_[0]) eq 'HASH';
         @_ = $self->{data};
     }
 
@@ -39,6 +55,7 @@ sub process_data {
 }
 
 sub _make_table {
+    my $table_attrs = ref($_[0]) eq 'HASH' ? shift : {};
     my $rows = '';
     for my $row (@_) {
         $rows .= '<tr>';
