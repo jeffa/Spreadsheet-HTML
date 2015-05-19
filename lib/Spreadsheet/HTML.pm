@@ -23,15 +23,12 @@ sub process_data {
     my ($self, @data);
 
 	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
-        # called as method
         $self = shift;
-        return @{ $self->{data} } if $self->{__processed_data__};
-        @data = @{ ref($self->{data}) ? $self->{data} : [[ $self->{data} ]] };
-    } else {
-        # called as function
-        @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
+        return @{ $self->{data} } if exists $self->{__processed_data__};
+        @_ = $self->{data};
     }
 
+    @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [[ $_[0] ]] };
     @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
 
     $self->{data} = _encode( @data );
