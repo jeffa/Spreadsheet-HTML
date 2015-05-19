@@ -4,8 +4,9 @@ use warnings FATAL => 'all';
 our $VERSION = '0.06';
 
 use Data::Dumper;
-use HTML::Entities;
 use Math::Matrix;
+use HTML::Entities;
+#use HTML::Element;
 
 sub new {
     my $class = shift;
@@ -55,7 +56,7 @@ sub process_data {
 }
 
 sub _make_table {
-    my $table_attrs = ref($_[0]) eq 'HASH' ? shift : {};
+    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
     my $rows = '';
     for my $row (@_) {
         $rows .= '<tr>';
@@ -70,6 +71,14 @@ sub _make_table {
     }
 
     return "<table>$rows</table>";
+#    return HTML::Element->new_from_lol(
+#        [table => $attrs{table},
+#            [tr => $attrs{tr}, map [ th => $attrs{th}, $_ ], qw(h1 h2 h3) ],
+#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
+#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
+#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
+#        ]
+#    )->as_HTML;
 }
 
 sub _mark_headers {

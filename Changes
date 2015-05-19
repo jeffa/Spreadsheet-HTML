@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.06    
+        - refactored arg handling
+        - added table attrs
+        - corrected license ref
 
 0.05    Corrected build and unit testing
 
