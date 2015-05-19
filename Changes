@@ -1,6 +1,6 @@
 Revision history for Spreadsheet-HTML
 
-0.05
+0.05    Corrected build and unit testing
 
 0.04    Temporarily allowing DBIx::HTML to subclass.
 
