@@ -13,11 +13,11 @@ sub new {
     return bless { %attrs }, $class;
 }
 
-sub generate { _make_table( _data( @_ ) ) }
+sub generate { _make_table( process_data( @_ ) ) }
 
-sub transpose { _make_table( @{ Math::Matrix::transpose( [ _data( @_ ) ] ) } ) }
+sub transpose { _make_table( @{ Math::Matrix::transpose( [ process_data( @_ ) ] ) } ) }
 
-sub reverse { _make_table( reverse _data( @_ ) ) }
+sub reverse { _make_table( reverse process_data( @_ ) ) }
 
 sub process_data {
     my ($self, @data);
@@ -38,17 +38,6 @@ sub process_data {
     $self->{data} = _mark_headers( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
-}
-
-sub _data {
-    my ($self, @data);
-	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
-        $self = shift;
-        @data = $self->process_data;
-    } else {
-        @data = process_data( @_ );
-    }
-    return @data;
 }
 
 sub _make_table {
