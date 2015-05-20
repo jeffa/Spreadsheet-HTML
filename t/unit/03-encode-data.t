@@ -16,8 +16,8 @@ my $spaces = [
 ];
 
 my $expected_encodes = [
-    [ ['&lt;'], ['='], ['&amp;'], ['&gt;'] ],
-    [ qw( &lt; = &amp; &gt; ) ],
+    [ ['<'], ['='], ['&'], ['>'] ],
+    [ qw( < = & > ) ],
 ];
 my $expected_spaces = [
     [ ['&nbsp;'], ['foo<br />'], ['&nbsp;'], ['&nbsp;'] ],
@@ -25,7 +25,7 @@ my $expected_spaces = [
 ];
 
 my $table = new_ok 'Spreadsheet::HTML', [ data => $encodes ];
-is_deeply [ $table->process_data ], $expected_encodes,  "correctly encoded data";
+is_deeply [ $table->process_data ], $expected_encodes,  "we are not encoding data";
 is_deeply [ $table->process_data ], $expected_encodes,  "only processes once";
 
 $table = new_ok 'Spreadsheet::HTML', [ data => $spaces ];

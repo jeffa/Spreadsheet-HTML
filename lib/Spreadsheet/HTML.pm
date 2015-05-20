@@ -5,7 +5,6 @@ our $VERSION = '0.06';
 
 use Data::Dumper;
 use Math::Matrix;
-use HTML::Entities;
 use HTML::Element;
 
 sub new {
@@ -57,6 +56,9 @@ sub _make_table {
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
     $attrs->{$_} ||= {} for qw( table tr th td );
 
+    my $encodes = delete $attrs->{encodes} || '';
+    my $indent  = delete $attrs->{indent};
+
     my $table = HTML::Element->new_from_lol(
         [table => $attrs->{table},
             map [tr => $attrs->{tr},
@@ -67,8 +69,7 @@ sub _make_table {
         ],
     );
 
-    #TODO here is where we can encode entities and indent HTML
-    chomp( my $html = $table->as_HTML( '' ) );
+    chomp( my $html = $table->as_HTML( $encodes, $indent ) );
     return $html;
 }
 
@@ -93,9 +94,6 @@ sub _process {
         map { [
             map {
                 do { no warnings; s/^\s*$/&nbsp;/g };
-                #TODO we most likely want to let client decide how to encode
-                decode_entities( $_ );    
-                encode_entities( $_ );    
                 s/\n/<br \/>/g;
                 $_
             } @$_
@@ -150,6 +148,11 @@ Used to transpose data from portrait to landscape.
 
 =item new()
 
+  my $table = Spreadsheet::HTML->new;
+  my $table = Spreadsheet::HTML->new( @data );
+  my $table = Spreadsheet::HTML->new( $data );
+  my $table = Spreadsheet::HTML->new( data => $data );
+
 Constructs object. Currently accepts one parameter: data.
 Data should be a two dimensional array and you should 
 expect the first row to be treated as the header (which
@@ -157,6 +160,20 @@ means each cell will be wrapped with <th> tags instead
 of <td> tags).
 
 =item generate()
+
+  my $html = $table->generate;
+  my $html = $table->generate( indent => '    ' );
+  my $html = $table->generate( encode => '<>&=' );
+  my $html = $table->generate( table => { class => 'foo' } );
+
+  my $html = Spreadsheet::HTML::generate( @data );
+  my $html = Spreadsheet::HTML::generate( $data );
+  my $html = Spreadsheet::HTML::generate(
+      data   => $data,
+      indent => '    ',
+      encode => '<>&=',
+      table  => { class => 'foo' },
+  );
 
 Returns a string that contains the rendered HTML table.
 Currently (and subject to change if better ideas arise),
@@ -166,24 +183,20 @@ all data will:
 
 =item - be converted to &nbsp; if empty
 
-=item - be HTML entity decoded
-
-=item - be HTML entity encoded
-
 =item - have any newlines converted to <br> tags
 
 =back
 
-The first row of the data will have columns wrapped with
-<tr> tags and the remaining rows will be wraped with 
-<td> tags.
-
 =item transpose()
+
+  (same usage as generate)    
 
 Uses Math::Matrix to rotate the data 90 degrees and
 then returns a string containing the rendered HTML table.
 
 =item reverse()
+
+  (same usage as generate)    
 
 Uses Math::Matrix to rotate the data 180 degrees and
 then returns a string containing the rendered HTML table.
@@ -191,7 +204,8 @@ then returns a string containing the rendered HTML table.
 =item process_data()
 
 Returns the munged data before it is used to generate
-a rendered HTML table.
+a rendered HTML table. This is called on your behalf, but
+is available should you want it.
 
 =back
 
@@ -201,9 +215,11 @@ a rendered HTML table.
 
 =item L<HTML::Tree>
 
-=item L<HTML::Entities>
+Used to generate HTML.
 
 =item L<Math::Matrix>
+
+Used for transposing data.
 
 =back
 
