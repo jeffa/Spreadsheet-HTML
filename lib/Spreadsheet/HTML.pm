@@ -22,6 +22,13 @@ sub _wrapper {
     my $sub   = shift;
     my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
+
+    if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
+        my %args = @_;
+        @_ = delete $args{data};
+        $attrs = {%args};    
+    }
+
     my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
     return _make_table( $attrs, $sub->( @data ) );
 }

@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 32;
+use Test::More tests => 34;
 use Data::Dumper;
 
 use Spreadsheet::HTML;
@@ -17,6 +17,8 @@ is_deeply $one_string->process_data, [ [1] ],                                   
 is_deeply Spreadsheet::HTML::process_data( 1 ), [ [1] ],                                "correct data from function for one scalar string";
 is $one_string->generate, '<table><tr><th>1</th></tr></table>',                         "correct html from method for one scalar string";
 is Spreadsheet::HTML::generate( 1 ), '<table><tr><th>1</th></tr></table>',              "correct html from function for one scalar string";
+is Spreadsheet::HTML::generate( data => 1 ), '<table><tr><th>1</th></tr></table>',              "correct html from function for one scalar string";
+is Spreadsheet::HTML::generate( data => [ 1 ] ), '<table><tr><th>1</th></tr></table>',              "correct html from function for one scalar string";
 
 my $oned_empty = new_ok 'Spreadsheet::HTML', [ data => [] ];
 is_deeply $oned_empty->process_data, [ ['&nbsp;'] ],                                    "correct data from method for empty 1d array ref";
