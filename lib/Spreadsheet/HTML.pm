@@ -14,25 +14,16 @@ sub new {
     return bless { %attrs }, $class;
 }
 
-sub generate {
-    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
-    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
-    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
-    return _make_table( $attrs, @data );
-}
+sub generate    { _wrapper( sub { @_ }, @_ ) }
+sub transpose   { _wrapper( sub { @{ Math::Matrix::transpose( [@_] ) } }, @_ ) }
+sub reverse     { _wrapper( sub { reverse @_ }, @_ ) }
 
-sub transpose {
+sub _wrapper {
+    my $sub   = shift;
     my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
     my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
-    return _make_table( $attrs, @{ Math::Matrix::transpose( [@data] ) } );
-}
-
-sub reverse {
-    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
-    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
-    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
-    return _make_table( $attrs, reverse @data );
+    return _make_table( $attrs, $sub->( @data ) );
 }
 
 sub process_data {
@@ -69,11 +60,12 @@ sub _make_table {
         ],
     );
 
-    # here is where we can encode entities and indent HTML
+    #TODO here is where we can encode entities and indent HTML
     chomp( my $html = $table->as_HTML( '' ) );
     return $html;
 }
 
+# just a way to seperate th cells from td cells now (for later)
 sub _mark_headers {
     my $data = shift;
     $data->[0] = [ map [$_], @{ $data->[0] } ];
@@ -94,6 +86,7 @@ sub _process {
         map { [
             map {
                 do { no warnings; s/^\s*$/&nbsp;/g };
+                #TODO we most likely want to let client decide how to encode
                 decode_entities( $_ );    
                 encode_entities( $_ );    
                 s/\n/<br \/>/g;
@@ -192,6 +185,18 @@ then returns a string containing the rendered HTML table.
 
 Returns the munged data before it is used to generate
 a rendered HTML table.
+
+=back
+
+=head1 REQUIRES
+
+=over 4
+
+=item L<HTML::Tree>
+
+=item L<HTML::Entities>
+
+=item L<Math::Matrix>
 
 =back
 
