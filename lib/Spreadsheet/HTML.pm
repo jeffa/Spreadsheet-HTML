@@ -70,7 +70,8 @@ sub _make_table {
     );
 
     # here is where we can encode entities and indent HTML
-    return $table->as_HTML( '' );
+    chomp( my $html = $table->as_HTML( '' ) );
+    return $html;
 }
 
 sub _mark_headers {
