@@ -1,6 +1,6 @@
 language: perl
 before_install:
-    - cpanm --notest Test::Pod Test::Pod::Coverage HTML::Entities Math::Matrix
+    - cpanm --notest Test::Pod Test::Pod::Coverage HTML::Entities HTML::Tree Math::Matrix
 perl:
   - "5.20"
   - "5.18"
