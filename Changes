@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.06    
+        - using HTML::Element
         - refactored arg handling
         - added table attrs
         - corrected license ref

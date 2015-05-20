@@ -6,7 +6,7 @@ our $VERSION = '0.06';
 use Data::Dumper;
 use Math::Matrix;
 use HTML::Entities;
-#use HTML::Element;
+use HTML::Element;
 
 sub new {
     my $class = shift;
@@ -57,28 +57,20 @@ sub process_data {
 
 sub _make_table {
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
-    my $rows = '';
-    for my $row (@_) {
-        $rows .= '<tr>';
-        for my $cell (@$row) {
-            if (ref($cell)) {
-                $rows .= sprintf( '<th>%s</th>', $cell->[0] );
-            } else {
-                $rows .= sprintf( '<td>%s</td>', $cell );
-            }
-        }
-        $rows .= '</tr>';
-    }
+    $attrs->{$_} ||= {} for qw( table tr th td );
 
-    return "<table>$rows</table>";
-#    return HTML::Element->new_from_lol(
-#        [table => $attrs{table},
-#            [tr => $attrs{tr}, map [ th => $attrs{th}, $_ ], qw(h1 h2 h3) ],
-#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
-#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
-#            [tr => $attrs{tr}, map [ td => $attrs{td}, $_ ], qw(foo bar baz) ],
-#        ]
-#    )->as_HTML;
+    my $table = HTML::Element->new_from_lol(
+        [table => $attrs->{table},
+            map [tr => $attrs->{tr},
+                map ref($_) 
+                    ? [ th => $attrs->{td}, @$_ ]
+                    : [ td => $attrs->{td}, $_ ], @$_
+            ], @_
+        ],
+    );
+
+    # here is where we can encode entities and indent HTML
+    return $table->as_HTML( '' );
 }
 
 sub _mark_headers {
