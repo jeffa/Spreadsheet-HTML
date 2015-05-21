@@ -20,7 +20,7 @@ sub reverse     { _wrapper( sub { reverse @_ }, @_ ) }
 sub _wrapper {
     my $sub   = shift;
     my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
-    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
+    my $attrs = ref($_[0]) eq 'HASH' ? shift : $self ? {%$self} : {};
 
     if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
         my %args = @_;
