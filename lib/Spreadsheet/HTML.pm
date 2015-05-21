@@ -57,9 +57,10 @@ sub _make_table {
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
     $attrs->{$_} ||= {} for qw( table tr th td );
 
-    my $encodes = delete $attrs->{encodes} || '';
     my $indent  = delete $attrs->{indent};
     my $no_th   = delete $attrs->{matrix};
+    my $encodes = '';
+    $encodes = delete $attrs->{encodes} if exists $attrs->{encodes};
 
     my $table = HTML::Element->new_from_lol(
         [table => $attrs->{table},
@@ -238,13 +239,13 @@ undefined which produces no trailing whitespace to tags.
 Useful values are some number of spaces or tabs.
 See L<HTML::Element::as_HTML()>
 
-=item * encode => 0 or 1
+=item * encode => undef, '', or 'chars in a string'
 
 HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
-'<>&=' to perform encoding on any characters found. There
-currently is not a way to trigger the automatic encoding
-of all unsafe characters, but it is definitely posible.
+'<>&=' to perform encoding on any characters found. If the
+value is 'undef' then all unsafe characters will be
+encoded as HTML entites.
 See L<HTML::Element::as_HTML()>
 
 =item * matrix => 0 or 1
