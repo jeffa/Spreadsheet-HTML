@@ -46,8 +46,7 @@ perldoc command.
 ```
 perldoc Spreadsheet::HTML
 ```
-You can also look for information at
-[cpan.org](http://search.cpan.org/dist/Spreadsheet-HTML/)
+You can also find documentation at [metaCPAN](https://metacpan.org/pod/Spreadsheet::HTML).
 
 License and Copyright
 ---------------------
