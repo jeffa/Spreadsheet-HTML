@@ -1,14 +1,20 @@
 Revision history for Spreadsheet-HTML
 
-0.07    
+0.08    
+
+0.07
+    - added matrix attr (plain headings)
+    - added portrait and landscape aliases
+    - encode attr correctly accepts undef now
+      (allows HTML::Element to encode all unsafe chars)
 
 0.06    
-        - using HTML::Element
-        - H::E handles encoding and indention
-        - refactored arg handling
-        - added table attrs
-        - corrected license ref
-        - TODO: make th and td attrs non-global 
+    - using HTML::Element
+    - H::E handles encoding and indention
+    - refactored arg handling
+    - added table attrs
+    - corrected license ref
+    - TODO: make th and td attrs non-global 
 
 0.05    Corrected build and unit testing
 
