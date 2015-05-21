@@ -34,7 +34,7 @@ be sure and create the manifest before you test and install.
 ```
 perl Makefile.PL
 make
-make dist
+make manifest
 make test
 make install
 ```
