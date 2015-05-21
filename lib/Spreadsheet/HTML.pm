@@ -15,6 +15,8 @@ sub new {
 sub generate    { _wrapper( sub { @_ }, @_ ) }
 sub transpose   { _wrapper( sub { @{ Math::Matrix::transpose( [@_] ) } }, @_ ) }
 sub reverse     { _wrapper( sub { reverse @_ }, @_ ) }
+sub portrait    { generate( @_ ) }
+sub landscape   { transpose( @_ ) }
 
 sub _wrapper {
     my $sub   = shift;
@@ -165,6 +167,8 @@ of <td> tags).
 
 =item generate()
 
+=item portrait()
+
   my $html = $table->generate;
   my $html = $table->generate( indent => '    ' );
   my $html = $table->generate( encode => '<>&=' );
@@ -192,6 +196,8 @@ all data will:
 =back
 
 =item transpose()
+
+=item landscape()
 
   (same usage as generate)    
 
