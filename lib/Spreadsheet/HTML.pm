@@ -113,7 +113,26 @@ __END__
 
 Spreadsheet::HTML - Tabular data to HTML tables.
 
-This is an ALPHA release.
+=head1 THIS IS AN ALPHA RELEASE.
+
+While most functionality for this module has been completed,
+that final 10% takes 90% of the time ... there is still much
+todo:
+
+=over 4
+
+=item * emit col, colgroup, thead, tbody and caption tags
+
+=item * map client functions to cells
+
+=item * assign attrs to td tags by row
+
+=item * do that nifty rotating attr value trick
+
+=back
+
+You are encouraged to try my older L<DBIx::XHTML_Table> during
+the development of this module.
 
 =head1 REQUIRES
 
@@ -145,6 +164,7 @@ Used to transpose data from portrait to landscape.
     print $table->transpose;
     print $table->reverse;
 
+    # non OO
     print Spreadsheet::HTML::generate( $data );
     print Spreadsheet::HTML::transpose( $data );
     print Spreadsheet::HTML::reverse( $data );
@@ -337,6 +357,16 @@ L<http://search.cpan.org/dist/Spreadsheet-HTML/>
 =back
 
 =head1 ACKNOWLEDGEMENTS
+
+Thank you very much! :)
+
+=over 4
+
+=item * Neil Bowers
+
+Helped with Makefile.PL suggestions and corrections.
+
+=back
 
 =head1 LICENSE AND COPYRIGHT
 
