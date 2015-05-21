@@ -3,8 +3,8 @@ use strict;
 use warnings FATAL => 'all';
 our $VERSION = '0.08';
 
-use Math::Matrix;
 use HTML::Element;
+use Math::Matrix;
 
 sub new {
     my $class = shift;
@@ -134,20 +134,6 @@ todo:
 You are encouraged to try my older L<DBIx::XHTML_Table> during
 the development of this module.
 
-=head1 REQUIRES
-
-=over 4
-
-=item HTML::Entities
-
-Used to encode values with HTML entities.
-
-=item Math::Matrix
-
-Used to transpose data from portrait to landscape.
-
-=back
-
 =head1 SYNOPSIS
 
     use Spreadsheet::HTML;
@@ -256,8 +242,8 @@ The data to be rendered into table cells.
 
 Render the table with whitespace indention. Defaults to
 undefined which produces no trailing whitespace to tags.
-Useful values are some number of spaces or tabs.
-See L<HTML::Element::as_HTML()>
+Useful values are some number of spaces or tabs.  (see
+HTML::Element::as_HTML).
 
 =item * encode => undef, '', or 'chars in a string'
 
@@ -265,8 +251,7 @@ HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
 '<>&=' to perform encoding on any characters found. If the
 value is 'undef' then all unsafe characters will be
-encoded as HTML entites.
-See L<HTML::Element::as_HTML()>
+encoded as HTML entites (see HTML::Element::as_HTML).
 
 =item * matrix => 0 or 1
 
