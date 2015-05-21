@@ -238,14 +238,14 @@ an array ref assigned to the key 'data'.
 
 The data to be rendered into table cells.
 
-=item * indent => 0 or 1
+=item * indent => $str
 
 Render the table with whitespace indention. Defaults to
 undefined which produces no trailing whitespace to tags.
 Useful values are some number of spaces or tabs.  (see
 HTML::Element::as_HTML).
 
-=item * encode => undef, '', or 'chars in a string'
+=item * encode => $str
 
 HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
