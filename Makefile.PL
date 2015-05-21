@@ -16,8 +16,8 @@ WriteMakefile(
     },
     BUILD_REQUIRES => {
         'Test::More'        => 0,
-        'Math::Matrix'      => 0,
-        'HTML::Tree'        => 0,
+        'Math::Matrix'      => 0.8,
+        'HTML::Tree'        => 5.03,
     },
     PREREQ_PM => { },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
