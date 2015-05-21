@@ -26,11 +26,15 @@ print Spreadsheet::HTML::reverse( $data );
 
 Installation
 ------------
-To install this module, you may run the
-[classic CPAN process](http://perldoc.perl.org/ExtUtils/MakeMaker.html#Default-Makefile-Behaviour):
+To install this module, you should use CPAN. A good starting
+place is [How to install CPAN modules](http://www.cpan.org/modules/INSTALL.html)
+
+If you truly want to install from this git repos, then
+be sure and create the manifest before you test and install.
 ```
 perl Makefile.PL
 make
+make dist
 make test
 make install
 ```
