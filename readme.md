@@ -2,6 +2,20 @@ Spreadsheet-HTML
 ================
 HTML tables from arrays (with transpositions).
 
+ALPHA RELEASE
+-------------
+While most functionality for this module has been completed,
+that final 10% takes 90% of the time ... there is still much
+todo:
+
+* emit col, colgroup, thead, tbody and caption tags
+* map client functions to cells
+* assign attrs to td tags by row
+* do that nifty rotating attr value trick
+
+See [DBIx::XHTML_Table](http://search.cpan.org/dist/DBIx-XHTML_Table/)
+if you need a production ready solution and check back soon.
+
 Synopsis
 --------
 ```perl
