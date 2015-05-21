@@ -46,7 +46,7 @@ sub process_data {
     @data = [ undef ] unless @{ $data[0] };
 
     $self->{data} = _process( @data );
-    $self->{data} = _mark_headers( $self->{data} );
+    $self->{data} = _mark_headings( $self->{data} );
     $self->{__processed_data__} = 1;
     return @{ $self->{data} };
 }
@@ -57,12 +57,15 @@ sub _make_table {
 
     my $encodes = delete $attrs->{encodes} || '';
     my $indent  = delete $attrs->{indent};
+    my $no_th   = delete $attrs->{matrix};
 
     my $table = HTML::Element->new_from_lol(
         [table => $attrs->{table},
             map [tr => $attrs->{tr},
                 map ref($_) 
-                    ? [ th => $attrs->{th}, @$_ ]
+                    ? $no_th
+                        ? [ td => $attrs->{td}, @$_ ]
+                        : [ th => $attrs->{th}, @$_ ]
                     : [ td => $attrs->{td}, $_ ], @$_
             ], @_
         ],
@@ -73,7 +76,7 @@ sub _make_table {
 }
 
 # just a way to seperate th cells from td cells now (for later)
-sub _mark_headers {
+sub _mark_headings {
     my $data = shift;
     $data->[0] = [ map [$_], @{ $data->[0] } ];
     return $data;
@@ -83,7 +86,7 @@ sub _mark_headers {
 sub _process {
     my @data = @_;
 
-    # padding is determined by first row (the header)
+    # padding is determined by first row (the headings)
     my $max_cols = scalar @{ $data[0] };
     for my $row (@data[1 .. $#data]) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
@@ -106,6 +109,8 @@ __END__
 =head1 NAME
 
 Spreadsheet::HTML - Tabular data to HTML tables.
+
+This is an ALPHA release.
 
 =head1 REQUIRES
 
@@ -205,6 +210,55 @@ then returns a string containing the rendered HTML table.
 Returns the munged data before it is used to generate
 a rendered HTML table. This is called on your behalf, but
 is available should you want it.
+
+=back
+
+=head1 ATTRIBUTES
+
+All methods/procedures can accept named arguments.
+If named arguments are detected, the data has to be
+an array ref assigned to the key 'data'.
+
+=over 4
+
+=item * data => [ [], [], [], ... ]
+
+The data to be rendered into table cells.
+
+=item * indent => 0 or 1
+
+Render the table with whitespace indention. Defaults to
+undefined which produces no trailing whitespace to tags.
+Useful values are some number of spaces or tabs.
+See L<HTML::Element::as_HTML()>
+
+=item * encode => 0 or 1
+
+HTML Encode contents of td tags. Defaults to empty string
+which performs no encoding of entities. Pass a string like
+'<>&=' to perform encoding on any characters found. There
+currently is not a way to trigger the automatic encoding
+of all unsafe characters, but it is definitely posible.
+See L<HTML::Element::as_HTML()>
+
+=item * matrix => 0 or 1
+
+Render the table with only td tags, no th tags.
+
+=item * table => { key => 'value' }
+
+=item * tr => { key => 'value' }
+
+=item * th => { key => 'value' }
+
+=item * td => { key => 'value' }
+
+Supply attributes to the HTML tags that compose the table.
+There is currently no support for col, colgroup, caption,
+thead and tbody. See L<DBIx::XHTML_Table> for that, which
+despite being a DBI extension, can accept an AoA and produce
+an table with those tags, plus totals and subtotals. That
+module cannot produce a transposed table, however.
 
 =back
 
