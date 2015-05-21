@@ -63,7 +63,7 @@ sub _make_table {
         [table => $attrs->{table},
             map [tr => $attrs->{tr},
                 map ref($_) 
-                    ? [ th => $attrs->{td}, @$_ ]
+                    ? [ th => $attrs->{th}, @$_ ]
                     : [ td => $attrs->{td}, $_ ], @$_
             ], @_
         ],
