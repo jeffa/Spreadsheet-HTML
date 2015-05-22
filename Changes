@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
-0.08    
+0.08
+    - major refactor of internals (interface unchanged)
+    - more modular and flexible
 
 0.07
     - added matrix attr (plain headings)

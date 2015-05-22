@@ -6,72 +6,60 @@ our $VERSION = '0.08';
 use HTML::Element;
 use Math::Matrix;
 
-sub new {
-    my $class = shift;
-    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
-    return bless { %attrs }, $class;
-}
-
-sub generate    { _wrapper( sub { @_ }, @_ ) }
-sub transpose   { _wrapper( sub { @{ Math::Matrix::transpose( [@_] ) } }, @_ ) }
-sub reverse     { _wrapper( sub { reverse @_ }, @_ ) }
 sub portrait    { generate( @_ ) }
+sub generate    { _make_table( process( @_ ) ) }
+
 sub landscape   { transpose( @_ ) }
-
-sub _wrapper {
-    my $sub   = shift;
-    my $self  = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
-    my $attrs = ref($_[0]) eq 'HASH' ? shift : $self ? {%$self} : {};
-
-    if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
-        my %args = @_;
-        @_ = delete $args{data};
-        $attrs = {%args};    
-    }
-
-    my @data  = $self ? $self->process_data( @_ ) : process_data( @_ );
-    return _make_table( $attrs, $sub->( @data ) );
+sub transpose   {
+    my %args = process( @_ );
+    $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
+    return _make_table( %args );
 }
 
-sub process_data {
-    my ($self, @data);
+sub reverse   {
+    my %args = process( @_ );
+    $args{data} = [ CORE::reverse @{ $args{data} } ];
+    return _make_table( %args );
+}
 
-	if (UNIVERSAL::isa( $_[0], __PACKAGE__ )) {
-        $self = shift;
-        return @{ $self->{data} } if exists $self->{__processed_data__};
-        $self->{table_attrs} = shift if ref($_[0]) eq 'HASH';
-        @_ = $self->{data};
+
+sub process {
+    my ($self,$data,$args) = _args( @_ );
+
+    # padding
+    my $max_cols = scalar @{ $data->[0] };
+    for my $row (@{$data}[1 .. $#$data]) {
+        push @$row, undef for 1 .. ($max_cols - scalar @$row);
+        # TODO: truncate rows that are too long
     }
 
-    @data = @_ > 1 ? @_ : @{ ref($_[0]) ? $_[0] : [ $_[0] ] };
-    @data = [ @data ] unless ref( $data[0] ) eq 'ARRAY';
-    @data = [ undef ] unless @{ $data[0] };
+    # headings
+    shift @$data if $args->{headless};
+    unless ( $args->{headless} or $args->{matrix} or ref($data->[0][0]) ) {
+        #TODO: make objects here, assign class attrs here
+        $data->[0] = [ map [$_], @{ $data->[0] } ];
+    }
 
-    $self->{data} = _process( @data );
-    $self->{data} = _mark_headings( $self->{data} );
-    $self->{__processed_data__} = 1;
-    return @{ $self->{data} };
+    return wantarray ? ( data => $data, %$args ) : $data;
 }
 
 sub _make_table {
-    my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
-    $attrs->{$_} ||= {} for qw( table tr th td );
+    my %args = @_;
+    $args{$_} ||= {} for qw( table tr th td );
 
-    my $indent  = $attrs->{indent};
-    my $no_th   = $attrs->{matrix};
-    my $encodes = exists $attrs->{encodes} ? $attrs->{encodes} : '';
-
-    shift @_ if $attrs->{headless};
+    my $indent  = $args{indent};
+    my $no_th   = $args{matrix};
+    my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
     my $table = HTML::Element->new_from_lol(
-        [table => $attrs->{table},
-            map [tr => $attrs->{tr},
-                map ref($_) 
+        [table => $args{table},
+            map [tr => $args{tr},
+                map ref($_)
                     ? $no_th
-                        ? [ td => $attrs->{td}, @$_ ]
-                        : [ th => $attrs->{th}, @$_ ]
-                    : [ td => $attrs->{td}, $_ ], @$_
-            ], @_
+                        ? [ td => $args{td}, @$_ ]
+                        : [ th => $args{th}, @$_ ]
+                    : [ td => $args{td}, $_ ], @$_
+            ], @{ $args{data} }
         ],
     );
 
@@ -79,32 +67,51 @@ sub _make_table {
     return $html;
 }
 
-# just a way to seperate th cells from td cells now (for later)
-sub _mark_headings {
-    my $data = shift;
-    $data->[0] = [ map [$_], @{ $data->[0] } ];
-    return $data;
+sub new {
+    my $class = shift;
+    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
+    return bless { %attrs }, $class;
 }
 
+sub _args {
+    my ($self,$data,$args);
+    $self = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
 
-sub _process {
-    my @data = @_;
-
-    # padding is determined by first row (the headings)
-    my $max_cols = scalar @{ $data[0] };
-    for my $row (@data[1 .. $#data]) {
-        push @$row, undef for 1 .. ($max_cols - scalar @$row);
+    if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
+        my %args = @_;
+        if (my $arg = delete $args{data}) {
+            $data = $arg;
+        }
+        $args = {%args};
+    } elsif (@_ > 1 && ref($_[0]) eq 'ARRAY') {
+        $data = [ @_ ];
+    } elsif (@_ == 1) {
+        $data = $_[0];
     }
 
-    return [
-        map { [
-            map {
-                do { no warnings; s/^\s*$/&nbsp;/g };
-                s/\n/<br \/>/g;
-                $_
-            } @$_
-        ] } @data
-    ];
+    if ($self) {
+        $args = { %$self, %{ $args || {} } };
+        delete $args->{data};
+    }
+
+    unless (exists $args->{file}) {
+        if ($self and !$data) {
+            $data = $self->{data};
+        }
+
+        $data = [ $data ] unless ref($data);
+        $data = [ $data ] unless ref($data->[0]);
+        $data = [ [undef] ] if !scalar @{ $data->[0] };
+    }
+    else { # load data
+
+    }
+
+    if ($self) {
+        $self->{data} = $data if delete $args->{cache};
+    }
+
+    return ( $self, $data, $args );
 }
 
 1;
@@ -202,6 +209,10 @@ all data will:
 =item - have any newlines converted to <br> tags
 
 =back
+
+=item process()
+
+Data structure that can be used by the following:
 
 =item transpose()
 

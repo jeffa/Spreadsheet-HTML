@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 8;
+use Test::More tests => 6;
 use Data::Dumper;
 
 use Spreadsheet::HTML;
@@ -21,13 +21,13 @@ my $expected = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 
-my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
-is_deeply [ $construct_with_list->process_data ], $expected,  "expected data from interface for construct_with_list";
+my $construct_with_list = Spreadsheet::HTML->new( data => $data );
+is_deeply scalar $construct_with_list->process, $expected,  "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $expected,  "expected data from internal for construct_with_list";
 
-my $construct_with_ref = new_ok 'Spreadsheet::HTML', [ { data => $data } ];
-is_deeply [ $construct_with_ref->process_data ], $expected,  "expected data from interface for construct_with_ref";
+my $construct_with_ref = Spreadsheet::HTML->new( { data => $data } );
+is_deeply scalar $construct_with_ref->process, $expected,  "expected data from interface for construct_with_ref";
 is_deeply $construct_with_ref->{data}, $expected,  "expected data from internal for construct_with_ref";
 
-is_deeply [ Spreadsheet::HTML::process_data( $data ) ], $expected,  "expected output for array ref";
-is_deeply [ Spreadsheet::HTML::process_data( @$data ) ], $expected,  "expected output for array";
+is_deeply scalar Spreadsheet::HTML::process( $data ), $expected,  "expected output for array ref";
+is_deeply scalar Spreadsheet::HTML::process( @$data ), $expected,  "expected output for array";
