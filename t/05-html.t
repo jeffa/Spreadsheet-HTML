@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 8;
+use Test::More tests => 13;
 use Data::Dumper;
 
 use Spreadsheet::HTML;
@@ -30,3 +30,13 @@ is Spreadsheet::HTML::generate( data => $data, matrix => 1 ), $no_th,      "only
 $table = Spreadsheet::HTML->new( data => $data, matrix => 1 );
 is $table->generate, $no_th,                                                "only <td> tags via constructor args" ;
 is $table->generate( matrix => 0 ), $with_th,                              "<th> tags are back via method args" ;
+
+
+my $no_head = '<table><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>';
+
+$table = Spreadsheet::HTML->new( data => $data, headless => 1 );
+is $table->generate, $no_head,                                              "no headings (via constructore)" ;
+is $table->generate( headless => 0 ), $with_th,                             "headings are back (via named args)" ;
+is $table->generate( headless => 1 ), $no_head,                             "headings are gone again (via named args)" ;
+is $table->generate( headless => 0, matrix => 1 ), $no_th,                  "headings are back, matrix style" ;
+is Spreadsheet::HTML::generate( data => $data, headless => 1 ), $no_head,   "no headings (procedural nameds args)" ;

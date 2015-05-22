@@ -57,10 +57,11 @@ sub _make_table {
     my $attrs = ref($_[0]) eq 'HASH' ? shift : {};
     $attrs->{$_} ||= {} for qw( table tr th td );
 
-    my $indent  = delete $attrs->{indent};
-    my $no_th   = delete $attrs->{matrix};
-    my $encodes = '';
-    $encodes = delete $attrs->{encodes} if exists $attrs->{encodes};
+    my $indent  = $attrs->{indent};
+    my $no_th   = $attrs->{matrix};
+    my $encodes = exists $attrs->{encodes} ? $attrs->{encodes} : '';
+
+    shift @_ if $attrs->{headless};
 
     my $table = HTML::Element->new_from_lol(
         [table => $attrs->{table},
@@ -255,7 +256,11 @@ encoded as HTML entites (see HTML::Element::as_HTML).
 
 =item * matrix => 0 or 1
 
-Render the table with only td tags, no th tags.
+Render the table with only td tags, no th tags, if true.
+
+=item * headless => 0 or 1
+
+Render the table with without headings, if true.
 
 =item * table => { key => 'value' }
 
