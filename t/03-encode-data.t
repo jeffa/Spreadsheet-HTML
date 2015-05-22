@@ -44,9 +44,6 @@ is $table->generate( encodes => undef ),
     '<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>',
     "encoding all HTML entities";
 
-SKIP: {
-    skip "TODO: put space substitution back in", 2;
 $table = Spreadsheet::HTML->new( data => $spaces );
 is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
 is_deeply scalar $table->process, $expected_spaces,  "only processes once";
-};

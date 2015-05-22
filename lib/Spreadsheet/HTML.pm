@@ -6,6 +6,9 @@ our $VERSION = '0.08';
 use HTML::Element;
 use Math::Matrix;
 
+use Spreadsheet::HTML::CSV;
+use Spreadsheet::HTML::HTML;
+
 sub portrait    { generate( @_ ) }
 sub generate    { _make_table( process( @_ ) ) }
 
@@ -26,15 +29,22 @@ sub reverse   {
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
-    # padding
     my $max_cols = scalar @{ $data->[0] };
-    for my $row (@{$data}[1 .. $#$data]) {
+    shift @$data if $args->{headless};
+
+    for my $row (@$data) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
-        # TODO: truncate rows that are too long
+        #truncate rows that are too long
+        $row = [ @$row[0 .. $max_cols - 1] ] if scalar( @$row ) > $max_cols;
+
+        # white space transliteration
+        for my $i (0 .. $#$row) {
+            #TODO: this needs to be configurable
+            do{ no warnings; $row->[$i] =~ s/^\s*$/&nbsp;/g };
+            $row->[$i] =~ s/\n/<br \/>/g;
+        }
     }
 
-    # headings
-    shift @$data if $args->{headless};
     unless ( $args->{headless} or $args->{matrix} or ref($data->[0][0]) ) {
         #TODO: make objects here, assign class attrs here
         $data->[0] = [ map [$_], @{ $data->[0] } ];
@@ -103,8 +113,12 @@ sub _args {
         $data = [ $data ] unless ref($data->[0]);
         $data = [ [undef] ] if !scalar @{ $data->[0] };
     }
-    else { # load data
-
+    if (my $file = $args->{file}) {
+        if ($file =~ /\.csv$/) {
+            $data = Spreadsheet::HTML::CSV::load( $file );
+        } elsif ($file =~ /\.html?$/) {
+            $data = Spreadsheet::HTML::HTML::load( $file );
+        }
     }
 
     if ($self) {
