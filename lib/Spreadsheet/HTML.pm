@@ -8,6 +8,8 @@ use Math::Matrix;
 
 use Spreadsheet::HTML::CSV;
 use Spreadsheet::HTML::HTML;
+use Spreadsheet::HTML::JSON;
+use Spreadsheet::HTML::YAML;
 
 sub portrait    { generate( @_ ) }
 sub generate    { _make_table( process( @_ ) ) }
@@ -114,16 +116,20 @@ sub _args {
         if ($self and !$data) {
             $data = $self->{data};
         }
-
         $data = [ $data ] unless ref($data);
         $data = [ $data ] unless ref($data->[0]);
         $data = [ [undef] ] if !scalar @{ $data->[0] };
     }
+
     if (my $file = $args->{file}) {
         if ($file =~ /\.csv$/) {
             $data = Spreadsheet::HTML::CSV::load( $file );
         } elsif ($file =~ /\.html?$/) {
             $data = Spreadsheet::HTML::HTML::load( $file );
+        } elsif ($file =~ /\.jso?n$/) {
+            $data = Spreadsheet::HTML::JSON::load( $file );
+        } elsif ($file =~ /\.ya?ml$/) {
+            $data = Spreadsheet::HTML::YAML::load( $file );
         }
     }
 
