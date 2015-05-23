@@ -2,7 +2,6 @@
 use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 3;
-use Data::Dumper;
 
 use Spreadsheet::HTML;
 

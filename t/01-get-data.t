@@ -1,10 +1,9 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 6;
-use Data::Dumper;
+use Test::More tests => 9;
 
-use Spreadsheet::HTML;
+use_ok 'Spreadsheet::HTML';
 
 my $data = [
     [qw(header1 header2 header3 header4 )],
@@ -21,11 +20,11 @@ my $expected = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 
-my $construct_with_list = Spreadsheet::HTML->new( data => $data );
+my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
 is_deeply scalar $construct_with_list->process, $expected,  "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $expected,  "expected data from internal for construct_with_list";
 
-my $construct_with_ref = Spreadsheet::HTML->new( { data => $data } );
+my $construct_with_ref = new_ok 'Spreadsheet::HTML', [ { data => $data } ];
 is_deeply scalar $construct_with_ref->process, $expected,  "expected data from interface for construct_with_ref";
 is_deeply $construct_with_ref->{data}, $expected,  "expected data from internal for construct_with_ref";
 
