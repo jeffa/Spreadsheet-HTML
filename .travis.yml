@@ -1,6 +1,6 @@
 language: perl
 before_install:
-    - cpanm --notest JSON YAML Text::CSV_XS Test::Pod Test::Pod::Coverage HTML::Entities HTML::TableExtract Math::Matrix
+    - cpanm --notest JSON YAML Text::CSV Text::CSV_XS Test::Pod Test::Pod::Coverage HTML::Entities HTML::TableExtract Math::Matrix
 perl:
   - "5.20"
   - "5.18"
