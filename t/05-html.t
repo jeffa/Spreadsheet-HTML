@@ -36,14 +36,8 @@ my $no_head = '<table><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></
 
 $table = Spreadsheet::HTML->new( data => $data, headless => 1 );
 is $table->generate, $no_head,                                              "no headings (via constructore)" ;
-SKIP: {
-    skip "TODO figure how to propagate arg values of zero", 3;
 is $table->generate( headless => 0 ), $with_th,                             "headings are back (via named args)" ;
 is $table->generate( headless => 1 ), $no_head,                             "headings are gone again (via named args)" ;
 is $table->generate( headless => 0, matrix => 1 ), $no_th,                  "headings are back, matrix style" ;
-};
 
-SKIP: {
-    skip "headless is eating rows :(", 1;
 is Spreadsheet::HTML::generate( data => $data, headless => 1 ), $no_head,   "no headings (procedural nameds args)" ;
-};

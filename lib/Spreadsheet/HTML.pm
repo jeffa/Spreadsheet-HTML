@@ -30,7 +30,6 @@ sub process {
     my ($self,$data,$args) = _args( @_ );
 
     my $max_cols = scalar @{ $data->[0] };
-    shift @$data if $args->{headless};
 
     for my $row (@$data) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
@@ -61,6 +60,8 @@ sub _make_table {
     my $no_th   = $args{matrix};
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
+    my $start_index = $args{headless} ? 1 : 0;
+
     my $table = HTML::Element->new_from_lol(
         [table => $args{table},
             map [tr => $args{tr},
@@ -69,7 +70,7 @@ sub _make_table {
                         ? [ td => $args{td}, @$_ ]
                         : [ th => $args{th}, @$_ ]
                     : [ td => $args{td}, $_ ], @$_
-            ], @{ $args{data} }
+            ], @{ $args{data} }[$start_index .. $#{ $args{data} }]
         ],
     );
 
