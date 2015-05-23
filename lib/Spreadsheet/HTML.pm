@@ -43,6 +43,8 @@ sub reverse   {
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
+    $data = Clone::clone( $self->{data} ) if $self->{is_cached};
+
     my $max_cols = scalar @{ $data->[0] };
 
     for my $row (@$data) {
@@ -65,11 +67,6 @@ sub process {
 
     if ($args->{headless}) {
         shift @$data;
-    }
-
-    if ($self and !$self->{is_cached}) {
-        $self->{data} = $data if exists $args->{cache};
-        $self->{is_cached} = 1;
     }
 
     return wantarray ? ( data => $data, %$args ) : $data;
@@ -145,6 +142,11 @@ sub _args {
         } elsif ($file =~ /\.ya?ml$/) {
             $data = Spreadsheet::HTML::YAML::load( $file );
         }
+    }
+
+    if ($self and !$self->{is_cached} and delete $args->{cache}) {
+        $self->{data} = $data;
+        $self->{is_cached} = 1;
     }
 
     return ( $self, Clone::clone($data), $args );
