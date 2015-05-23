@@ -3,6 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 our $VERSION = '0.08';
 
+use Clone;
 use HTML::Element;
 use Math::Matrix;
 
@@ -21,12 +22,23 @@ sub transpose   {
     return _make_table( %args );
 }
 
-sub reverse   {
+sub flip   {
     my %args = process( @_ );
     $args{data} = [ CORE::reverse @{ $args{data} } ];
     return _make_table( %args );
 }
 
+sub mirror   {
+    my %args = process( @_ );
+    $args{data} = [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
+    return _make_table( %args );
+}
+
+sub reverse   {
+    my %args = process( @_ );
+    $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
+    return _make_table( %args );
+}
 
 sub process {
     my ($self,$data,$args) = _args( @_ );
@@ -51,6 +63,10 @@ sub process {
         $data->[0] = [ map [$_], @{ $data->[0] } ];
     }
 
+    if ($args->{headless}) {
+        shift @$data;
+    }
+
     if ($self and !$self->{is_cached}) {
         $self->{data} = $data if exists $args->{cache};
         $self->{is_cached} = 1;
@@ -67,8 +83,6 @@ sub _make_table {
     my $no_th   = $args{matrix};
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
-    my $start_index = $args{headless} ? 1 : 0;
-
     my $table = HTML::Element->new_from_lol(
         [table => $args{table},
             map [tr => $args{tr},
@@ -77,7 +91,7 @@ sub _make_table {
                         ? [ td => $args{td}, @$_ ]
                         : [ th => $args{th}, @$_ ]
                     : [ td => $args{td}, $_ ], @$_
-            ], @{ $args{data} }[$start_index .. $#{ $args{data} }]
+            ], @{ $args{data} }
         ],
     );
 
@@ -133,7 +147,7 @@ sub _args {
         }
     }
 
-    return ( $self, $data, $args );
+    return ( $self, Clone::clone($data), $args );
 }
 
 1;
@@ -195,6 +209,7 @@ the development of this module.
   my $table = Spreadsheet::HTML->new( @data );
   my $table = Spreadsheet::HTML->new( $data );
   my $table = Spreadsheet::HTML->new( data => $data );
+  my $table = Spreadsheet::HTML->new( { data => $data } );
 
 Constructs object. Currently accepts one parameter: data.
 Data should be a two dimensional array and you should 
@@ -202,9 +217,11 @@ expect the first row to be treated as the header (which
 means each cell will be wrapped with <th> tags instead 
 of <td> tags).
 
-=item generate()
+=item process()
 
-=item portrait()
+Data structure that can be used by the following:
+
+=item generate()
 
   my $html = $table->generate;
   my $html = $table->generate( indent => '    ' );
@@ -232,31 +249,31 @@ all data will:
 
 =back
 
-=item process()
+=item portrait( key => 'value' )
 
-Data structure that can be used by the following:
+Alias for generate()
 
-=item transpose()
+=item transpose( key => 'value' )
 
-=item landscape()
+Uses Math::Matrix to rotate the headings and data
+90 degrees counter-clockwise.
 
-  (same usage as generate)    
+=item landscape( key => 'value' )
 
-Uses Math::Matrix to rotate the data 90 degrees and
-then returns a string containing the rendered HTML table.
+Alias for transpose()
 
-=item reverse()
+=item flip( key => 'value' )
 
-  (same usage as generate)    
+Flips the headings and data upside down.
 
-Uses Math::Matrix to rotate the data 180 degrees and
-then returns a string containing the rendered HTML table.
+=item mirror( key => 'value' )
 
-=item process_data()
+Columns are rendered right to left.
 
-Returns the munged data before it is used to generate
-a rendered HTML table. This is called on your behalf, but
-is available should you want it.
+=item reverse( key => 'value' )
+
+Combines flip and mirror: flips the headings and
+data upside down and render columns right to left.
 
 =back
 

@@ -15,6 +15,7 @@ WriteMakefile(
         'ExtUtils::MakeMaker' => 0,
     },
     BUILD_REQUIRES => {
+        'Clone'             => 0,
         'Test::More'        => 0,
         'Math::Matrix'      => 0.8,
         'HTML::Tree'        => 5.03,
