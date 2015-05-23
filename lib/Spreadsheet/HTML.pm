@@ -49,6 +49,11 @@ sub process {
         $data->[0] = [ map [$_], @{ $data->[0] } ];
     }
 
+    if ($self and !$self->{is_cached}) {
+        $self->{data} = $data if exists $args->{cache};
+        $self->{is_cached} = 1;
+    }
+
     return wantarray ? ( data => $data, %$args ) : $data;
 }
 
@@ -120,10 +125,6 @@ sub _args {
         } elsif ($file =~ /\.html?$/) {
             $data = Spreadsheet::HTML::HTML::load( $file );
         }
-    }
-
-    if ($self) {
-        $self->{data} = $data if delete $args->{cache};
     }
 
     return ( $self, $data, $args );
