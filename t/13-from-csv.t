@@ -5,6 +5,9 @@ use Test::More tests => 4;
 
 use_ok 'Spreadsheet::HTML';
 
+eval "use Text::CSV";
+plan skip_all => "Text::CSV required" if $@;
+
 my $table = new_ok 'Spreadsheet::HTML', [ file => 't/data/simple.csv' ];
 
 is $table->generate,

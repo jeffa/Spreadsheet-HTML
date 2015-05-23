@@ -3,6 +3,9 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 6;
 
+eval "use YAML";
+plan skip_all => "YAML" if $@;
+
 use_ok 'Spreadsheet::HTML';
 
 my %file = ( file => 't/data/simple.yml' );

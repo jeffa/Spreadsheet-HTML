@@ -3,6 +3,9 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 6;
 
+eval "use HTML::TableExtract";
+plan skip_all => "HTML::TableExtract required" if $@;
+
 use_ok 'Spreadsheet::HTML';
 
 my %file = ( file => 't/data/simple.html' );
