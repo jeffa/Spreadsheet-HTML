@@ -1,10 +1,11 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 6;
+use Test::More;
 
 eval "use YAML";
 plan skip_all => "YAML" if $@;
+plan tests => 6;
 
 use_ok 'Spreadsheet::HTML';
 

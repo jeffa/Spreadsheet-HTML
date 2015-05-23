@@ -1,10 +1,11 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 6;
+use Test::More;
 
 eval "use JSON";
 plan skip_all => "JSON required" if $@;
+plan tests => 6;
 
 use_ok 'Spreadsheet::HTML';
 

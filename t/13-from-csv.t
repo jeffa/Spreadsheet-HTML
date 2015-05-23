@@ -1,12 +1,13 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 4;
-
-use_ok 'Spreadsheet::HTML';
+use Test::More;
 
 eval "use Text::CSV";
 plan skip_all => "Text::CSV required" if $@;
+plan tests => 4;
+
+use_ok 'Spreadsheet::HTML';
 
 my $table = new_ok 'Spreadsheet::HTML', [ file => 't/data/simple.csv' ];
 
