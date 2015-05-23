@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.00';
 
 use Carp;
-#use Text::CSV;
+eval "use Text::CSV";
 
 sub load {
     my @data;

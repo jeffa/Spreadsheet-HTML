@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.00';
 
 use Carp;
-use JSON;
+eval "use JSON";
 
 sub load {
     my $file = shift;

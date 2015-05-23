@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.00';
 
 use Carp;
-use YAML;
+eval "use YAML";
 
 sub load {
     my $file = shift;

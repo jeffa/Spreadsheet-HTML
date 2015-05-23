@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.00';
 
 use Carp;
-use HTML::TableExtract;
+eval "use HTML::TableExtract";
 
 sub load {
     my @data;
