@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.08
+    - added flip and mirror
+    - added data caching
+    - using Clone to prevent data from being clobbered
     - major refactor of internals (interface unchanged)
     - more modular and flexible
 

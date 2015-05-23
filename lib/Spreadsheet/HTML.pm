@@ -157,7 +157,7 @@ sub _args {
 __END__
 =head1 NAME
 
-Spreadsheet::HTML - Tabular data to HTML tables.
+Spreadsheet::HTML - Render HTML tables with ease.
 
 =head1 THIS IS AN ALPHA RELEASE.
 
@@ -167,7 +167,7 @@ todo:
 
 =over 4
 
-=item * emit col, colgroup, thead, tbody and caption tags
+=item * emit col, colgroup, thead, tbody and caption tags ... maybe ...
 
 =item * map client functions to cells
 
@@ -191,14 +191,18 @@ the development of this module.
         [qw(col1 col2 col3)],
     ];
 
-    my $table = Spreadsheet::HTML->new( data => $data );
+    my $table = Spreadsheet::HTML->new( data => $data, cache => 1 );
     print $table->generate;
     print $table->transpose;
+    print $table->flip;
+    print $table->mirror;
     print $table->reverse;
 
     # non OO
     print Spreadsheet::HTML::generate( $data );
     print Spreadsheet::HTML::transpose( $data );
+    print Spreadsheet::HTML::flip( $data );
+    print Spreadsheet::HTML::mirror( $data );
     print Spreadsheet::HTML::reverse( $data );
 
 =head1 METHODS
@@ -219,11 +223,11 @@ expect the first row to be treated as the header (which
 means each cell will be wrapped with <th> tags instead 
 of <td> tags).
 
-=item process()
+=item process( key => 'value' )
 
 Data structure that can be used by the following:
 
-=item generate()
+=item generate( key => 'value' )
 
   my $html = $table->generate;
   my $html = $table->generate( indent => '    ' );
@@ -250,6 +254,10 @@ all data will:
 =item - have any newlines converted to <br> tags
 
 =back
+
+These features are currently hard coded in (sorry). Plans
+to make these transliterations configurable by the client
+are planned. Plans planning plans.
 
 =item portrait( key => 'value' )
 
@@ -281,9 +289,13 @@ data upside down and render columns right to left.
 
 =head1 ATTRIBUTES
 
-All methods/procedures can accept named arguments.
-If named arguments are detected, the data has to be
-an array ref assigned to the key 'data'.
+All methods/procedures accept named arguments.
+If named arguments are detected: the data has to be
+an array ref assigned to the key 'data'. If no
+named args are detected then the parameter list is
+treated as the data itself, either an array containing
+array references or an array reference containing
+array references.
 
 =over 4
 
@@ -291,12 +303,18 @@ an array ref assigned to the key 'data'.
 
 The data to be rendered into table cells.
 
+=item * file => $str
+
+The name of the data file to read. Supported formats
+are CSV, JSON, YAML and HTML (first table found).
+Support for Excel files is planned.
+
 =item * indent => $str
 
 Render the table with whitespace indention. Defaults to
 undefined which produces no trailing whitespace to tags.
 Useful values are some number of spaces or tabs.  (see
-HTML::Element::as_HTML).
+L<HTML::Element>::as_HTML).
 
 =item * encode => $str
 
@@ -304,7 +322,12 @@ HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
 '<>&=' to perform encoding on any characters found. If the
 value is 'undef' then all unsafe characters will be
-encoded as HTML entites (see HTML::Element::as_HTML).
+encoded as HTML entites (see L<HTML::Element>::as_HTML).
+
+=item * cache => 0 or 1
+
+Preserve data after it has been processed. Only makes
+sense when used as class method on an object.
 
 =item * matrix => 0 or 1
 
@@ -343,11 +366,33 @@ Used to generate HTML.
 
 Used for transposing data.
 
+=item L<Clone>
+
+Useful for preventing data from being clobbered.
+
 =back
 
-=head1 AUTHOR
+=head1 REQUIRES (soon to be optional)
 
-Jeff Anderson, C<< <jeffa at cpan.org> >>
+These modules are used to load data from various
+different file formats. In the future they will
+be optionally loaded as requested by the client.
+For now they are hard coded dependencies. The good
+news is they are modules that everyone should have. ;)
+
+=over 4
+
+=item L<Text::CSV>
+
+=item L<Text::CSV_XS>
+
+=item L<HTML::TableExtract>
+
+=item L<JSON>
+
+=item L<YAML>
+
+=back
 
 =head1 BUGS
 
@@ -368,13 +413,15 @@ Please report any bugs or feature requests to either
 I will be notified, and then you'll automatically be notified of progress
 on your bug as I make changes.
 
+=head1 GITHUB
+
+The Github project is L<https://github.com/jeffa/Spreadsheet-HTML>
+
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc Spreadsheet::HTML
-
-The Github project is L<https://github.com/jeffa/Spreadsheet-HTML>
 
 You can also look for information at:
 
@@ -409,6 +456,10 @@ Thank you very much! :)
 Helped with Makefile.PL suggestions and corrections.
 
 =back
+
+=head1 AUTHOR
+
+Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 LICENSE AND COPYRIGHT
 

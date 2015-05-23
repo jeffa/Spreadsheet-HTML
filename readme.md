@@ -28,13 +28,17 @@ my $data = [
     [qw(col1 col2 col3)],
 ];
 
-my $table = Spreadsheet::HTML->new( data => $data );
+my $table = Spreadsheet::HTML->new( data => $data, cache => 1 );
 print $table->generate;
 print $table->transpose;
+print $table->flip;
+print $table->mirror;
 print $table->reverse;
 
 print Spreadsheet::HTML::generate( $data );
 print Spreadsheet::HTML::transpose( $data );
+print Spreadsheet::HTML::flip( $data );
+print Spreadsheet::HTML::mirror( $data );
 print Spreadsheet::HTML::reverse( $data );
 ```
 
