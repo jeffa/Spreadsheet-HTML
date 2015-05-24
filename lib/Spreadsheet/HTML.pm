@@ -62,7 +62,7 @@ sub process {
     }
 
     #TODO: this block should become obsolete if above TODO works
-    unless ( $args->{headless} or $args->{matrix} or ref($data->[0][0]) ) {
+    unless ( $args->{headless} or $args->{matrix} ) {
         $data->[0] = [ map [$_], @{ $data->[0] } ];
     }
 
