@@ -1,11 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More;
-
-eval "use Text::CSV";
-plan skip_all => "Text::CSV required" if $@;
-plan tests => 4;
+use Test::More tests => 4;
 
 use_ok 'Spreadsheet::HTML';
 
