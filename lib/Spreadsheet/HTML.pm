@@ -43,7 +43,7 @@ sub reverse   {
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
-    $data = Clone::clone( $self->{data} ) if $self->{is_cached};
+    $data = Clone::clone( $self->{data} ) if ref($self) and $self->{is_cached};
 
     my $max_cols = scalar @{ $data->[0] };
 
@@ -119,12 +119,12 @@ sub _args {
     }
 
     if ($self) {
-        $args = { %$self, %{ $args || {} } };
+        $args = { %{ ref($self) ? $self : {} }, %{ $args || {} } };
         delete $args->{data};
     }
 
     unless (exists $args->{file}) {
-        if ($self and !$data) {
+        if (ref($self) and !$data) {
             $data = $self->{data};
         }
         $data = [ $data ] unless ref($data);
@@ -144,7 +144,7 @@ sub _args {
         }
     }
 
-    if ($self and !$self->{is_cached} and delete $args->{cache}) {
+    if (ref($self) and !$self->{is_cached} and delete $args->{cache}) {
         $self->{data} = $data;
         $self->{is_cached} = 1;
     }
