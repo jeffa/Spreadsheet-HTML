@@ -209,7 +209,7 @@ the development of this module.
 
 =over 4
 
-=item new()
+=item * new( key => 'value' )
 
   my $table = Spreadsheet::HTML->new;
   my $table = Spreadsheet::HTML->new( @data );
@@ -217,17 +217,18 @@ the development of this module.
   my $table = Spreadsheet::HTML->new( data => $data );
   my $table = Spreadsheet::HTML->new( { data => $data } );
 
-Constructs object. Currently accepts one parameter: data.
-Data should be a two dimensional array and you should 
-expect the first row to be treated as the header (which
-means each cell will be wrapped with <th> tags instead 
-of <td> tags).
+Constructs object. Accepts named arguments (see ATTRIBUTES).
+Unless you give it an array of array refs. Or an array ref
+of array refs. Otherwise it expects named arguments. The
+most favorite being 'data' which is exactly an array ref
+of array refs. The first row will be treated as the headings
+unless you specify otherwise (see ATTRIBUTES).
 
-=item process( key => 'value' )
+=item * process( key => 'value' )
 
 Data structure that can be used by the following:
 
-=item generate( key => 'value' )
+=item * generate( key => 'value' )
 
   my $html = $table->generate;
   my $html = $table->generate( indent => '    ' );
@@ -238,9 +239,9 @@ Data structure that can be used by the following:
   my $html = Spreadsheet::HTML::generate( $data );
   my $html = Spreadsheet::HTML::generate(
       data   => $data,
-      indent => '    ',
+      indent => "\t",
       encode => '<>&=',
-      table  => { class => 'foo' },
+      table  => { class => 'spreadsheet' },
   );
 
 Returns a string that contains the rendered HTML table.
@@ -259,28 +260,28 @@ These features are currently hard coded in (sorry). Plans
 to make these transliterations configurable by the client
 are planned. Plans planning plans.
 
-=item portrait( key => 'value' )
+=item * portrait( key => 'value' )
 
 Alias for generate()
 
-=item transpose( key => 'value' )
+=item * transpose( key => 'value' )
 
 Uses Math::Matrix to rotate the headings and data
 90 degrees counter-clockwise.
 
-=item landscape( key => 'value' )
+=item * landscape( key => 'value' )
 
 Alias for transpose()
 
-=item flip( key => 'value' )
+=item * flip( key => 'value' )
 
 Flips the headings and data upside down.
 
-=item mirror( key => 'value' )
+=item * mirror( key => 'value' )
 
 Columns are rendered right to left.
 
-=item reverse( key => 'value' )
+=item * reverse( key => 'value' )
 
 Combines flip and mirror: flips the headings and
 data upside down and render columns right to left.
@@ -358,39 +359,40 @@ module cannot produce a transposed table, however.
 
 =over 4
 
-=item L<HTML::Tree>
+=item * L<HTML::Tree>
 
 Used to generate HTML.
 
-=item L<Math::Matrix>
+=item * L<Math::Matrix>
 
 Used for transposing data.
 
-=item L<Clone>
+=item * L<Clone>
 
 Useful for preventing data from being clobbered.
 
 =back
 
-=head1 REQUIRES (soon to be optional)
+=head1 REQUIRES (optional)
 
 These modules are used to load data from various
-different file formats. In the future they will
-be optionally loaded as requested by the client.
-For now they are hard coded dependencies. The good
-news is they are modules that everyone should have. ;)
+different file formats. They should be optional
+but testing is still being conducted on this feature.
+Attempting to parse a file when the necessary module
+is not installed should prompt a clear error and
+suggest action. This version may or may not reflect that. ;)
 
 =over 4
 
-=item L<Text::CSV>
+=item * L<Text::CSV>
 
-=item L<Text::CSV_XS>
+=item * L<Text::CSV_XS>
 
-=item L<HTML::TableExtract>
+=item * L<HTML::TableExtract>
 
-=item L<JSON>
+=item * L<JSON>
 
-=item L<YAML>
+=item * L<YAML>
 
 =back
 
