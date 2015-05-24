@@ -47,6 +47,7 @@ sub process {
 
     my $max_cols = scalar @{ $data->[0] };
 
+    #TODO: make objects here, assign class attrs here
     for my $row (@$data) {
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
         #truncate rows that are too long
@@ -60,14 +61,12 @@ sub process {
         }
     }
 
+    #TODO: this block should become obsolete if above TODO works
     unless ( $args->{headless} or $args->{matrix} or ref($data->[0][0]) ) {
-        #TODO: make objects here, assign class attrs here
         $data->[0] = [ map [$_], @{ $data->[0] } ];
     }
 
-    if ($args->{headless}) {
-        shift @$data;
-    }
+    shift @$data if $args->{headless};
 
     return wantarray ? ( data => $data, %$args ) : $data;
 }
@@ -76,23 +75,19 @@ sub _make_table {
     my %args = @_;
     $args{$_} ||= {} for qw( table tr th td );
 
-    my $indent  = $args{indent};
-    my $no_th   = $args{matrix};
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
     my $table = HTML::Element->new_from_lol(
         [table => $args{table},
             map [tr => $args{tr},
                 map ref($_)
-                    ? $no_th
-                        ? [ td => $args{td}, @$_ ]
-                        : [ th => $args{th}, @$_ ]
+                    ? [ th => $args{th}, @$_ ]
                     : [ td => $args{td}, $_ ], @$_
             ], @{ $args{data} }
         ],
     );
 
-    chomp( my $html = $table->as_HTML( $encodes, $indent ) );
+    chomp( my $html = $table->as_HTML( $encodes, $args{indent} ) );
     return $html;
 }
 
@@ -393,6 +388,21 @@ suggest action. This version may or may not reflect that. ;)
 =item * L<JSON>
 
 =item * L<YAML>
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<DBIx::HTML>
+
+Uses this module (Spreadsheet::HTML) to format SQL query results.
+
+=item * L<DBIx::XHTML_Table>
+
+The original since 2001. Can handle advanced grouping, individual cell
+value contol, rotating attributes and totals/subtotals.
 
 =back
 
