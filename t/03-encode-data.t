@@ -15,12 +15,12 @@ my $spaces = [
 ];
 
 my $expected_encodes = [
-    [ map { {data=>$_} } qw( < = & > " ' ) ],
-    [ qw( < = & > " ' ) ],
+    [ map Spreadsheet::HTML::_element( th => $_ ), qw( < = & > " ' ) ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw( < = & > " ' ) ],
 ];
 my $expected_spaces = [
-    [ map { {data=>$_} } '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
-    [ '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
+    [ map Spreadsheet::HTML::_element( th => $_ ), '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
 ];
 
 my $table = Spreadsheet::HTML->new( data => $encodes );

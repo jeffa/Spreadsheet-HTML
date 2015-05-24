@@ -6,9 +6,7 @@ use Data::Dumper;
 
 use Spreadsheet::HTML;
 
-my $data = [
-    ([qw(foo1 bar1 baz1 qux1)]) x 100
-];
+my $data = [ map [qw(foo1 bar1 baz1 qux1)], 1 .. 100 ];
 
 my $table = Spreadsheet::HTML->new( data => $data );
 

@@ -5,7 +5,8 @@ use Test::More tests => 28;
 
 use Spreadsheet::HTML;
 
-sub expected { [ [{data=>+shift}] ] }
+sub expected    { [ [Spreadsheet::HTML::_element( th => $_[0] )] ] }
+sub expected_td { [ [Spreadsheet::HTML::_element( td => $_[0] )] ] }
 
 my $no_data = Spreadsheet::HTML->new;
 is_deeply scalar $no_data->process, expected( '&nbsp;' ),                                       "correct data from method for no args";
@@ -15,7 +16,7 @@ is Spreadsheet::HTML::generate(), '<table><tr><th>&nbsp;</th></tr></table>',    
 
 my $one_string = Spreadsheet::HTML->new( data => 1 );
 is_deeply scalar $one_string->process, expected( 1 ),                                           "correct data from method for one scalar string";
-is_deeply scalar $one_string->process( matrix => 1 ), [ [1] ],                                           "correct data from method for one scalar string (matrix attr)";
+is_deeply scalar $one_string->process( matrix => 1 ), expected_td( 1 ),                                           "correct data from method for one scalar string (matrix attr)";
 is_deeply scalar Spreadsheet::HTML::process( 1 ), expected( 1 ),                                "correct data from function for one scalar string";
 is $one_string->generate, '<table><tr><th>1</th></tr></table>',                         "correct html from method for one scalar string";
 is Spreadsheet::HTML::generate( 1 ), '<table><tr><th>1</th></tr></table>',              "correct html from function for one scalar string";
@@ -56,11 +57,11 @@ my $data = [
     [ qw( a b c d e f g) ],
 ];
 my $expected = [
-    [ map { {data=>$_} } qw( a b c d ) ],
-    [ qw( a b c &nbsp; ) ],
-    [ qw( a b &nbsp; &nbsp; ) ],
-    [ qw( a &nbsp; &nbsp; &nbsp; ) ],
-    [ qw( a b c d) ],
+    [ map Spreadsheet::HTML::_element( th => $_ ), qw( a b c d ) ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b c &nbsp; ) ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b &nbsp; &nbsp; ) ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a &nbsp; &nbsp; &nbsp; ) ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b c d) ],
 ];
 
 my $table = Spreadsheet::HTML->new( data => $data );

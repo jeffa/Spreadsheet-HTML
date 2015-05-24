@@ -13,11 +13,11 @@ my $data = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 my $expected = [
-    [ map { {data=>$_} } qw(header1 header2 header3 header4 )],
-    [qw(foo1 bar1 baz1 qux1)],
-    [qw(foo2 bar2 baz2 qux2)],
-    [qw(foo3 bar3 baz3 qux3)],
-    [qw(foo4 bar4 baz4 qux4)],
+    [ map Spreadsheet::HTML::_element( th => $_ ), qw(header1 header2 header3 header4 )],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo1 bar1 baz1 qux1)],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo2 bar2 baz2 qux2)],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo3 bar3 baz3 qux3)],
+    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo4 bar4 baz4 qux4)],
 ];
 
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];

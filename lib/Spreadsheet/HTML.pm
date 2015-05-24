@@ -45,14 +45,10 @@ sub process {
 
     # return if cached
     if (ref($self) and $self->{is_cached}) {
-        $data = Clone::clone( $self->{data} );
-        return wantarray ? ( data => $data, %$args ) : $data;
+        return wantarray ? ( data => $self->{data}, %$args ) : $data;
     }
 
     my $max_cols = scalar @{ $data->[0] };
-
-    # so we can assign cell attrs here
-    $args->{$_} ||= {} for qw( th td );
 
     # assign each cell as a td first
     my $first = 1;
@@ -64,17 +60,15 @@ sub process {
 
         for my $i (0 .. $#$row) {
             $row->[$i] = ($first and !($args->{headless} or $args->{matrix}))
-                ? { data => _scrub( $row->[$i] ) }
-                : _scrub( $row->[$i] )
+                ? _element( th => _scrub( $row->[$i] ), $args->{th} )
+                : _element( td => _scrub( $row->[$i] ), $args->{td} )
             ;
         }
 
         $first = 0;
     }
 
-    # then deal with assigning th to headings
-
-    if (ref($self) and !$self->{is_cached} and delete $args->{cache}) {
+    if (ref($self) and !$self->{is_cached} and $args->{cache}) {
         $self->{data} = $data;
         $self->{is_cached} = 1;
     }
@@ -92,17 +86,13 @@ sub new {
 
 sub _make_table {
     my %args = @_;
-    $args{$_} ||= {} for qw( table tr th td );
+    $args{$_} ||= {} for qw( table tr );
 
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
     my $table = HTML::Element->new_from_lol(
         [table => $args{table},
-            map [tr => $args{tr},
-                map ref($_)
-                    ? [ th => $args{th}, $_->{data} ]
-                    : [ td => $args{td}, $_ ], @$_
-            ], @{ $args{data} }
+            map [tr => $args{tr}, @$_ ], @{ $args{data} }
         ],
     );
 
@@ -119,7 +109,7 @@ sub _scrub {
 
 sub _element {
     my ($tag, $content, $attr) = @_;
-    my $e = HTML::Element->new( $tag, %$attr );
+    my $e = HTML::Element->new( $tag, %{ $attr || {} } );
     $e->push_content( $content );
     return $e;
 }
