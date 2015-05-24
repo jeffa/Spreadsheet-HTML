@@ -5,19 +5,21 @@ use Test::More tests => 10;
 
 use Spreadsheet::HTML;
 
+my $expected = [ [{data=>1}] ];
 my $table = Spreadsheet::HTML->new( data => 1 );
-is_deeply scalar $table->process, [ [[1]] ],                    "correct data processed";
+is_deeply scalar $table->process, $expected,                    "correct data processed";
 is_deeply $table->{data}, 1,                                    "internal data has changed";
 
 $table = Spreadsheet::HTML->new( data => 1, cache => 1 );
-is_deeply scalar $table->process, [ [[1]] ],                    "correct data processed";
-is_deeply $table->{data}, [ [[1]] ],                              "internal data has changed";
+is_deeply scalar $table->process, $expected,                    "correct data processed";
+is_deeply $table->{data}, $expected,                            "internal data has changed";
 
+$expected = [ [{data=>2}] ];
 $table = Spreadsheet::HTML->new( data => 2 );
-is_deeply scalar $table->process, [ [[2]] ],                    "correct data processed";
+is_deeply scalar $table->process, $expected,                    "correct data processed";
 is_deeply $table->{data}, 2,                                    "internal data not changed";
-is_deeply scalar $table->process( cache => 1 ), [ [[2]] ],      "correct data processed";
-is_deeply $table->{data}, [ [[2]] ],                              "internal data has changed";
+is_deeply scalar $table->process( cache => 1 ), $expected,      "correct data processed";
+is_deeply $table->{data}, $expected,                            "internal data has changed";
 
 
 my $data = [ (['a'..'d']) x 4 ];

@@ -15,11 +15,11 @@ my $spaces = [
 ];
 
 my $expected_encodes = [
-    [ ['<'], ['='], ['&'], ['>'], ['"'], ["'"] ],
+    [ map { {data=>$_} } qw( < = & > " ' ) ],
     [ qw( < = & > " ' ) ],
 ];
 my $expected_spaces = [
-    [ ['&nbsp;'], ['foo<br />'], ['&nbsp;'], ['&nbsp;'] ],
+    [ map { {data=>$_} } '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
     [ '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
 ];
 

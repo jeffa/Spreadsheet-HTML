@@ -13,7 +13,7 @@ my $data = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 my $expected = [
-    [['header1'],['header2'],['header3'],['header4']],
+    [ map { {data=>$_} } qw(header1 header2 header3 header4 )],
     [qw(foo1 bar1 baz1 qux1)],
     [qw(foo2 bar2 baz2 qux2)],
     [qw(foo3 bar3 baz3 qux3)],

@@ -55,6 +55,7 @@ sub process {
     $args->{$_} ||= {} for qw( th td );
 
     # assign each cell as a td first
+    my $first = 1;
     for my $row (@{$data}) {
 
         # pad and truncate
@@ -64,12 +65,15 @@ sub process {
         for my $i (0 .. $#$row) {
             _scrub( \$row->[$i] );
         }
+
+        if ( $first and !($args->{headless} or $args->{matrix})) {
+            $data->[0] = [ map { {data=>$_} } @{ $data->[0] } ];
+        }
+
+        $first = 0;
     }
 
     # then deal with assigning th to headings
-    unless ( $args->{headless} or $args->{matrix} ) {
-        $data->[0] = [ map [$_], @{ $data->[0] } ];
-    }
 
     if (ref($self) and !$self->{is_cached} and delete $args->{cache}) {
         $self->{data} = $data;
@@ -97,7 +101,7 @@ sub _make_table {
         [table => $args{table},
             map [tr => $args{tr},
                 map ref($_)
-                    ? [ th => $args{th}, @$_ ]
+                    ? [ th => $args{th}, $_->{data} ]
                     : [ td => $args{td}, $_ ], @$_
             ], @{ $args{data} }
         ],
