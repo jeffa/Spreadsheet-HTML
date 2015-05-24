@@ -43,32 +43,48 @@ sub reverse   {
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
-    $data = Clone::clone( $self->{data} ) if ref($self) and $self->{is_cached};
+    # return if cached
+    if (ref($self) and $self->{is_cached}) {
+        $data = Clone::clone( $self->{data} );
+        return wantarray ? ( data => $data, %$args ) : $data;
+    }
 
     my $max_cols = scalar @{ $data->[0] };
 
-    #TODO: make objects here, assign class attrs here
-    for my $row (@$data) {
+    # so we can assign cell attrs here
+    $args->{$_} ||= {} for qw( th td );
+
+    # assign each cell as a td first
+    for my $row (@{$data}) {
+
+        # pad and truncate
         push @$row, undef for 1 .. ($max_cols - scalar @$row);
-        #truncate rows that are too long
         $row = [ @$row[0 .. $max_cols - 1] ] if scalar( @$row ) > $max_cols;
 
-        # white space transliteration
         for my $i (0 .. $#$row) {
-            #TODO: this needs to be configurable
-            do{ no warnings; $row->[$i] =~ s/^\s*$/&nbsp;/g };
-            $row->[$i] =~ s/\n/<br \/>/g;
+            _scrub( \$row->[$i] );
         }
     }
 
-    #TODO: this block should become obsolete if above TODO works
+    # then deal with assigning th to headings
     unless ( $args->{headless} or $args->{matrix} ) {
         $data->[0] = [ map [$_], @{ $data->[0] } ];
+    }
+
+    if (ref($self) and !$self->{is_cached} and delete $args->{cache}) {
+        $self->{data} = $data;
+        $self->{is_cached} = 1;
     }
 
     shift @$data if $args->{headless};
 
     return wantarray ? ( data => $data, %$args ) : $data;
+}
+
+sub new {
+    my $class = shift;
+    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
+    return bless { %attrs }, $class;
 }
 
 sub _make_table {
@@ -91,10 +107,17 @@ sub _make_table {
     return $html;
 }
 
-sub new {
-    my $class = shift;
-    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
-    return bless { %attrs }, $class;
+sub _scrub {
+    my $value = shift;
+    do{ no warnings; $$value =~ s/^\s*$/&nbsp;/g };
+    $$value =~ s/\n/<br \/>/g;
+}
+
+sub _element {
+    my ($tag, $content, $attr) = @_;
+    my $e = HTML::Element->new( $tag, %$attr );
+    $e->push_content( $content );
+    return $e;
 }
 
 sub _args {
@@ -118,6 +141,11 @@ sub _args {
         delete $args->{data};
     }
 
+    if (ref($self) and $self->{is_cached}) {
+        $data = Clone::clone( $self->{data} );
+        return ( $self, Clone::clone($data), $args );
+    }
+
     unless (exists $args->{file}) {
         if (ref($self) and !$data) {
             $data = $self->{data};
@@ -137,11 +165,6 @@ sub _args {
         } elsif ($file =~ /\.ya?ml$/) {
             $data = Spreadsheet::HTML::YAML::load( $file );
         }
-    }
-
-    if (ref($self) and !$self->{is_cached} and delete $args->{cache}) {
-        $self->{data} = $data;
-        $self->{is_cached} = 1;
     }
 
     return ( $self, Clone::clone($data), $args );
