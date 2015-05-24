@@ -22,7 +22,7 @@ is_deeply scalar $table->process( cache => 1 ), $expected,      "correct data pr
 is_deeply $table->{data}, $expected,                            "internal data has changed";
 
 
-my $data = [ (['a'..'d']) x 4 ];
+my $data = [ map ['a'..'d'], 1.. 4 ];
 $table = Spreadsheet::HTML->new( data => $data, cache => 1 );
 is $table->generate,
     '<table><tr><th>a</th><th>b</th><th>c</th><th>d</th></tr><tr><td>a</td><td>b</td><td>c</td><td>d</td></tr><tr><td>a</td><td>b</td><td>c</td><td>d</td></tr><tr><td>a</td><td>b</td><td>c</td><td>d</td></tr></table>',
