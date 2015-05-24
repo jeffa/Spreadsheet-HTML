@@ -63,11 +63,10 @@ sub process {
         $row = [ @$row[0 .. $max_cols - 1] ] if scalar( @$row ) > $max_cols;
 
         for my $i (0 .. $#$row) {
-            _scrub( \$row->[$i] );
-        }
-
-        if ( $first and !($args->{headless} or $args->{matrix})) {
-            $data->[0] = [ map { {data=>$_} } @{ $data->[0] } ];
+            $row->[$i] = ($first and !($args->{headless} or $args->{matrix}))
+                ? { data => _scrub( $row->[$i] ) }
+                : _scrub( $row->[$i] )
+            ;
         }
 
         $first = 0;
@@ -113,8 +112,9 @@ sub _make_table {
 
 sub _scrub {
     my $value = shift;
-    do{ no warnings; $$value =~ s/^\s*$/&nbsp;/g };
-    $$value =~ s/\n/<br \/>/g;
+    do{ no warnings; $value =~ s/^\s*$/&nbsp;/g };
+    $value =~ s/\n/<br \/>/g;
+    return $value;
 }
 
 sub _element {
@@ -146,8 +146,7 @@ sub _args {
     }
 
     if (ref($self) and $self->{is_cached}) {
-        $data = Clone::clone( $self->{data} );
-        return ( $self, Clone::clone($data), $args );
+        return ( $self, $self->{data}, $args );
     }
 
     unless (exists $args->{file}) {
