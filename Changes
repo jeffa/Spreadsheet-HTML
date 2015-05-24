@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.10
+
 0.09
     - fixed manifest (left out test data dir)
     - finished Spreadsheet:HTML::CSV
