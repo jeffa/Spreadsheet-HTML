@@ -1,13 +1,16 @@
 package Spreadsheet::HTML::YAML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 use Carp;
 eval "use YAML";
+our $NOT_AVAILABLE = $@;
 
 sub load {
     my $file = shift;
+    return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
+
     my $data = YAML::LoadFile( $file );
     return $data;
 }

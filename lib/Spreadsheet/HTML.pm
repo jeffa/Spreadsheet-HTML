@@ -338,8 +338,7 @@ encoded as HTML entites (see L<HTML::Element>::as_HTML).
 
 =item * cache => 0 or 1
 
-Preserve data after it has been processed. Only makes
-sense when used as class method on an object.
+Preserve data after it has been processed (and loaded).
 
 =item * matrix => 0 or 1
 
