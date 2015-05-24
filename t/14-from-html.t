@@ -1,10 +1,11 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 6;
+use Test::More;
 
 eval "use HTML::TableExtract";
 plan skip_all => "HTML::TableExtract required" if $@;
+plan tests => 6;
 
 use_ok 'Spreadsheet::HTML';
 
