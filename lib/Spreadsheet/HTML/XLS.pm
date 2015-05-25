@@ -40,7 +40,7 @@ sub load {
 __END__
 =head1 NAME
 
-Spreadsheet::HTML::XLS - Load data from HTML file.
+Spreadsheet::HTML::XLS - Load data from Excel file.
 
 =head1 METHODS
 
