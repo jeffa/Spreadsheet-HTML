@@ -199,7 +199,7 @@ tags such as caption, col, colgroup, thead, and tbody.
 
 =over 4
 
-=item * new( key => 'value' )
+=item * C<new( %args )>
 
   my $table = Spreadsheet::HTML->new( data => $data );
 
@@ -210,7 +210,7 @@ most favorite being 'data' which is exactly an array ref
 of array refs. The first row will be treated as the headings
 unless you specify otherwise (see ATTRIBUTES).
 
-=item * generate( key => 'value' )
+=item * C<generate( %args )>
 
   $html = $table->generate( table => {border => 1}, encode => '<>' );
   print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
@@ -231,33 +231,33 @@ These features are currently hard coded in (sorry). Plans
 to make these transliterations configurable by the client
 are planned. Plans planning plans.
 
-=item * portrait( key => 'value' )
+=item * C<portrait( %args )>
 
-Alias for generate()
+Alias for C<generate()>
 
-=item * transpose( key => 'value' )
+=item * C<transpose( %args )>
 
 Uses Math::Matrix to rotate the headings and data
 90 degrees counter-clockwise.
 
-=item * landscape( key => 'value' )
+=item * C<landscape( %args )>
 
-Alias for transpose()
+Alias for C<transpose()>
 
-=item * flip( key => 'value' )
+=item * C<flip( %args )>
 
 Flips the headings and data upside down.
 
-=item * mirror( key => 'value' )
+=item * C<mirror( %args )>
 
 Columns are rendered right to left.
 
-=item * reverse( key => 'value' )
+=item * C<reverse( %args )>
 
 Combines flip and mirror: flips the headings and
 data upside down and render columns right to left.
 
-=item * process( key => 'value' )
+=item * C<process( %args )>
 
 Returns processed data.
 
@@ -275,24 +275,24 @@ array references.
 
 =over 4
 
-=item * data => [ [], [], [], ... ]
+=item * C<data: [ [], [], [], ... ]>
 
 The data to be rendered into table cells.
 
-=item * file => $str
+=item * C<file: $str>
 
 The name of the data file to read. Supported formats
 are CSV, JSON, YAML and HTML (first table found).
 Support for Excel files is planned.
 
-=item * indent => $str
+=item * C<indent: $str>
 
 Render the table with whitespace indention. Defaults to
 undefined which produces no trailing whitespace to tags.
 Useful values are some number of spaces or tabs.  (see
 L<HTML::Element>::as_HTML).
 
-=item * encode => $str
+=item * C<encode: $str>
 
 HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
@@ -300,34 +300,34 @@ which performs no encoding of entities. Pass a string like
 value is 'undef' then all unsafe characters will be
 encoded as HTML entites (see L<HTML::Element>::as_HTML).
 
-=item * empty => $str
+=item * C<empty: $str>
 
 Replace empty cells with this value. Defaults to &nbsp;
 Set value to undef to avoid any substitutions.
 
-=item * cache => 0 or 1
+=item * C<cache: 0 or 1>
 
 Preserve data after it has been processed (and loaded).
 
-=item * matrix => 0 or 1
+=item * C<matrix: 0 or 1>
 
 Render the table with only td tags, no th tags, if true.
 
-=item * headless => 0 or 1
+=item * C<headless: 0 or 1>
 
 Render the table with without headings, if true.
 
-=item * headings => sub { return function( shift ) }
+=item * C<headings: sub { return function( shift ) }>
 
 Apply this anonymous subroutine to headers.
 
-=item * table => { key => 'value' }
+=item * C<table: { %args }>
 
-=item * tr => { key => 'value' }
+=item * C<tr: { %args }>
 
-=item * th => { key => 'value' }
+=item * C<th: { %args }>
 
-=item * td => { key => 'value' }
+=item * C<td: { %args }>
 
 Supply attributes to the HTML tags that compose the table.
 There is currently no support for col, colgroup, caption,
