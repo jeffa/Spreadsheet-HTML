@@ -1,7 +1,7 @@
 package Spreadsheet::HTML::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Carp;
 eval "use HTML::TableExtract";
@@ -14,7 +14,7 @@ sub load {
     my @data;
     my $extract = HTML::TableExtract->new( keep_headers => 1 );
     $extract->parse_file( $file );
-    return [ $extract->rows ];
+    return [ $extract->tables ? $extract->rows : [undef] ];
 }
 
 
