@@ -178,13 +178,9 @@ tags such as caption, col, colgroup, thead, and tbody.
 
     use Spreadsheet::HTML;
 
-    my $data = [
-        [qw(header1 header2 header3)],
-        [qw(a1 a2 a3)], [qw(b1 b2 b3)],
-        [qw(c1 c2 c3)], [qw(d1 d2 d3)],
-    ];
+    $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
 
-    my $table = Spreadsheet::HTML->new( data => $data );
+    $table = Spreadsheet::HTML->new( data => $data );
     print $table->portrait;
     print $table->landscape;
 
@@ -193,7 +189,7 @@ tags such as caption, col, colgroup, thead, and tbody.
     print Spreadsheet::HTML::landscape( $data );
 
     # load from files
-    my $table = Spreadsheet::HTML->new( file => 'data.json', cache => 1 );
+    $table = Spreadsheet::HTML->new( file => 'data.csv', cache => 1 );
 
 =head1 METHODS
 
@@ -201,11 +197,7 @@ tags such as caption, col, colgroup, thead, and tbody.
 
 =item * new( key => 'value' )
 
-  my $table = Spreadsheet::HTML->new;
-  my $table = Spreadsheet::HTML->new( @data );
-  my $table = Spreadsheet::HTML->new( $data );
   my $table = Spreadsheet::HTML->new( data => $data );
-  my $table = Spreadsheet::HTML->new( { data => $data } );
 
 Constructs object. Accepts named arguments (see ATTRIBUTES).
 Unless you give it an array of array refs. Or an array ref
@@ -216,19 +208,8 @@ unless you specify otherwise (see ATTRIBUTES).
 
 =item * generate( key => 'value' )
 
-  my $html = $table->generate;
-  my $html = $table->generate( indent => '    ' );
-  my $html = $table->generate( encode => '<>&=' );
-  my $html = $table->generate( table => { class => 'foo' } );
-
-  my $html = Spreadsheet::HTML::generate( @data );
-  my $html = Spreadsheet::HTML::generate( $data );
-  my $html = Spreadsheet::HTML::generate(
-      data   => $data,
-      indent => "\t",
-      encode => '<>&=',
-      table  => { class => 'spreadsheet' },
-  );
+  $html = $table->generate( table => {border => 1}, encode => '<>' );
+  print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
 
 Returns a string that contains the rendered HTML table.
 Currently (and subject to change if better ideas arise),
