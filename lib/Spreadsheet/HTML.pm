@@ -43,32 +43,24 @@ sub reverse   {
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
-    # return if cached
-    if (ref($self) and $self->{is_cached}) {
+    if ($self and $self->{is_cached}) {
         return wantarray ? ( data => $self->{data}, %$args ) : $data;
     }
 
     my $max_cols = scalar @{ $data->[0] };
 
-    # assign each cell as a td first
-    my $first = 1;
-    for my $row (@{$data}) {
+    for my $i (0 .. $#$data) {
 
-        # pad and truncate
-        push @$row, undef for 1 .. ($max_cols - scalar @$row);
-        $row = [ @$row[0 .. $max_cols - 1] ] if scalar( @$row ) > $max_cols;
+        push @{ $data->[$i] }, undef for 1 .. $max_cols - $#{ $data->[$i] } + 1;  # pad
+        pop  @{ $data->[$i] } for $max_cols .. $#{ $data->[$i] };                 # truncate
 
-        for my $i (0 .. $#$row) {
-            $row->[$i] = ($first and !($args->{headless} or $args->{matrix}))
-                ? _element( th => _scrub( $row->[$i] ), $args->{th} )
-                : _element( td => _scrub( $row->[$i] ), $args->{td} )
-            ;
+        for my $j (0 .. $#{ $data->[$i] }) {
+            my $tag = (!$i and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
+            $data->[$i][$j] = _element( $tag => _scrub( $data->[$i][$j] ), $args->{$tag} );
         }
-
-        $first = 0;
     }
 
-    if (ref($self) and !$self->{is_cached} and $args->{cache}) {
+    if ($args->{cache} and $self and !$self->{is_cached}) {
         $self->{data} = $data;
         $self->{is_cached} = 1;
     }
@@ -182,7 +174,8 @@ todo:
 =back
 
 You are encouraged to try my older L<DBIx::XHTML_Table> during
-the development of this module.
+the development of this module, which provides support for 
+tags such as caption, col, colgroup, thead, and tbody.
 
 =head1 SYNOPSIS
 
@@ -190,24 +183,20 @@ the development of this module.
 
     my $data = [
         [qw(header1 header2 header3)],
-        [qw(foo bar baz)],
-        [qw(one two three)],
-        [qw(col1 col2 col3)],
+        [qw(a1 a2 a3)], [qw(b1 b2 b3)],
+        [qw(c1 c2 c3)], [qw(d1 d2 d3)],
     ];
 
-    my $table = Spreadsheet::HTML->new( data => $data, cache => 1 );
-    print $table->generate;
-    print $table->transpose;
-    print $table->flip;
-    print $table->mirror;
-    print $table->reverse;
+    my $table = Spreadsheet::HTML->new( data => $data );
+    print $table->portrait;
+    print $table->landscape;
 
     # non OO
-    print Spreadsheet::HTML::generate( $data );
-    print Spreadsheet::HTML::transpose( $data );
-    print Spreadsheet::HTML::flip( $data );
-    print Spreadsheet::HTML::mirror( $data );
-    print Spreadsheet::HTML::reverse( $data );
+    print Spreadsheet::HTML::portrait( $data );
+    print Spreadsheet::HTML::landscape( $data );
+
+    # load from files
+    my $table = Spreadsheet::HTML->new( file => 'data.json', cache => 1 );
 
 =head1 METHODS
 
@@ -227,10 +216,6 @@ of array refs. Otherwise it expects named arguments. The
 most favorite being 'data' which is exactly an array ref
 of array refs. The first row will be treated as the headings
 unless you specify otherwise (see ATTRIBUTES).
-
-=item * process( key => 'value' )
-
-Data structure that can be used by the following:
 
 =item * generate( key => 'value' )
 
@@ -289,6 +274,10 @@ Columns are rendered right to left.
 
 Combines flip and mirror: flips the headings and
 data upside down and render columns right to left.
+
+=item * process( key => 'value' )
+
+Returns processed data.
 
 =back
 
