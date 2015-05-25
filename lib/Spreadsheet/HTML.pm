@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use Clone;
 use HTML::Element;
@@ -130,22 +130,11 @@ sub _args {
         $data = $_[0];
     }
 
-    if ($self) {
+    if (ref($self)) {
+        return ( $self, $self->{data}, $args ) if $self->{is_cached};
         $args = { %{ ref($self) ? $self : {} }, %{ $args || {} } };
         delete $args->{data};
-    }
-
-    if (ref($self) and $self->{is_cached}) {
-        return ( $self, $self->{data}, $args );
-    }
-
-    unless (exists $args->{file}) {
-        if (ref($self) and !$data) {
-            $data = $self->{data};
-        }
-        $data = [ $data ] unless ref($data);
-        $data = [ $data ] unless ref($data->[0]);
-        $data = [ [undef] ] if !scalar @{ $data->[0] };
+        $data = $self->{data} unless $data or $args->{file};
     }
 
     if (my $file = $args->{file}) {
@@ -159,6 +148,10 @@ sub _args {
             $data = Spreadsheet::HTML::YAML::load( $file );
         }
     }
+
+    $data = [ $data ] unless ref($data);
+    $data = [ $data ] unless ref($data->[0]);
+    $data = [ [undef] ] if !scalar @{ $data->[0] };
 
     return ( $self, Clone::clone($data), $args );
 }
