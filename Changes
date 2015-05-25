@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.11
+    - added 'empty' attribute
     - added 'headings' attribute
 
 0.10

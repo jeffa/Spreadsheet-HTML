@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Spreadsheet::HTML;
 
@@ -46,3 +46,12 @@ is $table->generate( encodes => undef ),
 $table = Spreadsheet::HTML->new( data => $spaces );
 is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
 is_deeply scalar $table->process, $expected_spaces,  "only processes once";
+
+$expected_spaces = [
+    [ map Spreadsheet::HTML::_element( th => $_ ), '', 'foo<br />', '', '' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), '', 'foo<br />', '', '' ],
+];
+$table = Spreadsheet::HTML->new( data => $spaces, empty => undef );
+is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
+is_deeply scalar $table->process, $expected_spaces,  "only processes once";
+

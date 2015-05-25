@@ -48,6 +48,7 @@ sub process {
         return wantarray ? ( data => $self->{data}, %$args ) : $data;
     }
 
+    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
     my $max_cols = scalar @{ $data->[0] };
 
     for my $row (0 .. $#$data) {
@@ -58,7 +59,7 @@ sub process {
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
-            do{ no warnings; $val =~ s/^\s*$/&nbsp;/g };
+            do{ no warnings; $val =~ s/^\s*$/$empty/g };
             $val =~ s/\n/<br \/>/g;
             $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
             $data->[$row][$col] = _element( $tag => $val, $args->{$tag} );
@@ -298,6 +299,11 @@ which performs no encoding of entities. Pass a string like
 '<>&=' to perform encoding on any characters found. If the
 value is 'undef' then all unsafe characters will be
 encoded as HTML entites (see L<HTML::Element>::as_HTML).
+
+=item * empty => $str
+
+Replace empty cells with this value. Defaults to &nbsp;
+Set value to undef to avoid any substitutions.
 
 =item * cache => 0 or 1
 
