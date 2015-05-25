@@ -23,24 +23,38 @@ use Spreadsheet::HTML;
 
 my $data = [
     [qw(header1 header2 header3)],
-    [qw(foo bar baz)],
-    [qw(one two three)],
-    [qw(col1 col2 col3)],
+    [qw(a1 a2 a3)], [qw(b1 b2 b3)],
+    [qw(c1 c2 c3)], [qw(d1 d2 d3)],
 ];
 
-my $table = Spreadsheet::HTML->new( data => $data, cache => 1 );
-print $table->generate;
-print $table->transpose;
-print $table->flip;
-print $table->mirror;
-print $table->reverse;
+my $table = Spreadsheet::HTML->new( data => $data );
+print $table->portrait;
+print $table->landscape;
 
-print Spreadsheet::HTML::generate( $data );
-print Spreadsheet::HTML::transpose( $data );
-print Spreadsheet::HTML::flip( $data );
-print Spreadsheet::HTML::mirror( $data );
-print Spreadsheet::HTML::reverse( $data );
+# non OO
+print Spreadsheet::HTML::portrait( $data );
+print Spreadsheet::HTML::landscape( $data );
+
+# load from files
+my $table = Spreadsheet::HTML->new( file => 'data.json', cache => 1 );
 ```
+
+Interface
+---------
+* portrait
+<table><tr><th>Header1</th><th>Header2</th><th>Header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>
+
+* landscape
+<table><tr><th>Header1</th><td>foo</td><td>one</td><td>1</td></tr><tr><th>Header2</th><td>bar</td><td>two</td><td>2</td></tr><tr><th>Header3</th><td>baz</td><td>three</td><td>3</td></tr></table>
+
+* flip
+<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><th>Header1</th><th>Header2</th><th>Header3</th></tr></table>
+
+* mirror
+<table><tr><th>Header3</th><th>Header2</th><th>Header1</th></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>3</td><td>2</td><td>1</td></tr></table>
+
+* reverse
+<table><tr><td>3</td><td>2</td><td>1</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><th>Header3</th><th>Header2</th><th>Header1</th></tr></table>
 
 Installation
 ------------
