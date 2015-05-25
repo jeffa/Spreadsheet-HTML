@@ -49,14 +49,18 @@ sub process {
 
     my $max_cols = scalar @{ $data->[0] };
 
-    for my $i (0 .. $#$data) {
+    for my $row (0 .. $#$data) {
 
-        push @{ $data->[$i] }, undef for 1 .. $max_cols - $#{ $data->[$i] } + 1;  # pad
-        pop  @{ $data->[$i] } for $max_cols .. $#{ $data->[$i] };                 # truncate
+        push @{ $data->[$row] }, undef for 1 .. $max_cols - $#{ $data->[$row] } + 1;  # pad
+        pop  @{ $data->[$row] } for $max_cols .. $#{ $data->[$row] };                 # truncate
 
-        for my $j (0 .. $#{ $data->[$i] }) {
-            my $tag = (!$i and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            $data->[$i][$j] = _element( $tag => _scrub( $data->[$i][$j] ), $args->{$tag} );
+        for my $col (0 .. $#{ $data->[$row] }) {
+            my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
+            my $val = $data->[$row][$col];
+            do{ no warnings; $val =~ s/^\s*$/&nbsp;/g };
+            $val =~ s/\n/<br \/>/g;
+            $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
+            $data->[$row][$col] = _element( $tag => $val, $args->{$tag} );
         }
     }
 
@@ -90,13 +94,6 @@ sub _make_table {
 
     chomp( my $html = $table->as_HTML( $encodes, $args{indent} ) );
     return $html;
-}
-
-sub _scrub {
-    my $value = shift;
-    do{ no warnings; $value =~ s/^\s*$/&nbsp;/g };
-    $value =~ s/\n/<br \/>/g;
-    return $value;
 }
 
 sub _element {
