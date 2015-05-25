@@ -8,6 +8,7 @@ use HTML::Element;
 use Math::Matrix;
 
 use Spreadsheet::HTML::CSV;
+use Spreadsheet::HTML::XLS;
 use Spreadsheet::HTML::HTML;
 use Spreadsheet::HTML::JSON;
 use Spreadsheet::HTML::YAML;
@@ -142,6 +143,8 @@ sub _load_file {
         return Spreadsheet::HTML::JSON::load( $file );
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::YAML::load( $file );
+    } elsif ($file =~ /\.xls$/) {
+        return Spreadsheet::HTML::XLS::load( $file );
     }
 }
 
