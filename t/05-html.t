@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 19;
+use Test::More tests => 21;
 
 use Spreadsheet::HTML;
 
@@ -60,3 +60,8 @@ is Spreadsheet::HTML::generate( data => $data, matrix => 1, %attrs ), $no_th,   
 $no_head = '<table class="spreadsheet"><tr style="background: red"><td class="row">foo1</td><td class="row">bar1</td><td class="row">baz1</td><td class="row">qux1</td></tr><tr style="background: red"><td class="row">foo2</td><td class="row">bar2</td><td class="row">baz2</td><td class="row">qux2</td></tr><tr style="background: red"><td class="row">foo3</td><td class="row">bar3</td><td class="row">baz3</td><td class="row">qux3</td></tr><tr style="background: red"><td class="row">foo4</td><td class="row">bar4</td><td class="row">baz4</td><td class="row">qux4</td></tr></table>';
 is $table->generate( headless => 1, %attrs ), $no_head,                                 "no headings for tags with attributes via method args" ;
 is Spreadsheet::HTML::generate( data => $data, headless => 1, %attrs ), $no_head,       "no headings for tags with attributes via procedural named args" ;
+
+my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>1</td></tr><tr><td>2</td><td>2</td></tr></table>';
+$table = Spreadsheet::HTML->new;
+is $table->generate ( layout => 1, data => [ [1],[2,2] ] ), $layout,                    "correct HTML for layout via method";
+is Spreadsheet::HTML::portrait( layout => 1, data => [ [1],[2,2] ] ), $layout,          "correct HTML for layout via method";

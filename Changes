@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.12
+    - added 'layout' attribute
 
 0.11
     - added 'empty' attribute

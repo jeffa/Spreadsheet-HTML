@@ -51,10 +51,21 @@ sub process {
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
     my $max_cols = scalar @{ $data->[0] };
 
+    if ($args->{layout}) {
+        $args->{table}{role}          = 'presentation';
+        $args->{table}{border}        = 0;
+        $args->{table}{cellspacing}   = 0;
+        $args->{table}{cellpadding}   = 0;
+        $args->{encode} = undef; 
+        $args->{matrix} = 1;
+    }
+
     for my $row (0 .. $#$data) {
 
-        push @{ $data->[$row] }, undef for 1 .. $max_cols - $#{ $data->[$row] } + 1;  # pad
-        pop  @{ $data->[$row] } for $max_cols .. $#{ $data->[$row] };                 # truncate
+        unless ($args->{layout}) {
+            push @{ $data->[$row] }, undef for 1 .. $max_cols - $#{ $data->[$row] } + 1;  # pad
+            pop  @{ $data->[$row] } for $max_cols .. $#{ $data->[$row] };                 # truncate
+        }
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
@@ -272,8 +283,7 @@ The data to be rendered into table cells.
 =item * C<file: $str>
 
 The name of the data file to read. Supported formats
-are CSV, JSON, YAML and HTML (first table found).
-Support for Excel files is planned.
+are XLS, CSV, JSON, YAML and HTML (first table found).
 
 =item * C<indent: $str>
 
@@ -303,6 +313,12 @@ Preserve data after it has been processed (and loaded).
 
 Render the table with only td tags, no th tags, if true.
 
+=item * C<layout: 0 or 1>
+
+Add W3C recommended table attributes, emit only <td> tags,
+no row padding or pruning, and force no HTML entity encoding
+in table cells.
+
 =item * C<headless: 0 or 1>
 
 Render the table with without headings, if true.
@@ -311,13 +327,13 @@ Render the table with without headings, if true.
 
 Apply this anonymous subroutine to headers.
 
-=item * C<table: { %args }>
+=item * C<table: \%args>
 
-=item * C<tr: { %args }>
+=item * C<tr: \%args>
 
-=item * C<th: { %args }>
+=item * C<th: \%args>
 
-=item * C<td: { %args }>
+=item * C<td: \%args>
 
 Supply attributes to the HTML tags that compose the table.
 There is currently no support for col, colgroup, caption,
@@ -352,15 +368,17 @@ Used to load data from various different file formats.
 
 =over 4
 
+=item * L<JSON>
+
+=item * L<YAML>
+
 =item * L<Text::CSV>
 
 =item * L<Text::CSV_XS>
 
 =item * L<HTML::TableExtract>
 
-=item * L<JSON>
-
-=item * L<YAML>
+=item * L<Spreadsheet::ParseExcel>
 
 =back
 
@@ -376,6 +394,14 @@ Uses this module (Spreadsheet::HTML) to format SQL query results.
 
 The original since 2001. Can handle advanced grouping, individual cell
 value contol, rotating attributes and totals/subtotals.
+
+=back
+
+=head1 REFERENCE
+
+=over 4
+
+=item * L<http://www.w3.org/TR/html5/tabular-data.html>
 
 =back
 
