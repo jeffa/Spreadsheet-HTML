@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.11
+
 0.10
     - using HTML::Element in process now()
     - caching working
