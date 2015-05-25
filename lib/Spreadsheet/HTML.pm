@@ -111,41 +111,41 @@ sub _args {
     $self = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
 
     if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
-        my %args = @_;
-        if (my $arg = delete $args{data}) {
-            $data = $arg;
-        }
-        $args = {%args};
+        $args = {@_};
+        $data = delete $args->{data} if exists $args->{data};
     } elsif (@_ > 1 && ref($_[0]) eq 'ARRAY') {
         $data = [ @_ ];
     } elsif (@_ == 1) {
         $data = $_[0];
     }
 
-    if (ref($self)) {
+    if ($self) {
         return ( $self, $self->{data}, $args ) if $self->{is_cached};
-        $args = { %{ ref($self) ? $self : {} }, %{ $args || {} } };
+        $args = { %{ $self || {} }, %{ $args || {} } };
         delete $args->{data};
         $data = $self->{data} unless $data or $args->{file};
     }
 
-    if (my $file = $args->{file}) {
-        if ($file =~ /\.csv$/) {
-            $data = Spreadsheet::HTML::CSV::load( $file );
-        } elsif ($file =~ /\.html?$/) {
-            $data = Spreadsheet::HTML::HTML::load( $file );
-        } elsif ($file =~ /\.jso?n$/) {
-            $data = Spreadsheet::HTML::JSON::load( $file );
-        } elsif ($file =~ /\.ya?ml$/) {
-            $data = Spreadsheet::HTML::YAML::load( $file );
-        }
-    }
-
+    $data = _load_file( $args->{file} ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
     $data = [ [undef] ] if !scalar @{ $data->[0] };
 
     return ( $self, Clone::clone($data), $args );
+}
+
+sub _load_file {
+    my $file = shift;
+
+    if ($file =~ /\.csv$/) {
+        return Spreadsheet::HTML::CSV::load( $file );
+    } elsif ($file =~ /\.html?$/) {
+        return Spreadsheet::HTML::HTML::load( $file );
+    } elsif ($file =~ /\.jso?n$/) {
+        return Spreadsheet::HTML::JSON::load( $file );
+    } elsif ($file =~ /\.ya?ml$/) {
+        return Spreadsheet::HTML::YAML::load( $file );
+    }
 }
 
 1;
@@ -353,11 +353,11 @@ module cannot produce a transposed table, however.
 
 =item * L<HTML::Tree>
 
-Used to generate HTML.
+Used to generate HTML. Handles indentation and HTML entity encoding.
 
 =item * L<Math::Matrix>
 
-Used for transposing data.
+Used for transposing data from portrait to landscape.
 
 =item * L<Clone>
 
@@ -365,14 +365,9 @@ Useful for preventing data from being clobbered.
 
 =back
 
-=head1 REQUIRES (optional)
+=head1 OPTIONAL
 
-These modules are used to load data from various
-different file formats. They should be optional
-but testing is still being conducted on this feature.
-Attempting to parse a file when the necessary module
-is not installed should prompt a clear error and
-suggest action. This version may or may not reflect that. ;)
+Used to load data from various different file formats.
 
 =over 4
 
