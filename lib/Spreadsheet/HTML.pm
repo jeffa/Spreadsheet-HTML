@@ -327,6 +327,10 @@ Render the table with only td tags, no th tags, if true.
 
 Render the table with without headings, if true.
 
+=item * headings => sub { return function( shift ) }
+
+Apply this anonymous subroutine to headers.
+
 =item * table => { key => 'value' }
 
 =item * tr => { key => 'value' }
