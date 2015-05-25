@@ -60,7 +60,6 @@ sub process {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
             do{ no warnings; $val =~ s/^\s*$/$empty/g };
-            $val =~ s/\n/<br \/>/g;
             $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
             $data->[$row][$col] = _element( $tag => $val, $args->{$tag} );
         }
@@ -216,20 +215,6 @@ unless you specify otherwise (see ATTRIBUTES).
   print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
 
 Returns a string that contains the rendered HTML table.
-Currently (and subject to change if better ideas arise),
-all data will:
-
-=over 8
-
-=item - be converted to &nbsp; if empty
-
-=item - have any newlines converted to <br> tags
-
-=back
-
-These features are currently hard coded in (sorry). Plans
-to make these transliterations configurable by the client
-are planned. Plans planning plans.
 
 =item * C<portrait( %args )>
 

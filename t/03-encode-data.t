@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 use Spreadsheet::HTML;
 
@@ -19,8 +19,8 @@ my $expected_encodes = [
     [ map Spreadsheet::HTML::_element( td => $_ ), qw( < = & > " ' ) ],
 ];
 my $expected_spaces = [
-    [ map Spreadsheet::HTML::_element( th => $_ ), '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), '&nbsp;', 'foo<br />', '&nbsp;', '&nbsp;' ],
+    [ map Spreadsheet::HTML::_element( th => $_ ), '&nbsp;', "foo\n", '&nbsp;', '&nbsp;' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), '&nbsp;', "foo\n", '&nbsp;', '&nbsp;' ],
 ];
 
 my $table = Spreadsheet::HTML->new( data => $encodes );
@@ -48,10 +48,31 @@ is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spac
 is_deeply scalar $table->process, $expected_spaces,  "only processes once";
 
 $expected_spaces = [
-    [ map Spreadsheet::HTML::_element( th => $_ ), '', 'foo<br />', '', '' ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), '', 'foo<br />', '', '' ],
+    [ map Spreadsheet::HTML::_element( th => $_ ), '', "foo\n", '', '' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), '', "foo\n", '', '' ],
 ];
 $table = Spreadsheet::HTML->new( data => $spaces, empty => undef );
+is_deeply scalar $table->process, $expected_spaces,  "spaces untouched";
+
+$expected_spaces = [
+    [ map Spreadsheet::HTML::_element( th => $_ ), '', "foo\n", '', '' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), '', "foo\n", '', '' ],
+];
+$table = Spreadsheet::HTML->new( data => $spaces, empty => '' );
 is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
-is_deeply scalar $table->process, $expected_spaces,  "only processes once";
+
+$expected_spaces = [
+    [ map Spreadsheet::HTML::_element( th => $_ ), ' ', "foo\n", ' ', ' ' ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), ' ', "foo\n", ' ', ' ' ],
+];
+$table = Spreadsheet::HTML->new( data => $spaces, empty => ' ' );
+is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
+
+$expected_spaces = [
+    [ map Spreadsheet::HTML::_element( th => $_ ), 0, "foo\n", 0, 0 ],
+    [ map Spreadsheet::HTML::_element( td => $_ ), 0, "foo\n", 0, 0 ],
+];
+$table = Spreadsheet::HTML->new( data => $spaces, empty => 0 );
+is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
+
 
