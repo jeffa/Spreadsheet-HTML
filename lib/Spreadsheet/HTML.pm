@@ -59,8 +59,13 @@ sub process {
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
+
+            # --empty
             do{ no warnings; $val =~ s/^\s*$/$empty/g };
+
+            # --headings
             $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
+
             $data->[$row][$col] = _element( $tag => $val, $args->{$tag} );
         }
     }
