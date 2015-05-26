@@ -190,28 +190,6 @@ __END__
 
 Spreadsheet::HTML - Render HTML tables with ease.
 
-=head1 THIS IS AN ALPHA RELEASE.
-
-While most functionality for this module has been completed,
-that final 10% takes 90% of the time ... there is still much
-todo:
-
-=over 4
-
-=item * emit col and colgroup tags
-
-=item * map client functions to cells
-
-=item * assign attrs to td tags by row
-
-=item * do that nifty rotating attr value trick
-
-=back
-
-You are encouraged to try my older L<DBIx::XHTML_Table> during
-the development of this module, which provides support for 
-tags such as caption, col, colgroup, thead, and tbody.
-
 =head1 SYNOPSIS
 
     use Spreadsheet::HTML;
@@ -226,8 +204,8 @@ tags such as caption, col, colgroup, thead, and tbody.
     print Spreadsheet::HTML::portrait( $data );
     print Spreadsheet::HTML::landscape( $data );
 
-    # load from files
-    $table = Spreadsheet::HTML->new( file => 'data.csv', cache => 1 );
+    # load from files (first table found)
+    $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 
 =head1 METHODS
 
@@ -350,7 +328,8 @@ Apply this anonymous subroutine to headers.
 
 Group table rows into <thead> <tfoot> and <tbody>
 sections. The <tfoot> section is always found before
-the <tbody> section.
+the <tbody> section. Only available for C<generate()>,
+C<portrait()> and C<mirror()>.
 
 =item * C<table: \%args>
 
@@ -431,6 +410,26 @@ value contol, rotating attributes and totals/subtotals.
 =item * L<http://www.w3.org/TR/html5/tabular-data.html>
 
 =back
+
+=head1 THIS IS AN ALPHA RELEASE.
+
+While most functionality for this module has been completed,
+that final 10% takes 90% of the time ... there is still much
+todo:
+
+=over 4
+
+=item * emit col and colgroup tags
+
+=item * map client functions to cells
+
+=item * assign attrs to td tags by row
+
+=item * do that nifty rotating attr value trick
+
+=back
+
+You are encouraged to L<DBIx::XHTML_Table> during the development of this module.
 
 =head1 BUGS
 
