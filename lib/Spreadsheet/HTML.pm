@@ -45,7 +45,7 @@ sub process {
     my ($self,$data,$args) = _args( @_ );
 
     if ($self and $self->{is_cached}) {
-        return wantarray ? ( data => $self->{data}, %$args ) : $data;
+        return wantarray ? ( data => $self->{data}, %{ $args || {} } ) : $data;
     }
 
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
