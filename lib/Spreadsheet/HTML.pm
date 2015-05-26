@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Clone;
 use HTML::Element;
