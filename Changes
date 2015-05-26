@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.12
+    - added 'tgroup' attribute (new tags!)
     - added 'layout' attribute
 
 0.11

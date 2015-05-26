@@ -36,7 +36,7 @@ print Spreadsheet::HTML::portrait( $data );
 print Spreadsheet::HTML::landscape( $data );
 
 # load from files
-my $table = Spreadsheet::HTML->new( file => 'data.json', cache => 1 );
+my $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 ```
 
 Interface

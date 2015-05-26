@@ -196,7 +196,7 @@ Spreadsheet::HTML - Render HTML tables with ease.
 
     $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
 
-    $table = Spreadsheet::HTML->new( data => $data );
+    $table = Spreadsheet::HTML->new( data => $data, indent => "\t" );
     print $table->portrait;
     print $table->landscape;
 
@@ -413,17 +413,15 @@ value contol, rotating attributes and totals/subtotals.
 
 =head1 THIS IS AN ALPHA RELEASE.
 
-While most functionality for this module has been completed,
-that final 10% takes 90% of the time ... there is still much
-todo:
+Left TODO before considerd BETA:
 
 =over 4
 
-=item * emit col and colgroup tags
+=item * emit col and colgroup tags by rows
 
-=item * map client functions to cells
+=item * map client functions to cells by columns
 
-=item * assign attrs to td tags by row
+=item * assign attrs to td tags by columns, etc.
 
 =item * do that nifty rotating attr value trick
 
