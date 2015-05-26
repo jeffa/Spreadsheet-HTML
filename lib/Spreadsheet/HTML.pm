@@ -335,6 +335,12 @@ C<portrait()> and C<mirror()>.
 
 =item * C<caption: $str>
 
+=item * C<thead: \%args>
+
+=item * C<tfoot: \%args>
+
+=item * C<tbody: \%args>
+
 =item * C<tr: \%args>
 
 =item * C<th: \%args>
@@ -342,11 +348,7 @@ C<portrait()> and C<mirror()>.
 =item * C<td: \%args>
 
 Supply attributes to the HTML tags that compose the table.
-There is currently no support for col, colgroup, caption,
-thead and tbody. See L<DBIx::XHTML_Table> for that, which
-despite being a DBI extension, can accept an AoA and produce
-an table with those tags, plus totals and subtotals. That
-module cannot produce a transposed table, however.
+There is currently no support for col and colgroup.
 
 =back
 
