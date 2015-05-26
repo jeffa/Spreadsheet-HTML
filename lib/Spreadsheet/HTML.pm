@@ -20,13 +20,13 @@ sub landscape   { transpose( @_ ) }
 sub transpose   {
     my %args = process( @_ );
     $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
-    return _make_table( %args );
+    return _make_table( %args, tgroups => 0 );
 }
 
 sub flip   {
     my %args = process( @_ );
     $args{data} = [ CORE::reverse @{ $args{data} } ];
-    return _make_table( %args );
+    return _make_table( %args, tgroups => 0 );
 }
 
 sub mirror   {
@@ -38,7 +38,7 @@ sub mirror   {
 sub reverse   {
     my %args = process( @_ );
     $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
-    return _make_table( %args );
+    return _make_table( %args, tgroups => 0 );
 }
 
 sub process {
@@ -99,13 +99,32 @@ sub new {
 
 sub _make_table {
     my %args = @_;
-    $args{$_} ||= {} for qw( table tr );
+    $args{$_} ||= {} for qw( table tr thead tbody tfoot );
 
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
 
+    if ($args{tgroups}) {
+        if (scalar @{ $args{data} } > 2) {
+            # replace last row between 1st and 2nd rows
+            splice @{ $args{data} }, 1, 0, pop @{ $args{data} };
+        } else {
+            delete $args{tgroups};
+        }
+    }
+
+    # yes, foot is second and not last
+    my ($head, $foot, @body) = @{ $args{data} };
+
+    my $head_row  = [tr => $args{tr}, @$head];
+    my $foot_row  = [tr => $args{tr}, @{ $foot || [] }];
+    my @body_rows = map [tr => $args{tr}, @$_ ], @body;
+
     my $table = HTML::Element->new_from_lol(
         [table => $args{table},
-            map [tr => $args{tr}, @$_ ], @{ $args{data} }
+            ( $args{caption} ? [caption => {}, $args{caption}] : () ),
+            ( $args{tgroups} ? [ thead => $args{thead}, $head_row ]  : $head_row ),
+            ( $args{tgroups} ? [ tfoot => $args{tfoot}, $foot_row ]  : $foot ? $foot_row : () ),
+              $args{tgroups} ? [ tbody => $args{tbody}, @body_rows ] : @body_rows
         ],
     );
 
@@ -179,7 +198,7 @@ todo:
 
 =over 4
 
-=item * emit col, colgroup, thead, tbody and caption tags ... maybe ...
+=item * emit col and colgroup tags
 
 =item * map client functions to cells
 
@@ -327,7 +346,15 @@ Render the table with without headings, if true.
 
 Apply this anonymous subroutine to headers.
 
+=item * C<tgroups: 0 or 1>
+
+Group table rows into <thead> <tfoot> and <tbody>
+sections. The <tfoot> section is always found before
+the <tbody> section.
+
 =item * C<table: \%args>
+
+=item * C<caption: $str>
 
 =item * C<tr: \%args>
 
