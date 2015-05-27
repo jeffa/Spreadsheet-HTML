@@ -130,8 +130,7 @@ sub _make_table {
         ],
     );
 
-    chomp( my $html = $table->as_HTML( $encodes, $args{indent} ) );
-    return $html;
+    return $table->as_HTML( $encodes, $args{indent} );
 }
 
 sub _element {
@@ -443,7 +442,7 @@ timed at around 8.5 seconds. Not awesome. DBIx::XHTML_Table timed at 2.2 seconds
 The several lines of code that HTML::Element save me are not worth the time
 trade off, so i will be working to develop my own solution, unless another CPAN
 module will suffice. Don't get me wrong, HTML::Tree is awesome and powerful.
-But i needs speed.
+But i needs speed. And i could be wrong ... ;)
 
 This implementation is currently missing the following features:
 
