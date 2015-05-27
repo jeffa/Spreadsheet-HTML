@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.13
+    - fixed 'layout' (was overriding client values)
 
 0.12
     - added 'tgroup' attribute (new tags!)

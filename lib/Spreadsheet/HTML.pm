@@ -190,7 +190,7 @@ sub _load_file {
 __END__
 =head1 NAME
 
-Spreadsheet::HTML - Render HTML tables with ease.
+Spreadsheet::HTML - Render HTML5 tables with ease.
 
 =head1 SYNOPSIS
 
@@ -208,6 +208,18 @@ Spreadsheet::HTML - Render HTML tables with ease.
 
     # load from files (first table found)
     $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+
+=head1 DESCRIPTION
+
+THIS MODULE IS AN ALPHA RELEASE!
+
+Renders HTML5 tables with ease. Provides a handful of distinctly
+named methods to control overall table orientation. These methods
+in turn accept a number of distinctly named attributes for directing
+what tags and attributes to use.
+
+Currently missing <col> and <colgroup> tags, row grouping and 
+fine grained cell attribute and content control.
 
 =head1 METHODS
 
@@ -402,55 +414,56 @@ Uses this module (Spreadsheet::HTML) to format SQL query results.
 
 =item * L<DBIx::XHTML_Table>
 
-The original since 2001. Can handle advanced grouping, individual cell
+My original from 2001. Can handle advanced grouping, individual cell
 value contol, rotating attributes and totals/subtotals.
-
-=back
-
-=head1 REFERENCE
-
-=over 4
 
 =item * L<http://www.w3.org/TR/html5/tabular-data.html>
 
 =back
 
-=head1 THIS IS AN ALPHA RELEASE.
-
-Left TODO before considerd BETA:
-
-=over 4
-
-=item * emit col and colgroup tags by rows
-
-=item * map client functions to cells by columns
-
-=item * assign attrs to td tags by columns, etc.
-
-=item * do that nifty rotating attr value trick
-
-=back
-
-You are encouraged to L<DBIx::XHTML_Table> during the development of this module.
-
-=head1 BUGS
+=head1 BUGS AND LIMITATIONS
 
 Please report any bugs or feature requests to either
 
 =over 4
 
-=item * C<bug-spreadsheet-html at rt.cpan.org>
+=item * Email: C<bug-spreadsheet-html at rt.cpan.org>
 
-  Send an email.
-
-=item * L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>
-
-  Use the web interface.
+=item * Web: L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Spreadsheet-HTML>
 
 =back
 
 I will be notified, and then you'll automatically be notified of progress
 on your bug as I make changes.
+
+In terms of limitations this implementation is not as fast as it should be.
+From the results a few performance tests, i believe this to be blamed on HTML::Tree.
+v0.02 could process a 500x500 data matrix in 1/5 of a second. This version 
+timed at around 8.5 seconds. Not awesome. DBIx::XHTML_Table timed at 2.2 seconds.
+The several lines of code that HTML::Element save me are not worth the time
+trade off, so i will be working to develop my own solution, unless another CPAN
+module will suffice. Don't get me wrong, HTML::Tree is awesome and powerful.
+But i needs speed.
+
+This implementation is currently missing the following features:
+
+=over 4
+
+=item * build index map for columns
+
+=item * build auto col_XX and row_XX for item 1 (maybe ...)
+
+=item * emit col and colgroup tags
+
+=item * map client functions to cells by columns
+
+=item * assign "rotating" attrs to td tags by columns, etc.
+
+=item * what HTML::Element::as_HTML offers - including encoding and indention :(
+
+=back
+
+You are encouraged to use L<DBIx::XHTML_Table> during the development of this module.
 
 =head1 GITHUB
 
@@ -466,21 +479,13 @@ You can also look for information at:
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
+=item * RT: CPAN's request tracker (report bugs here) L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Spreadsheet-HTML>
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Spreadsheet-HTML>
+=item * AnnoCPAN: Annotated CPAN documentation L<http://annocpan.org/dist/Spreadsheet-HTML>
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item * CPAN Ratings L<http://cpanratings.perl.org/d/Spreadsheet-HTML>
 
-L<http://annocpan.org/dist/Spreadsheet-HTML>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Spreadsheet-HTML>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Spreadsheet-HTML/>
+=item * Search CPAN L<http://search.cpan.org/dist/Spreadsheet-HTML/>
 
 =back
 
