@@ -1,5 +1,8 @@
 Revision history for Spreadsheet-HTML
 
+0.14
+    - 
+
 0.13
     - replaced file loading modules with Spreadsheet::HTML::File::Loader
     - fixed 'layout' (was overriding client values)
