@@ -15,12 +15,13 @@ WriteMakefile(
         'ExtUtils::MakeMaker' => 0,
     },
     BUILD_REQUIRES => {
-        'Clone'             => 0,
         'Test::More'        => 0,
+    },
+    PREREQ_PM => {
+        'Clone'             => 0,
         'Math::Matrix'      => 0.8,
         'HTML::Tree'        => 5.03,
     },
-    PREREQ_PM => { },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Spreadsheet-HTML-*' },
 );
