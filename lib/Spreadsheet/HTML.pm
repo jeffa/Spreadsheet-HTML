@@ -6,12 +6,7 @@ our $VERSION = '0.13';
 use Clone;
 use HTML::Element;
 use Math::Matrix;
-
-use Spreadsheet::HTML::CSV;
-use Spreadsheet::HTML::XLS;
-use Spreadsheet::HTML::HTML;
-use Spreadsheet::HTML::JSON;
-use Spreadsheet::HTML::YAML;
+use Spreadsheet::HTML::FromFile;
 
 sub portrait    { generate( @_ ) }
 sub generate    { _make_table( process( @_ ) ) }
@@ -103,8 +98,6 @@ sub _make_table {
     my %args = @_;
     $args{$_} ||= {} for qw( table tr thead tbody tfoot );
 
-    my $encodes = exists $args{encodes} ? $args{encodes} : '';
-
     if ($args{tgroups}) {
         if (scalar @{ $args{data} } > 2) {
             # replace last row between 1st and 2nd rows
@@ -114,9 +107,7 @@ sub _make_table {
         }
     }
 
-    # yes, foot is second and not last
     my ($head, $foot, @body) = @{ $args{data} };
-
     my $head_row  = [tr => $args{tr}, @$head];
     my $foot_row  = [tr => $args{tr}, @{ $foot || [] }];
     my @body_rows = map [tr => $args{tr}, @$_ ], @body;
@@ -130,6 +121,7 @@ sub _make_table {
         ],
     );
 
+    my $encodes = exists $args{encodes} ? $args{encodes} : '';
     return $table->as_HTML( $encodes, $args{indent} );
 }
 
@@ -160,7 +152,7 @@ sub _args {
         $data = $self->{data} unless $data or $args->{file};
     }
 
-    $data = _load_file( $args->{file} ) if $args->{file};
+    $data = Spreadsheet::HTML::FromFile::load( $args->{file} ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
     $data = [ [undef] ] if !scalar @{ $data->[0] };
@@ -168,21 +160,6 @@ sub _args {
     return ( $self, Clone::clone($data), $args );
 }
 
-sub _load_file {
-    my $file = shift;
-
-    if ($file =~ /\.csv$/) {
-        return Spreadsheet::HTML::CSV::load( $file );
-    } elsif ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::HTML::load( $file );
-    } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::JSON::load( $file );
-    } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::YAML::load( $file );
-    } elsif ($file =~ /\.xls$/) {
-        return Spreadsheet::HTML::XLS::load( $file );
-    }
-}
 
 1;
 
