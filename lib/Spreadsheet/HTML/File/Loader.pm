@@ -1,13 +1,13 @@
-package Spreadsheet::HTML::YAML;
+package Spreadsheet::HTML::File::YAML;
 =head1 NAME
 
-Spreadsheet::HTML::YAML - Load data from YAML encoded data files.
+Spreadsheet::HTML::File::YAML - Load data from YAML encoded data files.
 
 =head1 METHODS
 
 =over 4
 
-=item * C<load()>
+=item * C<parse()>
 
 =back
 
@@ -28,7 +28,7 @@ use warnings FATAL => 'all';
 eval "use YAML";
 our $NOT_AVAILABLE = $@;
 
-sub load {
+sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
 
@@ -40,16 +40,16 @@ sub load {
 
 
 
-package Spreadsheet::HTML::JSON;
+package Spreadsheet::HTML::File::JSON;
 =head1 NAME
 
-Spreadsheet::HTML::JSON - Load data from JSON encoded data files.
+Spreadsheet::HTML::File::JSON - Load data from JSON encoded data files.
 
 =head1 METHODS
 
 =over 4
 
-=item * C<load()>
+=item * C<parse()>
 
 =back
 
@@ -70,7 +70,7 @@ use warnings FATAL => 'all';
 eval "use JSON";
 our $NOT_AVAILABLE = $@;
 
-sub load {
+sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install JSON' ]] if $NOT_AVAILABLE;
 
@@ -84,16 +84,16 @@ sub load {
 
 
 
-package Spreadsheet::HTML::CSV;
+package Spreadsheet::HTML::File::CSV;
 =head1 NAME
 
-Spreadsheet::HTML::CSV - Load data from comma seperated value files.
+Spreadsheet::HTML::File::CSV - Load data from comma seperated value files.
 
 =head1 METHODS
 
 =over 4
 
-=item * C<load()>
+=item * C<parse()>
 
 =back
 
@@ -122,7 +122,7 @@ if ($@) {
     $PARSER = 'Text::CSV_XS';
 }
 
-sub load {
+sub parse {
     my @data;
     my $file = shift;
 
@@ -150,16 +150,16 @@ sub load {
 
 
 
-package Spreadsheet::HTML::HTML;
+package Spreadsheet::HTML::File::HTML;
 =head1 NAME
 
-Spreadsheet::HTML::HTML - Load data from Hypertext Markup files.
+Spreadsheet::HTML::File::HTML - Load data from Hypertext Markup files.
 
 =head1 METHODS
 
 =over 4
 
-=item * C<load()>
+=item * C<parse()>
 
 =back
 
@@ -180,7 +180,7 @@ use warnings FATAL => 'all';
 eval "use HTML::TableExtract";
 our $NOT_AVAILABLE = $@;
 
-sub load {
+sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
 
@@ -194,16 +194,16 @@ sub load {
 
 
 
-package Spreadsheet::HTML::XLS;
+package Spreadsheet::HTML::File::XLS;
 =head1 NAME
 
-Spreadsheet::HTML::XLS - Load data from Excel files.
+Spreadsheet::HTML::File::XLS - Load data from Excel files.
 
 =head1 METHODS
 
 =over 4
 
-=item * C<load()>
+=item * C<parse()>
 
 =back
 
@@ -224,7 +224,7 @@ use warnings FATAL => 'all';
 eval "use Spreadsheet::ParseExcel";
 our $NOT_AVAILABLE = $@;
 
-sub load {
+sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::ParseExcel' ]] if $NOT_AVAILABLE;
 
@@ -255,16 +255,16 @@ sub load {
 
 
 
-package Spreadsheet::HTML::FromFile;
+package Spreadsheet::HTML::File::Loader;
 =head1 NAME
 
-Spreadsheet::HTML::FromFile - Load data from files.
+Spreadsheet::HTML::File::Loader - Load data from files.
 
 =head1 METHODS
 
 =over 4
 
-=item * load()
+=item * parse()
 
 =back
 
@@ -274,19 +274,19 @@ use Carp;
 use strict;
 use warnings FATAL => 'all';
 
-sub load {
+sub parse {
     my $file = shift;
 
     if ($file =~ /\.csv$/) {
-        return Spreadsheet::HTML::CSV::load( $file );
+        return Spreadsheet::HTML::File::CSV::parse( $file );
     } elsif ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::HTML::load( $file );
+        return Spreadsheet::HTML::File::HTML::parse( $file );
     } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::JSON::load( $file );
+        return Spreadsheet::HTML::File::JSON::parse( $file );
     } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::YAML::load( $file );
+        return Spreadsheet::HTML::File::YAML::parse( $file );
     } elsif ($file =~ /\.xls$/) {
-        return Spreadsheet::HTML::XLS::load( $file );
+        return Spreadsheet::HTML::File::XLS::parse( $file );
     }
 }
 

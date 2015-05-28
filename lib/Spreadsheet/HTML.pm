@@ -6,7 +6,7 @@ our $VERSION = '0.13';
 use Clone;
 use HTML::Element;
 use Math::Matrix;
-use Spreadsheet::HTML::FromFile;
+use Spreadsheet::HTML::File::Loader;
 
 sub portrait    { generate( @_ ) }
 sub generate    { _make_table( process( @_ ) ) }
@@ -152,7 +152,7 @@ sub _args {
         $data = $self->{data} unless $data or $args->{file};
     }
 
-    $data = Spreadsheet::HTML::FromFile::load( $args->{file} ) if $args->{file};
+    $data = Spreadsheet::HTML::File::Loader::parse( $args->{file} ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
     $data = [ [undef] ] if !scalar @{ $data->[0] };
