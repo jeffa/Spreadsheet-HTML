@@ -1,3 +1,58 @@
+package Spreadsheet::HTML::File::Loader;
+=head1 NAME
+
+Spreadsheet::HTML::File::Loader - Load data from files.
+
+=head1 SUPPORTED FORMATS
+
+=over 4
+
+=item * CSV
+
+=item * HTML
+
+=item * JSON
+
+=item * XLS
+
+=item * YAML
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item * parse()
+
+=back
+
+=cut
+
+use Carp;
+use strict;
+use warnings FATAL => 'all';
+
+sub parse {
+    my $file = shift;
+
+    if ($file =~ /\.csv$/) {
+        return Spreadsheet::HTML::File::CSV::parse( $file );
+    } elsif ($file =~ /\.html?$/) {
+        return Spreadsheet::HTML::File::HTML::parse( $file );
+    } elsif ($file =~ /\.jso?n$/) {
+        return Spreadsheet::HTML::File::JSON::parse( $file );
+    } elsif ($file =~ /\.ya?ml$/) {
+        return Spreadsheet::HTML::File::YAML::parse( $file );
+    } elsif ($file =~ /\.xls$/) {
+        return Spreadsheet::HTML::File::XLS::parse( $file );
+    }
+}
+
+1;
+
+
+
 package Spreadsheet::HTML::File::YAML;
 =head1 NAME
 
@@ -249,45 +304,6 @@ sub parse {
     }
 
     return [ @data ];
-}
-
-1;
-
-
-
-package Spreadsheet::HTML::File::Loader;
-=head1 NAME
-
-Spreadsheet::HTML::File::Loader - Load data from files.
-
-=head1 METHODS
-
-=over 4
-
-=item * parse()
-
-=back
-
-=cut
-
-use Carp;
-use strict;
-use warnings FATAL => 'all';
-
-sub parse {
-    my $file = shift;
-
-    if ($file =~ /\.csv$/) {
-        return Spreadsheet::HTML::File::CSV::parse( $file );
-    } elsif ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::File::HTML::parse( $file );
-    } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::File::JSON::parse( $file );
-    } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::File::YAML::parse( $file );
-    } elsif ($file =~ /\.xls$/) {
-        return Spreadsheet::HTML::File::XLS::parse( $file );
-    }
 }
 
 1;
