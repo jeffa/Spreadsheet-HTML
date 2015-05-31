@@ -201,9 +201,6 @@ named methods to control overall table orientation. These methods
 in turn accept a number of distinctly named attributes for directing
 what tags and attributes to use.
 
-Currently missing <col> and <colgroup> tags, row grouping and 
-fine grained cell attribute and content control.
-
 =head1 METHODS
 
 =over 4
@@ -406,6 +403,40 @@ value contol, rotating attributes and totals/subtotals.
 =back
 
 =head1 BUGS AND LIMITATIONS
+
+Currently missing <col> and <colgroup> tags, row grouping and 
+fine grained cell attribute and content control.
+
+Benchmarks have improved since switching from HTML::Element
+to HTML::AutoTag but we are still a C- student at best.
+The following benchmark was performed by rendering a
+500x500 cell table 20 times:
+
+Before switch to HTML::AutoTag
+
+                     s/iter  S::H  H::E H::AT  H::T D::XT
+  Spreadsheet::HTML    8.58    --  -13%  -53%  -66%  -78%
+  HTML::Element        7.50   14%    --  -47%  -62%  -74%
+  HTML::AutoTag        4.01  114%   87%    --  -28%  -52%
+  HTML::Tiny           2.87  198%  161%   39%    --  -33%
+  DBIx::XHTML_Table    1.92  347%  291%  109%   50%    --
+
+
+After switch to HTML::AutoTag
+
+                    s/iter  H::E  S::H H::AT  H::T D::XT
+  HTML::Element       7.56    --  -34%  -46%  -60%  -74%
+  Spreadsheet::HTML   4.96   53%    --  -17%  -39%  -60%
+  HTML::AutoTag       4.12   84%   21%    --  -26%  -52%
+  HTML::Tiny          3.05  148%   63%   35%    --  -35%
+  DBIx::XHTML_Table   1.99  281%  150%  107%   53%    --
+
+Switching to HTML::Tiny would improve speed but this would
+complicate rotating attributes. The suggestion from these
+benchmarks is to do it the way DBIx::XHTML_Table does it:
+by complete brute force. This does not interest me ...
+if 1 second can be shaved off of HTML::AutoTag's time this
+would suffice.
 
 Please report any bugs or feature requests to either
 
