@@ -5,8 +5,8 @@ use Test::More tests => 28;
 
 use Spreadsheet::HTML;
 
-sub expected    { [ [Spreadsheet::HTML::_element( th => $_[0] )] ] }
-sub expected_td { [ [Spreadsheet::HTML::_element( td => $_[0] )] ] }
+sub expected    { [ [{ tag => 'th', cdata => $_[0] }] ] }
+sub expected_td { [ [{ tag => 'td', cdata => $_[0] }] ] }
 
 my $no_data = Spreadsheet::HTML->new;
 is_deeply scalar $no_data->process, expected( '&nbsp;' ),                                       "correct data from method for no args";
@@ -57,11 +57,11 @@ my $data = [
     [ qw( a b c d e f g) ],
 ];
 my $expected = [
-    [ map Spreadsheet::HTML::_element( th => $_ ), qw( a b c d ) ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b c &nbsp; ) ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b &nbsp; &nbsp; ) ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a &nbsp; &nbsp; &nbsp; ) ],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw( a b c d) ],
+    [ map { tag => 'th', cdata => $_ }, qw( a b c d ) ],
+    [ map { tag => 'td', cdata => $_ }, qw( a b c &nbsp; ) ],
+    [ map { tag => 'td', cdata => $_ }, qw( a b &nbsp; &nbsp; ) ],
+    [ map { tag => 'td', cdata => $_ }, qw( a &nbsp; &nbsp; &nbsp; ) ],
+    [ map { tag => 'td', cdata => $_ }, qw( a b c d) ],
 ];
 
 my $table = Spreadsheet::HTML->new( data => $data );

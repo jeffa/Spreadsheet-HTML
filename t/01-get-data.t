@@ -13,13 +13,14 @@ my $data = [
     [qw(foo4 bar4 baz4 qux4)],
 ];
 my $expected = [
-    [ map Spreadsheet::HTML::_element( th => $_ ), qw(header1 header2 header3 header4 )],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo1 bar1 baz1 qux1)],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo2 bar2 baz2 qux2)],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo3 bar3 baz3 qux3)],
-    [ map Spreadsheet::HTML::_element( td => $_ ), qw(foo4 bar4 baz4 qux4)],
+    [ map { tag => 'th', cdata => $_ }, qw(header1 header2 header3 header4 )],
+    [ map { tag => 'td', cdata => $_ }, qw(foo1 bar1 baz1 qux1)],
+    [ map { tag => 'td', cdata => $_ }, qw(foo2 bar2 baz2 qux2)],
+    [ map { tag => 'td', cdata => $_ }, qw(foo3 bar3 baz3 qux3)],
+    [ map { tag => 'td', cdata => $_ }, qw(foo4 bar4 baz4 qux4)],
 ];
 
+use Data::Dumper;
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
 is_deeply scalar $construct_with_list->process, $expected,  "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $data,              "internal data unchanged for construct_with_list";
