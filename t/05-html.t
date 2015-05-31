@@ -3,8 +3,6 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 23;
 
-SKIP: {
-    skip "changing internals", 23;
 use Spreadsheet::HTML;
 
 my $data = [
@@ -72,4 +70,3 @@ $layout = '<table><tr><th>&</th></tr><tr><td><</td><td>></td></tr></table>';
 $table = Spreadsheet::HTML->new;
 is $table->generate ( layout => 1, table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,                    "can still override defaults for layout via method";
 is Spreadsheet::HTML::portrait( layout => 1, table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,          "can still override defaults for layout via method";
-};

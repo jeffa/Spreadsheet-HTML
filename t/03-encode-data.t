@@ -27,8 +27,6 @@ my $table = Spreadsheet::HTML->new( data => $encodes );
 is_deeply scalar $table->process, $expected_encodes,  "we are not encoding data by default";
 is_deeply scalar $table->process, $expected_encodes,  "only processes once";
 
-SKIP: {
-    skip "changing internals", 4;
 is $table->generate(),
     q(<table><tr><th><</th><th>=</th><th>&</th><th>></th><th>"</th><th>'</th></tr><tr><td><</td><td>=</td><td>&</td><td>></td><td>"</td><td>'</td></tr></table>),
     "no HTML entities encoded";
@@ -44,7 +42,6 @@ is $table->generate( encodes => '<=&>"\'' ),
 is $table->generate( encodes => undef ),
     '<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>',
     "encoding all HTML entities";
-};
 
 $table = Spreadsheet::HTML->new( data => $spaces );
 is_deeply scalar $table->process, $expected_spaces,  "correctly substituted spaces";
