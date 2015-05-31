@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.14';
 
 use Clone;
-use HTML::Element;
+use HTML::AutoTag;
 use Math::Matrix;
 use Spreadsheet::HTML::File::Loader;
 
@@ -74,7 +74,11 @@ sub process {
             # --headings
             $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
 
-            $data->[$row][$col] = _element( $tag => $val, $args->{$tag} );
+            $data->[$row][$col] = { 
+                tag => $tag, 
+                (defined( $val ) ? (cdata => $val) : ()), 
+                (defined( $args->{$tag} ) ? (attr => $args->{$tag}) : ()),
+            };
         }
     }
 
@@ -112,14 +116,14 @@ sub _make_table {
     my $foot_row  = [tr => $args{tr}, @{ $foot || [] }];
     my @body_rows = map [tr => $args{tr}, @$_ ], @body;
 
-    my $table = HTML::Element->new_from_lol(
-        [table => $args{table},
-            ( $args{caption} ? [caption => {}, $args{caption}] : () ),
-            ( $args{tgroups} ? [ thead => $args{thead}, $head_row ]  : $head_row ),
-            ( $args{tgroups} ? [ tfoot => $args{tfoot}, $foot_row ]  : $foot ? $foot_row : () ),
-              $args{tgroups} ? [ tbody => $args{tbody}, @body_rows ] : @body_rows
-        ],
-    );
+    my $table = ''; #HTML::Element->new_from_lol(
+#        [table => $args{table},
+#            ( $args{caption} ? [caption => {}, $args{caption}] : () ),
+#            ( $args{tgroups} ? [ thead => $args{thead}, $head_row ]  : $head_row ),
+#            ( $args{tgroups} ? [ tfoot => $args{tfoot}, $foot_row ]  : $foot ? $foot_row : () ),
+#              $args{tgroups} ? [ tbody => $args{tbody}, @body_rows ] : @body_rows
+#        ],
+#    );
 
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
     return $table->as_HTML( $encodes, $args{indent} );
