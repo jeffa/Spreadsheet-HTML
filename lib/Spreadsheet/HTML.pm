@@ -119,12 +119,21 @@ sub _make_table {
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
     my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent} );
 
+    my $caption;
+    if (ref($args{caption}) eq 'HASH') {
+        (my $cdata) = keys %{ $args{caption} };
+        (my $attr)  = values %{ $args{caption} };
+        $caption = { tag => 'caption', attr => $attr, cdata => $cdata };
+    } elsif (defined $args{caption} ) {
+        $caption = { tag => 'caption', cdata => $args{caption} };
+    } 
+
     # TODO: add caption back
-    # ( $args{caption} ? [caption => {}, $args{caption}] : () ),
     return $auto->tag(
         tag => 'table',
         attr => $args{table},
         cdata => [
+            ( ref( $caption ) ? $caption : () ),
             ( $args{tgroups} ? { tag => 'thead', attr => $args{thead}, cdata => $head_row }  : $head_row ),
             ( $args{tgroups} ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row }  : $foot ? $foot_row : () ),
               $args{tgroups} ? { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] } : @body_rows

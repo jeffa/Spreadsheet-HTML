@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.15
+    - implemented support for caption tag
 
 0.14
     - now using HTML::AutoTag to generate HTML
