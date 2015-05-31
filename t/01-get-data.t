@@ -20,7 +20,6 @@ my $expected = [
     [ map { tag => 'td', cdata => $_ }, qw(foo4 bar4 baz4 qux4)],
 ];
 
-use Data::Dumper;
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
 is_deeply scalar $construct_with_list->process, $expected,  "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $data,              "internal data unchanged for construct_with_list";
