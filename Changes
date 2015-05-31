@@ -1,7 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.14
-    - 
+    - now using HTML::AutoTag to generate HTML
 
 0.13
     - replaced file loading modules with Spreadsheet::HTML::File::Loader

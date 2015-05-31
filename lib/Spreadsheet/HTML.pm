@@ -353,9 +353,10 @@ There is currently no support for col and colgroup.
 
 =over 4
 
-=item * L<HTML::Tree>
+=item * L<HTML::AutoTag>
 
 Used to generate HTML. Handles indentation and HTML entity encoding.
+Uses L<Tie::Hash::Attribute> to handle rotation of class attributes.
 
 =item * L<Math::Matrix>
 
@@ -438,11 +439,7 @@ This implementation is currently missing the following features:
 
 =item * emit col and colgroup tags
 
-=item * map client functions to cells by columns
-
-=item * assign "rotating" attrs to td tags by columns, etc.
-
-=item * what HTML::Element::as_HTML offers - including encoding and indention :(
+=item * map client attrs and functions to cells by columns/rows
 
 =back
 
