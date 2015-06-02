@@ -54,6 +54,12 @@ Interface
 * reverse
 <table><tr><td>3</td><td>2</td><td>1</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><th>Header3</th><th>Header2</th><th>Header1</th></tr></table>
 
+* earthquake
+<table><tr><td>1</td><td>one</td><td>foo</td><th>Header1</th></tr><tr><td>2</td><td>two</td><td>bar</td><th>Header2</th></tr><tr><td>3</td><td>three</td><td>baz</td><th>Header3</th></tr></table>
+
+* tsunami
+<table><tr><td>3</td><td>three</td><td>baz</td><th>Header3</th></tr><tr><td>2</td><td>two</td><td>bar</td><th>Header2</th></tr><tr><td>1</td><td>one</td><td>foo</td><th>Header1</th></tr></table>
+
 Installation
 ------------
 To install this module, you should use CPAN. A good starting

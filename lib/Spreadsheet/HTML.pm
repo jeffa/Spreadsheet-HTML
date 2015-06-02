@@ -36,6 +36,18 @@ sub reverse   {
     return _make_table( %args, tgroups => 0 );
 }
 
+sub earthquake   {
+    my %args = process( @_ );
+    $args{data} = [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
+    return _make_table( %args, tgroups => 0 );
+}
+
+sub tsunami   {
+    my %args = process( @_ );
+    $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+    return _make_table( %args, tgroups => 0 );
+}
+
 sub process {
     my ($self,$data,$args) = _args( @_ );
 
@@ -257,6 +269,16 @@ Columns are rendered right to left.
 
 Combines flip and mirror: flips the headings and
 data upside down and render columns right to left.
+
+=item * C<earthquake( %args )>
+
+mirror() applied to transpose/landscape.
+
+=item * C<tsunami( %args )>
+
+revers() applied to transpose/landscape.
+
+Columns are rendered right to left.
 
 =item * C<process( %args )>
 
