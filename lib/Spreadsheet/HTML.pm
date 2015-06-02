@@ -140,7 +140,6 @@ sub _make_table {
         $caption = { tag => 'caption', cdata => $args{caption} };
     } 
 
-    # TODO: add caption back
     return $auto->tag(
         tag => 'table',
         attr => $args{table},
