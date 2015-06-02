@@ -21,12 +21,12 @@ my $expected = [
 ];
 
 my $construct_with_list = new_ok 'Spreadsheet::HTML', [ data => $data ];
-is_deeply scalar $construct_with_list->process, $expected,  "expected data from interface for construct_with_list";
+is_deeply scalar $construct_with_list->_process, $expected, "expected data from interface for construct_with_list";
 is_deeply $construct_with_list->{data}, $data,              "internal data unchanged for construct_with_list";
 
 my $construct_with_ref = new_ok 'Spreadsheet::HTML', [ { data => $data } ];
-is_deeply scalar $construct_with_ref->process, $expected,  "expected data from interface for construct_with_ref";
+is_deeply scalar $construct_with_ref->_process, $expected, "expected data from interface for construct_with_ref";
 is_deeply $construct_with_ref->{data}, $data,           "internal data unchanged for construct_with_ref";
 
-is_deeply scalar Spreadsheet::HTML::process( $data ), $expected,  "expected output for array ref";
-is_deeply scalar Spreadsheet::HTML::process( @$data ), $expected,  "expected output for array";
+is_deeply scalar Spreadsheet::HTML::_process( $data ), $expected,   "expected output for array ref";
+is_deeply scalar Spreadsheet::HTML::_process( @$data ), $expected,  "expected output for array";

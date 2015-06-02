@@ -3,52 +3,61 @@ use strict;
 use warnings FATAL => 'all';
 our $VERSION = '0.15';
 
+use Exporter 'import';
+our @EXPORT = qw( portrait generate landscape transpose flip mirror reverse earthquake tsunami );
+
 use Clone;
 use HTML::AutoTag;
 use Math::Matrix;
 use Spreadsheet::HTML::File::Loader;
 
 sub portrait    { generate( @_ ) }
-sub generate    { _make_table( process( @_ ) ) }
+sub generate    { _make_table( _process( @_ ) ) }
 
 sub landscape   { transpose( @_ ) }
 sub transpose   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
     return _make_table( %args, tgroups => 0 );
 }
 
 sub flip   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [ CORE::reverse @{ $args{data} } ];
     return _make_table( %args, tgroups => 0 );
 }
 
 sub mirror   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
     return _make_table( %args );
 }
 
 sub reverse   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
     return _make_table( %args, tgroups => 0 );
 }
 
 sub earthquake   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
     return _make_table( %args, tgroups => 0 );
 }
 
 sub tsunami   {
-    my %args = process( @_ );
+    my %args = _process( @_ );
     $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
     return _make_table( %args, tgroups => 0 );
 }
 
-sub process {
+sub new {
+    my $class = shift;
+    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
+    return bless { %attrs }, $class;
+}
+
+sub _process {
     my ($self,$data,$args) = _args( @_ );
 
     if ($self and $self->{is_cached}) {
@@ -102,12 +111,6 @@ sub process {
     return wantarray ? ( data => $data, %$args ) : $data;
 }
 
-sub new {
-    my $class = shift;
-    my %attrs = ref($_[0]) eq 'HASH' ? %{+shift} : @_;
-    return bless { %attrs }, $class;
-}
-
 sub _make_table {
     my %args = @_;
     $args{$_} ||= {} for qw( table tr thead tbody tfoot );
@@ -148,13 +151,6 @@ sub _make_table {
               $args{tgroups} ? { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] } : @body_rows
         ],
     );
-}
-
-sub _element {
-    my ($tag, $content, $attr) = @_;
-    my $e = HTML::Element->new( $tag, %{ $attr || {} } );
-    $e->push_content( $content );
-    return $e;
 }
 
 sub _args {
@@ -221,6 +217,8 @@ what tags and attributes to use.
 
 =head1 METHODS
 
+All methods (except new) are exportable as functions too.
+
 =over 4
 
 =item * C<new( %args )>
@@ -276,10 +274,6 @@ mirror() applied to transpose/landscape.
 revers() applied to transpose/landscape.
 
 Columns are rendered right to left.
-
-=item * C<process( %args )>
-
-Returns processed data.
 
 =back
 
