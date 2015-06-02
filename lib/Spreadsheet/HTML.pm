@@ -76,6 +76,9 @@ sub _process {
         }
     }
 
+    # headings is an alias for row_0
+    $args->{row_0} = delete $args->{headings} if exists $args->{headings};
+
     for my $row (0 .. $#$data) {
 
         unless ($args->{layout}) {
@@ -87,11 +90,14 @@ sub _process {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
 
+            # --cells
+            $val = $args->{"row_$row"}->($val) if exists $args->{"row_$row"} and ref($args->{"row_$row"}) eq 'CODE';
+            unless ($row == 0) {
+                $val = $args->{"col_$col"}->($val) if exists $args->{"col_$col"} and ref($args->{"col_$col"}) eq 'CODE';
+            }
+
             # --empty
             do{ no warnings; $val =~ s/^\s*$/$empty/g };
-
-            # --headings
-            $val = $args->{headings}->($val) if !$row and ref($args->{headings}) eq 'CODE';
 
             $data->[$row][$col] = { 
                 tag => $tag, 
@@ -199,12 +205,13 @@ Spreadsheet::HTML - Render HTML5 tables with ease.
     print $table->portrait;
     print $table->landscape;
 
-    # non OO
-    print Spreadsheet::HTML::portrait( $data );
-    print Spreadsheet::HTML::landscape( $data );
-
     # load from files (first table found)
     $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+
+    # non OO
+    use Spreadsheet::HTML qw( portrait landscape );
+    print portrait( $data );
+    print landscape( $data );
 
 =head1 DESCRIPTION
 
@@ -267,11 +274,11 @@ data upside down and render columns right to left.
 
 =item * C<earthquake( %args )>
 
-mirror() applied to transpose/landscape.
+C<mirror()> applied to transpose/landscape.
 
 =item * C<tsunami( %args )>
 
-revers() applied to transpose/landscape.
+C<reverse()> applied to transpose/landscape.
 
 Columns are rendered right to left.
 
@@ -347,9 +354,19 @@ sections. The <tfoot> section is always found before
 the <tbody> section. Only available for C<generate()>,
 C<portrait()> and C<mirror()>.
 
+=item * C<tgroups: 0 or 1>
+
 =item * C<table: \%args>
 
-=item * C<caption: $str>
+=item * C<caption: $str or \%args>
+
+Caption is special in that you can either pass a string to
+be used as CDATA or a hash whose only key is the string
+to be used as CDATA:
+
+  caption => "Just Some Title"
+
+  caption => { "Title With Attributes" => { align => "bottom" } }
 
 =item * C<thead: \%args>
 
@@ -486,13 +503,9 @@ This implementation is currently missing the following features:
 
 =over 4
 
-=item * build index map for columns
-
-=item * build auto col_XX and row_XX for item 1 (maybe ...)
+=item * map client attrs and functions to cells by heading names
 
 =item * emit col and colgroup tags
-
-=item * map client attrs and functions to cells by columns/rows
 
 =back
 
