@@ -62,10 +62,8 @@ sub process {
         $args->{encodes} = undef unless exists $args->{encodes}; 
         $args->{matrix} = 1 unless exists $args->{matrix};
         unless (exists $args->{table}) {
-            $args->{table}{role}          = 'presentation';
-            $args->{table}{border}        = 0;
-            $args->{table}{cellspacing}   = 0;
-            $args->{table}{cellpadding}   = 0;
+            $args->{table}{role} = 'presentation';
+            $args->{table}{$_}   = 0 for qw( border cellspacing cellpadding );
         }
     }
 
