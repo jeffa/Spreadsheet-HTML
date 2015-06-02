@@ -5,7 +5,7 @@ use Test::More tests => 6;
 
 use_ok 'Spreadsheet::HTML';
 
-my %file = ( file => 't/data/simple.yml' );
+my %file = ( file => 't/data/simple.csv' );
 
 my $table = new_ok 'Spreadsheet::HTML', [ %file ];
 
