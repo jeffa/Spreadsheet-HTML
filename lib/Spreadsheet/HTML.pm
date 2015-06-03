@@ -80,9 +80,12 @@ sub _process {
     $args->{-row_0} = delete $args->{headings} if exists $args->{headings};
 
     # headings to index mapping for column
-    my %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
-    for (grep /^-/, keys %$args) {
-        $args->{"-col_$index{$_}" } = delete $args->{$_} if exists $index{$_};
+    my %index = ();
+    if ($#{ $data->[0] }) {
+        %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
+        for (grep /^-/, keys %$args) {
+            $args->{"-col_$index{$_}" } = delete $args->{$_} if exists $index{$_};
+        }
     }
 
     for my $row (0 .. $#$data) {
