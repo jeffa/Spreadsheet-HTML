@@ -35,6 +35,6 @@ is Spreadsheet::HTML::transpose( %file ),
 ;
 
 is Spreadsheet::HTML::generate( file => 'absent.xls' ),
-    '<table><tr><th>cannot load absent.xls</th></tr><tr><td>File not found</td></tr></table>',
+    '<table><tr><th>cannot load absent.xls</th></tr><tr><td>No such file or directory</td></tr></table>',
     "handles file not found"
 ;
