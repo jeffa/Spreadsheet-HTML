@@ -77,7 +77,7 @@ sub _process {
     }
 
     # headings is an alias for row_0
-    $args->{row_0} = delete $args->{headings} if exists $args->{headings};
+    $args->{-row_0} = delete $args->{headings} if exists $args->{headings};
 
     for my $row (0 .. $#$data) {
 
@@ -91,9 +91,9 @@ sub _process {
             my $val = $data->[$row][$col];
 
             # --cells
-            $val = $args->{"row_$row"}->($val) if exists $args->{"row_$row"} and ref($args->{"row_$row"}) eq 'CODE';
+            $val = $args->{"-row_$row"}->($val) if exists $args->{"-row_$row"} and ref($args->{"-row_$row"}) eq 'CODE';
             unless ($row == 0) {
-                $val = $args->{"col_$col"}->($val) if exists $args->{"col_$col"} and ref($args->{"col_$col"}) eq 'CODE';
+                $val = $args->{"-col_$col"}->($val) if exists $args->{"-col_$col"} and ref($args->{"-col_$col"}) eq 'CODE';
             }
 
             # --empty
@@ -224,7 +224,14 @@ what tags and attributes to use.
 
 =head1 METHODS
 
-All methods (except new) are exportable as functions too.
+All methods (except C<new>) are exportable as functions too. With the
+exception of C<new>, all methods return HTML as a scalar string. Any
+named parameters supplied to the method are applied to the data before
+any table rotations are performed. If it helps, work with the table
+using, for example, C<portrait()> until you have the parameters
+correct and then switch to C<landscape()> for the final product.
+All methods accept the same named parameters, although some methods
+override certain ones, hopefully in ways that make sense.
 
 =over 4
 
@@ -232,12 +239,12 @@ All methods (except new) are exportable as functions too.
 
   my $table = Spreadsheet::HTML->new( data => $data );
 
-Constructs object. Accepts named arguments (see ATTRIBUTES).
-Unless you give it an array of array refs. Or an array ref
-of array refs. Otherwise it expects named arguments. The
+Constructs object. Accepts named parameters (see PARAMETERS).
+Unless you give it a list of array refs. Or an array ref
+of array refs. Otherwise it expects named parameters. The
 most favorite being 'data' which is exactly an array ref
 of array refs. The first row will be treated as the headings
-unless you specify otherwise (see ATTRIBUTES).
+unless you specify otherwise (see PARAMETERS).
 
 =item * C<generate( %args )>
 
@@ -284,10 +291,10 @@ Columns are rendered right to left.
 
 =back
 
-=head1 ATTRIBUTES
+=head1 PARAMETERS
 
-All methods/procedures accept named arguments.
-If named arguments are detected: the data has to be
+All methods/procedures accept the same named parameters.
+If named parameters are detected: the data has to be
 an array ref assigned to the key 'data'. If no
 named args are detected then the parameter list is
 treated as the data itself, either an array containing
@@ -298,19 +305,25 @@ array references.
 
 =item * C<data: [ [], [], [], ... ]>
 
-The data to be rendered into table cells.
+The data to be rendered into table cells. Should be
+an array ref of array refs.
+
+  data => [["a".."c"],[1..3],[4..6],[7..9]]
 
 =item * C<file: $str>
 
 The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML and HTML (first table found).
 
+  file => 'foo.json'
+
 =item * C<indent: $str>
 
-Render the table with whitespace indention. Defaults to
-undefined which produces no trailing whitespace to tags.
-Useful values are some number of spaces or tabs.  (see
-L<HTML::Element>::as_HTML).
+Render the table with nested indentation. Defaults to
+undefined which produces no indentation. Adds newlines
+when set to any value that is defined.
+
+  indent => '    '
 
 =item * C<encode: $str>
 
@@ -318,14 +331,20 @@ HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
 '<>&=' to perform encoding on any characters found. If the
 value is 'undef' then all unsafe characters will be
-encoded as HTML entites (see L<HTML::Element>::as_HTML).
+encoded as HTML entites.
+
+  encodes => '<>"'
 
 =item * C<empty: $str>
 
 Replace empty cells with this value. Defaults to &nbsp;
 Set value to undef to avoid any substitutions.
 
+  empty => '&#160;'
+
 =item * C<cache: 0 or 1>
+
+  cache => 1
 
 Preserve data after it has been processed (and loaded).
 
@@ -333,19 +352,41 @@ Preserve data after it has been processed (and loaded).
 
 Render the table with only td tags, no th tags, if true.
 
+  matrix => 1
+
 =item * C<layout: 0 or 1>
 
-Add W3C recommended table attributes, emit only <td> tags,
-no row padding or pruning, and force no HTML entity encoding
-in table cells.
+Layout tables are not recommended, but if you choose to
+use them you should label them as such. This adds W3C
+recommended layout attributes to the table tag and features:
+emiting only <td> tags, no padding or pruning of rows, forces
+no HTML entity encoding in table cells.
+
+  layout => 1
 
 =item * C<headless: 0 or 1>
 
-Render the table with without headings, if true.
+Render the table with without the headings row, if true. 
 
-=item * C<headings: sub { return function( shift ) }>
+  headless => 1
 
-Apply this anonymous subroutine to headers.
+=item * C<headings: sub { }>
+
+Apply anonymous subroutine to each cell in headings row.
+
+  headings => sub {join(" ",map{ucfirst lc$_}split"_",shift)}
+
+=item * C<-row_X: sub { }>
+
+Apply this anonymous subroutine to row X. (0 index based)
+
+  -row_3 => sub { uc shift }
+
+=item * C<-col_X: sub { return function( shift ) }>
+
+Apply this anonymous subroutine to column X. (0 index based)
+
+  -col_4 => sub { sprintf "%02d", shift || 0 }
 
 =item * C<tgroups: 0 or 1>
 
@@ -354,9 +395,7 @@ sections. The <tfoot> section is always found before
 the <tbody> section. Only available for C<generate()>,
 C<portrait()> and C<mirror()>.
 
-=item * C<tgroups: 0 or 1>
-
-=item * C<table: \%args>
+  tgroups => 1
 
 =item * C<caption: $str or \%args>
 
@@ -364,26 +403,43 @@ Caption is special in that you can either pass a string to
 be used as CDATA or a hash whose only key is the string
 to be used as CDATA:
 
-  caption => "Just Some Title"
+  caption => "Just Another Title"
 
-  caption => { "Title With Attributes" => { align => "bottom" } }
+  caption => { "With Attributes" => { align => "bottom" } }
+
+=item * C<table: \%args>
+
+Apply these attributes to the table tag.
+
+  table => { class => 'spreadsheet' }
 
 =item * C<thead: \%args>
 
+  thead => { style => 'background: color' }
+
 =item * C<tfoot: \%args>
+
+  tfoot => { style => 'background: color' }
 
 =item * C<tbody: \%args>
 
+  tbody => { style => 'background: color' }
+
 =item * C<tr: \%args>
+
+  tr => { style => { background => [qw( color1 color2 )]' } }
 
 =item * C<th: \%args>
 
+  th => { style => 'background: color' }
+
 =item * C<td: \%args>
 
-Supply attributes to the HTML tags that compose the table.
-There is currently no support for col and colgroup.
+  td => { style => 'background: color' }
 
 =back
+
+There is currently no support for col and colgroup.
 
 =head1 REQUIRES
 
