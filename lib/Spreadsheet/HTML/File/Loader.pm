@@ -1,4 +1,24 @@
 package Spreadsheet::HTML::File::Loader;
+use Carp;
+use strict;
+use warnings FATAL => 'all';
+
+sub parse {
+    my $file = shift;
+
+    if ($file =~ /\.csv$/) {
+        return Spreadsheet::HTML::File::CSV::parse( $file );
+    } elsif ($file =~ /\.html?$/) {
+        return Spreadsheet::HTML::File::HTML::parse( $file );
+    } elsif ($file =~ /\.jso?n$/) {
+        return Spreadsheet::HTML::File::JSON::parse( $file );
+    } elsif ($file =~ /\.ya?ml$/) {
+        return Spreadsheet::HTML::File::YAML::parse( $file );
+    } elsif ($file =~ /\.xls$/) {
+        return Spreadsheet::HTML::File::XLS::parse( $file );
+    }
+}
+
 =head1 NAME
 
 Spreadsheet::HTML::File::Loader - Load data from files.
@@ -28,26 +48,6 @@ Spreadsheet::HTML::File::Loader - Load data from files.
 =back
 
 =cut
-
-use Carp;
-use strict;
-use warnings FATAL => 'all';
-
-sub parse {
-    my $file = shift;
-
-    if ($file =~ /\.csv$/) {
-        return Spreadsheet::HTML::File::CSV::parse( $file );
-    } elsif ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::File::HTML::parse( $file );
-    } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::File::JSON::parse( $file );
-    } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::File::YAML::parse( $file );
-    } elsif ($file =~ /\.xls$/) {
-        return Spreadsheet::HTML::File::XLS::parse( $file );
-    }
-}
 
 1;
 
@@ -86,6 +86,7 @@ our $NOT_AVAILABLE = $@;
 sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
 
     my $data = YAML::LoadFile( $file );
     return $data;
@@ -129,7 +130,7 @@ sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install JSON' ]] if $NOT_AVAILABLE;
 
-    open my $fh, '<', $file or croak "Cannot read $file: $!\n";
+    open my $fh, '<', $file or return [[ "cannot load $file" ],[ $! ]];
     my $data = decode_json( do{ local $/; <$fh> } );
     close $fh;
     return $data;
@@ -181,7 +182,7 @@ sub parse {
     my @data;
     my $file = shift;
 
-    open my $fh, '<', $file or croak "Cannot read $file: $!\n";
+    open my $fh, '<', $file or return [[ "cannot load $file" ],[ $! ]];
 
     if ($PARSER) {
         my $csv = $PARSER->new;
@@ -238,6 +239,7 @@ our $NOT_AVAILABLE = $@;
 sub parse {
     my $file = shift;
     return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
 
     my @data;
     my $extract = HTML::TableExtract->new( keep_headers => 1 );
