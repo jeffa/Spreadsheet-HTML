@@ -85,8 +85,8 @@ our $NOT_AVAILABLE = $@;
 
 sub parse {
     my $file = shift;
-    return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
+    return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
 
     my $data = YAML::LoadFile( $file );
     return $data;
@@ -128,9 +128,9 @@ our $NOT_AVAILABLE = $@;
 
 sub parse {
     my $file = shift;
+    open my $fh, '<', $file or return [[ "cannot load $file" ],[ $! ]];
     return [[ "cannot load $file" ],[ 'please install JSON' ]] if $NOT_AVAILABLE;
 
-    open my $fh, '<', $file or return [[ "cannot load $file" ],[ $! ]];
     my $data = decode_json( do{ local $/; <$fh> } );
     close $fh;
     return $data;
@@ -238,8 +238,8 @@ our $NOT_AVAILABLE = $@;
 
 sub parse {
     my $file = shift;
-    return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
+    return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
 
     my @data;
     my $extract = HTML::TableExtract->new( keep_headers => 1 );
@@ -283,6 +283,7 @@ our $NOT_AVAILABLE = $@;
 
 sub parse {
     my $file = shift;
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::ParseExcel' ]] if $NOT_AVAILABLE;
 
     my $parser   = Spreadsheet::ParseExcel->new;
