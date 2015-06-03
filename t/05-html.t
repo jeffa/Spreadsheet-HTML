@@ -61,7 +61,7 @@ $no_head = '<table class="spreadsheet"><tr style="background: red"><td class="ro
 is $table->generate( headless => 1, %attrs ), $no_head,                                 "no headings for tags with attributes via method args" ;
 is Spreadsheet::HTML::generate( data => $data, headless => 1, %attrs ), $no_head,       "no headings for tags with attributes via procedural named args" ;
 
-my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>&amp;</td></tr><tr><td>&lt;</td><td>&gt;</td></tr></table>';
+my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>&</td></tr><tr><td><</td><td>></td></tr></table>';
 $table = Spreadsheet::HTML->new;
 is $table->generate ( layout => 1, data => [ ['&'],['<','>'] ] ), $layout,                    "correct HTML for layout via method";
 is Spreadsheet::HTML::portrait( layout => 1, data => [ ['&'],['<','>'] ] ), $layout,          "correct HTML for layout via method";

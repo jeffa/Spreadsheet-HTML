@@ -68,7 +68,7 @@ sub _process {
     my $max_cols = scalar @{ $data->[0] };
 
     if ($args->{layout}) {
-        $args->{encodes} = undef unless exists $args->{encodes}; 
+        $args->{encodes} = '' unless exists $args->{encodes}; 
         $args->{matrix} = 1 unless exists $args->{matrix};
         unless (exists $args->{table}) {
             $args->{table}{role} = 'presentation';
