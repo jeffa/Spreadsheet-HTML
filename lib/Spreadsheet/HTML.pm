@@ -259,7 +259,7 @@ Spreadsheet::HTML - Render HTML5 tables with ease.
 
 =head1 DESCRIPTION
 
-THIS MODULE IS AN ALPHA RELEASE!
+THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
 Renders HTML5 tables with ease. Provides a handful of distinctly
 named methods to control overall table orientation. These methods
@@ -473,7 +473,12 @@ to be used as CDATA:
 
 =item * C<colgroup: \@ or \%>
 
+Add colgroup tag(s) to the table. Use an AoH for multiple.
+
 =item * C<col: \@ or \%>
+
+Add col tag(s) to the table. Use an AoH for multiple. Wraps
+tags within a colgroup tag.
 
 =item * C<table: \%>
 
@@ -506,8 +511,6 @@ Apply these attributes to the table tag.
   td => { style => 'background: color' }
 
 =back
-
-There is currently no support for col and colgroup.
 
 =head1 REQUIRES
 
@@ -622,16 +625,6 @@ The several lines of code that HTML::Element save me are not worth the time
 trade off, so i will be working to develop my own solution, unless another CPAN
 module will suffice. Don't get me wrong, HTML::Tree is awesome and powerful.
 But i needs speed. And i could be wrong ... ;)
-
-This implementation is currently missing the following features:
-
-=over 4
-
-=item * emit col and colgroup tags
-
-=back
-
-You are encouraged to use L<DBIx::XHTML_Table> during the development of this module.
 
 =head1 GITHUB
 

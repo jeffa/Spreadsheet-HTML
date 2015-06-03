@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.15
+    - very close to feature complete (BETA)
+    - implemented row and column configuration
+    - implemented support for colgroup and col tags
     - implemented support for caption tag
 
 0.14
