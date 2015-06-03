@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use Spreadsheet::HTML;
 
@@ -33,8 +33,12 @@ is $table->generate( -row_0 => sub { ucfirst shift } ),
 
 is $table->generate( -row_2 => sub { uc shift } ),
     '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>FOO2</td><td>BAR2</td><td>BAZ2</td><td>QUX2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>',
-    "modify all cells in one row";
+    "modify all cells in one row by row number";
 
 is $table->generate( -col_2 => sub { uc shift } ),
     '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td>BAZ1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>BAZ2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>BAZ3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>BAZ4</td><td>qux4</td></tr></table>',
-    "modify all cells in one column";
+    "modify all cells in one column by column number";
+
+is $table->generate( -header3 => sub { "<b>$_[0]</b>" } ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td><b>baz1</b></td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td><b>baz2</b></td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td><b>baz3</b></td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td><b>baz4</b></td><td>qux4</td></tr></table>',
+    "modify all cells in one column by heading name";

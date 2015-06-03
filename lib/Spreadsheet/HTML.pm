@@ -79,6 +79,12 @@ sub _process {
     # headings is an alias for row_0
     $args->{-row_0} = delete $args->{headings} if exists $args->{headings};
 
+    # headings to index mapping for column
+    my %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
+    for (grep /^-/, keys %$args) {
+        $args->{"-col_$index{$_}" } = delete $args->{$_} if exists $index{$_};
+    }
+
     for my $row (0 .. $#$data) {
 
         unless ($args->{layout}) {
@@ -91,6 +97,7 @@ sub _process {
             my $val = $data->[$row][$col];
 
             # --cells
+            # TODO: allow client to pass hash refs too, these can be applied as attrs
             $val = $args->{"-row_$row"}->($val) if exists $args->{"-row_$row"} and ref($args->{"-row_$row"}) eq 'CODE';
             unless ($row == 0) {
                 $val = $args->{"-col_$col"}->($val) if exists $args->{"-col_$col"} and ref($args->{"-col_$col"}) eq 'CODE';
@@ -388,6 +395,11 @@ Apply this anonymous subroutine to column X. (0 index based)
 
   -col_4 => sub { sprintf "%02d", shift || 0 }
 
+You can alias any column number by the value of the heading
+in that column:
+
+  -status => sub { "<b>$_[0]"</b>" }
+
 =item * C<tgroups: 0 or 1>
 
 Group table rows into <thead> <tfoot> and <tbody>
@@ -558,8 +570,6 @@ But i needs speed. And i could be wrong ... ;)
 This implementation is currently missing the following features:
 
 =over 4
-
-=item * map client attrs and functions to cells by heading names
 
 =item * emit col and colgroup tags
 
