@@ -99,9 +99,8 @@ sub _process {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
 
-            # --cells
+            # -row_X
             my $attr = $args->{$tag};
-            # TODO: allow client to pass hash refs too, these can be applied as attrs
             if (exists $args->{"-row_$row"}) {
                 if (ref($args->{"-row_$row"}) eq 'CODE') {
                     $val = $args->{"-row_$row"}->($val);
@@ -110,8 +109,8 @@ sub _process {
                 }
             }
 
+            # -col_X
             unless ($row == 0) {
-                #$val = $args->{"-col_$col"}->($val) if exists $args->{"-col_$col"} and ref($args->{"-col_$col"}) eq 'CODE';
                 if (exists $args->{"-col_$col"}) {
                     if (ref($args->{"-col_$col"}) eq 'CODE') {
                         $val = $args->{"-col_$col"}->($val);
@@ -172,11 +171,31 @@ sub _make_table {
         $caption = { tag => 'caption', cdata => $args{caption} };
     } 
 
+    my @colgroup;
+    $args{col} = [ $args{col} ] if ref($args{col}) eq 'HASH';
+    if (ref($args{col}) eq 'ARRAY') {
+
+        @colgroup = ({
+            tag   => 'colgroup',
+            attr  => $args{colgroup},
+            cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
+        }); 
+
+    } else {
+
+        $args{colgroup} = [ $args{colgroup} ] if ref($args{colgroup}) eq 'HASH';
+        if (ref($args{colgroup}) eq 'ARRAY') {
+            @colgroup = map { tag => 'colgroup', attr => $_ }, @{ $args{colgroup} };
+        }
+    }
+
+
     return $auto->tag(
         tag => 'table',
         attr => $args{table},
         cdata => [
             ( ref( $caption ) ? $caption : () ),
+            ( @colgroup ? @colgroup : () ),
             ( $args{tgroups} ? { tag => 'thead', attr => $args{thead}, cdata => $head_row }  : $head_row ),
             ( $args{tgroups} ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row }  : $foot ? $foot_row : () ),
               $args{tgroups} ? { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] } : @body_rows
