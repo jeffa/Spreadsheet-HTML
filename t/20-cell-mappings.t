@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 7;
+use Test::More tests => 11;
 
 use Spreadsheet::HTML;
 
@@ -42,3 +42,19 @@ is $table->generate( -col_2 => sub { uc shift } ),
 is $table->generate( -header3 => sub { "<b>$_[0]</b>" } ),
     '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td><b>baz1</b></td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td><b>baz2</b></td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td><b>baz3</b></td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td><b>baz4</b></td><td>qux4</td></tr></table>',
     "modify all cells in one column by heading name";
+
+is $table->generate( -row_0 => { style => { color => [qw(blue red)] } } ),
+    '<table><tr><th style="color: blue">header1</th><th style="color: red">header2</th><th style="color: blue">header3</th><th style="color: red">header4</th></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>',
+    "-row_0 refers to th when applying styles";
+
+is $table->generate( -row_2 => { style => { color => [qw(blue red)] } } ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td style="color: blue">foo2</td><td style="color: red">bar2</td><td style="color: blue">baz2</td><td style="color: red">qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>',
+    "apply styles by row";
+
+is $table->generate( -col_2 => { style => { color => [qw(blue red)] } } ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td style="color: blue">baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td style="color: red">baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td style="color: blue">baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td style="color: red">baz4</td><td>qux4</td></tr></table>',
+    "apply styles by column";
+
+is $table->generate( -header3 => { style => { color => [qw(blue red)] } } ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr><td>foo1</td><td>bar1</td><td style="color: blue">baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td style="color: red">baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td style="color: blue">baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td style="color: red">baz4</td><td>qux4</td></tr></table>',
+    "apply styles to column heading name";

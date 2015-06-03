@@ -100,10 +100,25 @@ sub _process {
             my $val = $data->[$row][$col];
 
             # --cells
+            my $attr = $args->{$tag};
             # TODO: allow client to pass hash refs too, these can be applied as attrs
-            $val = $args->{"-row_$row"}->($val) if exists $args->{"-row_$row"} and ref($args->{"-row_$row"}) eq 'CODE';
+            if (exists $args->{"-row_$row"}) {
+                if (ref($args->{"-row_$row"}) eq 'CODE') {
+                    $val = $args->{"-row_$row"}->($val);
+                } elsif (ref($args->{"-row_$row"}) eq 'HASH') {
+                    $attr = $args->{"-row_$row"};
+                }
+            }
+
             unless ($row == 0) {
-                $val = $args->{"-col_$col"}->($val) if exists $args->{"-col_$col"} and ref($args->{"-col_$col"}) eq 'CODE';
+                #$val = $args->{"-col_$col"}->($val) if exists $args->{"-col_$col"} and ref($args->{"-col_$col"}) eq 'CODE';
+                if (exists $args->{"-col_$col"}) {
+                    if (ref($args->{"-col_$col"}) eq 'CODE') {
+                        $val = $args->{"-col_$col"}->($val);
+                    } elsif (ref($args->{"-col_$col"}) eq 'HASH') {
+                        $attr = $args->{"-col_$col"};
+                    }
+                }
             }
 
             # --empty
@@ -112,7 +127,7 @@ sub _process {
             $data->[$row][$col] = { 
                 tag => $tag, 
                 (defined( $val ) ? (cdata => $val) : ()), 
-                (defined( $args->{$tag} ) ? (attr => $args->{$tag}) : ()),
+                (defined( $attr ) ? (attr => $attr) : ()),
             };
         }
     }
