@@ -306,15 +306,16 @@ data upside down and render columns right to left.
 
 =item * C<earthquake( %args )>
 
-C<mirror()> applied to transpose/landscape.
+Combines transpose/landscape with mirror.
 
 =item * C<tsunami( %args )>
 
-C<reverse()> applied to transpose/landscape.
-
-Columns are rendered right to left.
+Combines transpose/landscape with reverse.
 
 =back
+
+For most cases, C<portrait()> and C<landscape()> are all you need. They
+are simply aliases for C<generate()> and C<transpose()>, respectively.
 
 =head1 PARAMETERS
 
@@ -395,28 +396,42 @@ Render the table with without the headings row, if true.
 
   headless => 1
 
-=item * C<headings: sub { }>
+=item * C<headings: \& or \%>
 
 Apply anonymous subroutine to each cell in headings row.
 
   headings => sub {join(" ",map{ucfirst lc$_}split"_",shift)}
 
-=item * C<-row_X: sub { }>
+Or apply hash ref as attributes:
+
+  headings => { class => 'some-class' }
+
+=item * C<-row_X: \& or \%>
 
 Apply this anonymous subroutine to row X. (0 index based)
 
   -row_3 => sub { uc shift }
 
-=item * C<-col_X: sub { return function( shift ) }>
+Or apply hash ref as attributes:
+
+  -row_3 => { class => 'some-class' }
+
+=item * C<-col_X: \& or \%>
 
 Apply this anonymous subroutine to column X. (0 index based)
 
   -col_4 => sub { sprintf "%02d", shift || 0 }
 
-You can alias any column number by the value of the heading
-in that column:
+Or apply hash ref as attributes:
 
-  -status => sub { "<b>$_[0]"</b>" }
+  -col_4 => { class => 'some-class' }
+
+You can alias any column number by the value of the heading
+name in that column:
+
+  -my_heading3 => sub { "<b>$_[0]"</b>" }
+
+  -my_heading3 => { class => 'special-row' }
 
 =item * C<tgroups: 0 or 1>
 
@@ -427,7 +442,7 @@ C<portrait()> and C<mirror()>.
 
   tgroups => 1
 
-=item * C<caption: $str or \%args>
+=item * C<caption: $str or \%>
 
 Caption is special in that you can either pass a string to
 be used as CDATA or a hash whose only key is the string
@@ -437,33 +452,37 @@ to be used as CDATA:
 
   caption => { "With Attributes" => { align => "bottom" } }
 
-=item * C<table: \%args>
+=item * C<colgroup: \@ or \%>
+
+=item * C<col: \@ or \%>
+
+=item * C<table: \%>
 
 Apply these attributes to the table tag.
 
   table => { class => 'spreadsheet' }
 
-=item * C<thead: \%args>
+=item * C<thead: \%>
 
   thead => { style => 'background: color' }
 
-=item * C<tfoot: \%args>
+=item * C<tfoot: \%>
 
   tfoot => { style => 'background: color' }
 
-=item * C<tbody: \%args>
+=item * C<tbody: \%>
 
   tbody => { style => 'background: color' }
 
-=item * C<tr: \%args>
+=item * C<tr: \%>
 
   tr => { style => { background => [qw( color1 color2 )]' } }
 
-=item * C<th: \%args>
+=item * C<th: \%>
 
   th => { style => 'background: color' }
 
-=item * C<td: \%args>
+=item * C<td: \%>
 
   td => { style => 'background: color' }
 
