@@ -569,9 +569,6 @@ value contol, rotating attributes and totals/subtotals.
 
 =head1 BUGS AND LIMITATIONS
 
-Currently missing <col> and <colgroup> tags, row grouping and 
-fine grained cell attribute and content control.
-
 Benchmarks have improved since switching from HTML::Element
 to HTML::AutoTag but we are still a C- student at best.
 The following benchmark was performed by rendering a
