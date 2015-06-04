@@ -474,10 +474,18 @@ to be used as CDATA:
 
 Add colgroup tag(s) to the table. Use an AoH for multiple.
 
+  colgroup => { span => 2, style => { 'background-color' => 'orange' } }
+
+  colgroup => [ { span => 20 }, { span => 1, class => 'end' } ]
+
 =item * C<col: \@ or \%>
 
 Add col tag(s) to the table. Use an AoH for multiple. Wraps
 tags within a colgroup tag.
+
+  col => { span => 2, style => { 'background-color' => 'orange' } }
+
+  col => [ { span => 20 }, { span => 1, class => 'end' } ]
 
 =item * C<table: \%>
 
