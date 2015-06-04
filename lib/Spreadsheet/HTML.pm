@@ -154,14 +154,6 @@ sub _make_table {
         }
     }
 
-    my ($head, $foot, @body) = @{ $args{data} };
-    my $head_row  = { tag => 'tr', attr => $args{tr}, cdata => $head };
-    my $foot_row  = { tag => 'tr', attr => $args{tr}, cdata => $foot };
-    my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
-
-    my $encodes = exists $args{encodes} ? $args{encodes} : '';
-    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent} );
-
     my $caption;
     if (ref($args{caption}) eq 'HASH') {
         (my $cdata) = keys %{ $args{caption} };
@@ -189,6 +181,13 @@ sub _make_table {
         }
     }
 
+    my ($head, $foot, @body) = @{ $args{data} };
+    my $head_row  = { tag => 'tr', attr => $args{tr}, cdata => $head };
+    my $foot_row  = { tag => 'tr', attr => $args{tr}, cdata => $foot };
+    my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
+
+    my $encodes = exists $args{encodes} ? $args{encodes} : '';
+    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent} );
 
     return $auto->tag(
         tag => 'table',
