@@ -110,7 +110,7 @@ sub _process {
             }
 
             # -col_X
-            unless ($row == 0) {
+            unless (!$args->{matrix} and $row == 0) {
                 if (exists $args->{"-col_$col"}) {
                     if (ref($args->{"-col_$col"}) eq 'CODE') {
                         $val = $args->{"-col_$col"}->($val);
