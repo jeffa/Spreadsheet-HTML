@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.17';
 
 use Exporter 'import';
-our @EXPORT = qw( portrait generate landscape transpose flip mirror reverse earthquake tsunami );
+our @EXPORT_OK = qw( portrait generate landscape transpose flip mirror reverse earthquake tsunami );
 
 use Clone;
 use HTML::AutoTag;
