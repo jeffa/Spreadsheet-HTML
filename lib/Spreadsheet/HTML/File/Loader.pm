@@ -14,7 +14,7 @@ sub parse {
         return Spreadsheet::HTML::File::JSON::parse( $file );
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::File::YAML::parse( $file );
-    } elsif ($file =~ /\.xls$/) {
+    } elsif ($file =~ /\.xlsx?$/) {
         return Spreadsheet::HTML::File::XLS::parse( $file );
     }
 }
