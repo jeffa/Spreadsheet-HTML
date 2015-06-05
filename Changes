@@ -1,6 +1,10 @@
 Revision history for Spreadsheet-HTML
 
 0.17
+    - -col_X works as it should with matrix now
+    - fixed EXPORT issues (using EXPORT_OK now)
+    - more consistent file parsing error handling
+    - added support for .xlsx extensions
 
 0.16
     - fixed broken test
