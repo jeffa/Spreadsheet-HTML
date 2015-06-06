@@ -369,7 +369,7 @@ when set to any value that is defined.
 
   indent => '    '
 
-=item * C<encode: $str>
+=item * C<encodes: $str>
 
 HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
