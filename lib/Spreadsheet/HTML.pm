@@ -11,36 +11,36 @@ use HTML::AutoTag;
 use Math::Matrix;
 use Spreadsheet::HTML::File::Loader;
 
-sub portrait    { generate( @_, flip => 0, rotate =>   0 ) }
-sub earthquake  { generate( @_, flip => 0, rotate =>  90, tgroups => 0 ) }
-sub flip        { generate( @_, flip => 0, rotate => 180, tgroups => 0 ) } # this should be flip
-sub tornado     { generate( @_, flip => 0, rotate => 270, tgroups => 0 ) }
+sub portrait    { generate( @_, flip => 0, theta =>   0 ) }
+sub earthquake  { generate( @_, flip => 0, theta =>  90, tgroups => 0 ) }
+sub flip        { generate( @_, flip => 0, theta => 180, tgroups => 0 ) } # this should be flip
+sub tornado     { generate( @_, flip => 0, theta => 270, tgroups => 0 ) }
 
-sub mirror      { generate( @_, flip => 1, rotate =>   0 ) }
-sub tsunami     { generate( @_, flip => 1, rotate =>  90, tgroups => 0 ) }
-sub reverse     { generate( @_, flip => 1, rotate => 180, tgroups => 0 ) } # this should be reverse
-sub landscape   { generate( @_, flip => 1, rotate => 270, tgroups => 0 ) }
+sub mirror      { generate( @_, flip => 1, theta =>   0 ) }
+sub tsunami     { generate( @_, flip => 1, theta =>  90, tgroups => 0 ) }
+sub reverse     { generate( @_, flip => 1, theta => 180, tgroups => 0 ) } # this should be reverse
+sub landscape   { generate( @_, flip => 1, theta => 270, tgroups => 0 ) }
 
 sub generate    {
     my %args = _process( @_ );
 
-    if (!$args{rotate}) {
+    if (!$args{theta}) {
 
         $args{data} = $args{flip} ? [ map [ CORE::reverse @$_ ], @{ $args{data} } ] : $args{data};
 
-    } elsif ($args{rotate} == 90) {
+    } elsif ($args{theta} == 90) {
 
         $args{data} = $args{flip}
             ? [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }]
             : [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
 
-    } elsif ($args{rotate} == 180) {
+    } elsif ($args{theta} == 180) {
 
         $args{data} = $args{flip}
             ? [ CORE::reverse @{ $args{data} } ]
             : [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
     
-    } elsif ($args{rotate} == 270) {
+    } elsif ($args{theta} == 270) {
 
         $args{data} = $args{flip}
             ? [@{ Math::Matrix::transpose( $args{data} ) }]
@@ -365,7 +365,7 @@ an array ref of array refs.
 
   data => [["a".."c"],[1..3],[4..6],[7..9]]
 
-=item * C<rotate: 0, 90, 180, or 270>
+=item * C<theta: 0, 90, 180, or 270>
 
 Rotates table clockwise. Default to 0: headers at top.
 90: headers at right. 180: headers at bottom.
@@ -374,7 +374,7 @@ Rotates table clockwise. Default to 0: headers at top.
 =item * C<flip: 0 or 1>
 
 Flips table horizontally. Can be used in conjunction
-with C<rotate> to achieve counter-clockwise table rotation.
+with C<theta> to achieve counter-clockwise table rotation.
 
 =item * C<file: $str>
 
@@ -594,6 +594,8 @@ My original from 2001. Can handle advanced grouping, individual cell
 value contol, rotating attributes and totals/subtotals.
 
 =item * L<http://www.w3.org/TR/html5/tabular-data.html>
+
+=item * L<http://en.wikipedia.org/wiki/Rotation_matrix>
 
 =back
 
