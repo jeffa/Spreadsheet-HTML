@@ -15,15 +15,15 @@ my $data = [
 my $expected = '<table><tr><th>header1</th><td>foo1</td><td>foo2</td><td>foo3</td><td>foo4</td></tr><tr><th>header2</th><td>bar1</td><td>bar2</td><td>bar3</td><td>bar4</td></tr><tr><th>header3</th><td>baz1</td><td>baz2</td><td>baz3</td><td>baz4</td></tr><tr><th>header4</th><td>qux1</td><td>qux2</td><td>qux3</td><td>qux4</td></tr></table>';
 
 my $table = Spreadsheet::HTML->new( data => $data );
-is $table->transpose, $expected,                         "correct HTML from method call" ;
-is Spreadsheet::HTML::transpose( $data ), $expected,     "correct HTML from procedural call (array ref arg)" ;
-is Spreadsheet::HTML::transpose( @$data ), $expected,    "correct HTML from procedural call (list arg)" ;
+is $table->landscape, $expected,                         "correct HTML from method call" ;
+is Spreadsheet::HTML::landscape( $data ), $expected,     "correct HTML from procedural call (array ref arg)" ;
+is Spreadsheet::HTML::landscape( @$data ), $expected,    "correct HTML from procedural call (list arg)" ;
 
-is Spreadsheet::HTML::transpose( data => $data, matrix => 1 ), 
+is Spreadsheet::HTML::landscape( data => $data, matrix => 1 ), 
     '<table><tr><td>header1</td><td>foo1</td><td>foo2</td><td>foo3</td><td>foo4</td></tr><tr><td>header2</td><td>bar1</td><td>bar2</td><td>bar3</td><td>bar4</td></tr><tr><td>header3</td><td>baz1</td><td>baz2</td><td>baz3</td><td>baz4</td></tr><tr><td>header4</td><td>qux1</td><td>qux2</td><td>qux3</td><td>qux4</td></tr></table>',
    "correct HTML from procedural call (list arg)";
 
-is Spreadsheet::HTML::transpose( data => $data, headless => 1 ), 
+is Spreadsheet::HTML::landscape( data => $data, headless => 1 ), 
     '<table><tr><td>foo1</td><td>foo2</td><td>foo3</td><td>foo4</td></tr><tr><td>bar1</td><td>bar2</td><td>bar3</td><td>bar4</td></tr><tr><td>baz1</td><td>baz2</td><td>baz3</td><td>baz4</td></tr><tr><td>qux1</td><td>qux2</td><td>qux3</td><td>qux4</td></tr></table>',
    "correct HTML from procedural call (list arg)";
 

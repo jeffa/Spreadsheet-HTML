@@ -11,44 +11,43 @@ use HTML::AutoTag;
 use Math::Matrix;
 use Spreadsheet::HTML::File::Loader;
 
-sub portrait    { generate( @_ ) }
-sub generate    { _make_table( _process( @_ ) ) }
+sub portrait    { generate( @_, flip => 0, rotate =>   0 ) }
+sub earthquake  { generate( @_, flip => 0, rotate =>  90, tgroups => 0 ) }
+sub flip        { generate( @_, flip => 0, rotate => 180, tgroups => 0 ) } # this should be flip
+sub tornado     { generate( @_, flip => 0, rotate => 270, tgroups => 0 ) }
 
-sub landscape   { transpose( @_ ) }
-sub transpose   {
-    my %args = _process( @_ );
-    $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
-    return _make_table( %args, tgroups => 0 );
-}
+sub mirror      { generate( @_, flip => 1, rotate =>   0 ) }
+sub tsunami     { generate( @_, flip => 1, rotate =>  90, tgroups => 0 ) }
+sub reverse     { generate( @_, flip => 1, rotate => 180, tgroups => 0 ) } # this should be reverse
+sub landscape   { generate( @_, flip => 1, rotate => 270, tgroups => 0 ) }
 
-sub flip   {
+sub generate    {
     my %args = _process( @_ );
-    $args{data} = [ CORE::reverse @{ $args{data} } ];
-    return _make_table( %args, tgroups => 0 );
-}
 
-sub mirror   {
-    my %args = _process( @_ );
-    $args{data} = [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
+    if (!$args{rotate}) {
+
+        $args{data} = $args{flip}
+            ? [ map [ CORE::reverse @$_ ], @{ $args{data} } ]
+            : $args{data};
+
+    } elsif ($args{rotate} == 90) {
+
+        $args{data} = $args{flip}
+            ? [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }]
+            : [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
+
+    } elsif ($args{rotate} == 180) {
+
+        $args{data} = $args{flip}
+            ? [ CORE::reverse @{ $args{data} } ]
+            : [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
+    
+    } elsif ($args{rotate} == 270) {
+
+        $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
+    }
+
     return _make_table( %args );
-}
-
-sub reverse   {
-    my %args = _process( @_ );
-    $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
-    return _make_table( %args, tgroups => 0 );
-}
-
-sub earthquake   {
-    my %args = _process( @_ );
-    $args{data} = [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
-    return _make_table( %args, tgroups => 0 );
-}
-
-sub tsunami   {
-    my %args = _process( @_ );
-    $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
-    return _make_table( %args, tgroups => 0 );
 }
 
 sub new {
@@ -210,7 +209,18 @@ sub _args {
         $args = {@_};
         $data = delete $args->{data} if exists $args->{data};
     } elsif (@_ > 1 && ref($_[0]) eq 'ARRAY') {
-        $data = [ @_ ];
+        if (ref($_[0]->[0]) eq 'ARRAY') {
+            $data = shift;
+        }
+        my @args;
+        for (@_) {
+            if (ref($_) eq 'ARRAY') {
+                push @$data, $_;
+            } else {
+                push @args, $_; 
+            }
+        }
+        $args = {@args};
     } elsif (@_ == 1) {
         $data = $_[0];
     }
@@ -229,6 +239,8 @@ sub _args {
 
     return ( $self, Clone::clone($data), $args );
 }
+
+sub transpose   { no warnings; warn "transpose is deprecated, use landscape"; landscape( @_ ) }
 
 
 1;
@@ -294,16 +306,13 @@ unless you specify otherwise (see PARAMETERS).
   $html = $table->generate( table => {border => 1}, encode => '<>' );
   print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
 
-Returns a string that contains the rendered HTML table.
-
 =item * C<portrait( %args )>
 
-Alias for C<generate()>
+Headers on top.
 
 =item * C<transpose( %args )>
 
-Uses Math::Matrix to rotate the headings and data
-90 degrees counter-clockwise.
+Headers on left.
 
 =item * C<landscape( %args )>
 
@@ -311,22 +320,25 @@ Alias for C<transpose()>
 
 =item * C<flip( %args )>
 
-Flips the headings and data upside down.
+Headers on bottom.
 
 =item * C<mirror( %args )>
 
-Columns are rendered right to left.
+Headers on top, reversed.
 
 =item * C<reverse( %args )>
 
-Combines flip and mirror: flips the headings and
-data upside down and render columns right to left.
+Headers on bottom, reversed.
 
 =item * C<earthquake( %args )>
 
-Combines transpose/landscape with mirror.
+Headers on right, ascending.
 
 =item * C<tsunami( %args )>
+
+Headers on right, descending.
+
+=item * C<tornado( %args )>
 
 Combines transpose/landscape with reverse.
 

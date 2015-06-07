@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.18
+    - deprecated transpose()
+    - all front end generating methods call generate()
+    - refactored _args() to allow any named args
 
 0.17
     - -col_X works as it should with matrix now

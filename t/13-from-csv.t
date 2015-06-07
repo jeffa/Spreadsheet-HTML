@@ -20,12 +20,12 @@ is Spreadsheet::HTML::generate( %file ),
 ;
 
 $table = Spreadsheet::HTML->new( %file );
-is $table->transpose,
+is $table->landscape,
     '<table><tr><th>header1</th><td>foo</td><td>one</td><td>1</td></tr><tr><th>header2</th><td>bar</td><td>two</td><td>2</td></tr><tr><th>header3</th><td>baz</td><td>three</td><td>3</td></tr></table>',
     "transposed simple CSV data via method from new object"
 ;
 
-is Spreadsheet::HTML::transpose( %file ),
+is Spreadsheet::HTML::landscape( %file ),
     '<table><tr><th>header1</th><td>foo</td><td>one</td><td>1</td></tr><tr><th>header2</th><td>bar</td><td>two</td><td>2</td></tr><tr><th>header3</th><td>baz</td><td>three</td><td>3</td></tr></table>',
     "transposed simple CSV data via procedure"
 ;

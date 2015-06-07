@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 23;
+use Test::More tests => 26;
 
 use Spreadsheet::HTML;
 
@@ -20,6 +20,9 @@ is $table->generate, $with_th,                                  "correct HTML fr
 is Spreadsheet::HTML::generate( $data ), $with_th,              "correct HTML from procedural call (array ref arg)" ;
 is Spreadsheet::HTML::generate( @$data ), $with_th,             "correct HTML from procedural call (list arg)" ;
 is Spreadsheet::HTML::generate( data => $data ), $with_th,      "correct HTML from procedural call (named params)" ;
+is Spreadsheet::HTML::generate( $data, foo => 'bar' ), $with_th,              "extra params does not break procedural call (array ref arg)" ;
+is Spreadsheet::HTML::generate( @$data, foo => 'bar' ), $with_th,             "extra params does not break procedural call (list arg)" ;
+is Spreadsheet::HTML::generate( data => $data, foo => 'bar' ), $with_th,      "extra params does not break procedural call (named params)" ;
 
 my $no_th = '<table><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>';
 
