@@ -28,25 +28,28 @@ my $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 Interface
 ---------
 * portrait
-<table><tr><th>Header1</th><th>Header2</th><th>Header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>
-
-* landscape
-<table><tr><th>Header1</th><td>foo</td><td>one</td><td>1</td></tr><tr><th>Header2</th><td>bar</td><td>two</td><td>2</td></tr><tr><th>Header3</th><td>baz</td><td>three</td><td>3</td></tr></table>
-
-* flip
-<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><th>Header1</th><th>Header2</th><th>Header3</th></tr></table>
-
-* mirror
-<table><tr><th>Header3</th><th>Header2</th><th>Header1</th></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>3</td><td>2</td><td>1</td></tr></table>
-
-* reverse
-<table><tr><td>3</td><td>2</td><td>1</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><th>Header3</th><th>Header2</th><th>Header1</th></tr></table>
+<table><tr><th>head1</th><th>head2</th><th>head3</th></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>
 
 * earthquake
-<table><tr><td>1</td><td>one</td><td>foo</td><th>Header1</th></tr><tr><td>2</td><td>two</td><td>bar</td><th>Header2</th></tr><tr><td>3</td><td>three</td><td>baz</td><th>Header3</th></tr></table>
+<table><tr><td>1</td><td>foo</td><td>one</td><th>head1</th></tr><tr><td>2</td><td>bar</td><td>two</td><th>head2</th></tr><tr><td>3</td><td>baz</td><td>three</td><th>head3</th></tr></table>
+
+* flip
+<table><tr><td>3</td><td>2</td><td>1</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><th>head3</th><th>head2</th><th>head1</th></tr></table>
+
+* tornado
+<table><tr><th>head3</th><td>three</td><td>baz</td><td>3</td></tr><tr><th>head2</th><td>two</td><td>bar</td><td>2</td></tr><tr><th>head1</th><td>one</td><td>foo</td><td>1</td></tr></table>
+
+* mirror
+<table><tr><th>head3</th><th>head2</th><th>head1</th></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><td>3</td><td>2</td><td>1</td></tr></table>
 
 * tsunami
-<table><tr><td>3</td><td>three</td><td>baz</td><th>Header3</th></tr><tr><td>2</td><td>two</td><td>bar</td><th>Header2</th></tr><tr><td>1</td><td>one</td><td>foo</td><th>Header1</th></tr></table>
+<table><tr><td>3</td><td>baz</td><td>three</td><th>head3</th></tr><tr><td>2</td><td>bar</td><td>two</td><th>head2</th></tr><tr><td>1</td><td>foo</td><td>one</td><th>head1</th></tr></table>
+
+* reverse
+<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><th>head1</th><th>head2</th><th>head3</th></tr></table>
+
+* landscape
+<table><tr><th>head1</th><td>one</td><td>foo</td><td>1</td></tr><tr><th>head2</th><td>two</td><td>bar</td><td>2</td></tr><tr><th>head3</th><td>three</td><td>baz</td><td>3</td></tr></table>
 
 Installation
 ------------
