@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.18';
 
 use Exporter 'import';
-our @EXPORT_OK = qw( portrait generate landscape transpose flip mirror reverse earthquake tsunami );
+our @EXPORT_OK = qw( portrait generate landscape tornado flip mirror reverse earthquake tsunami );
 
 use Clone;
 use HTML::AutoTag;
@@ -26,9 +26,7 @@ sub generate    {
 
     if (!$args{rotate}) {
 
-        $args{data} = $args{flip}
-            ? [ map [ CORE::reverse @$_ ], @{ $args{data} } ]
-            : $args{data};
+        $args{data} = $args{flip} ? [ map [ CORE::reverse @$_ ], @{ $args{data} } ] : $args{data};
 
     } elsif ($args{rotate} == 90) {
 
@@ -44,7 +42,9 @@ sub generate    {
     
     } elsif ($args{rotate} == 270) {
 
-        $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = $args{flip}
+            ? [@{ Math::Matrix::transpose( $args{data} ) }]
+            : [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
     }
 
     return _make_table( %args );
@@ -310,13 +310,9 @@ unless you specify otherwise (see PARAMETERS).
 
 Headers on top.
 
-=item * C<transpose( %args )>
-
-Headers on left.
-
 =item * C<landscape( %args )>
 
-Alias for C<transpose()>
+Headers on left.
 
 =item * C<flip( %args )>
 
@@ -342,10 +338,13 @@ Headers on right, descending.
 
 Combines transpose/landscape with reverse.
 
+=item * C<transpose( %args )>
+
+Deprecated: use C<landscape()>
+
 =back
 
-For most cases, C<portrait()> and C<landscape()> are all you need. They
-are simply aliases for C<generate()> and C<transpose()>, respectively.
+For most cases, C<portrait()> and C<landscape()> are all you need.
 
 =head1 PARAMETERS
 
@@ -365,6 +364,17 @@ The data to be rendered into table cells. Should be
 an array ref of array refs.
 
   data => [["a".."c"],[1..3],[4..6],[7..9]]
+
+=item * C<rotate: 0, 90, 180, or 270>
+
+Rotates table clockwise. Default to 0: headers at top.
+90: headers at right. 180: headers at bottom.
+270: headers at left. 
+
+=item * C<flip: 0 or 1>
+
+Flips table horizontally. Can be used in conjunction
+with C<rotate> to achieve counter-clockwise table rotation.
 
 =item * C<file: $str>
 
@@ -632,15 +642,6 @@ Please report any bugs or feature requests to either
 
 I will be notified, and then you'll automatically be notified of progress
 on your bug as I make changes.
-
-In terms of limitations this implementation is not as fast as it should be.
-From the results a few performance tests, i believe this to be blamed on HTML::Tree.
-v0.02 could process a 500x500 data matrix in 1/5 of a second. This version 
-timed at around 8.5 seconds. Not awesome. DBIx::XHTML_Table timed at 2.2 seconds.
-The several lines of code that HTML::Element save me are not worth the time
-trade off, so i will be working to develop my own solution, unless another CPAN
-module will suffice. Don't get me wrong, HTML::Tree is awesome and powerful.
-But i needs speed. And i could be wrong ... ;)
 
 =head1 GITHUB
 
