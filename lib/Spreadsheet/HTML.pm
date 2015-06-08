@@ -315,6 +315,17 @@ Headers on bottom: C<generate( 'theta', -180 )>
 
 Headers on right: C<generate( 'theta', 90 )>
 
+=back
+
+For most cases, C<portrait()> and C<landscape()> are all you need.
+
+=head2 DEPRECATED METHODS
+
+These methods will be removed soon. Using them now will
+emit warning messages that inform of alternatives.
+
+=over 4
+
 =item * C<transpose( %args )>
 
 Deprecated: use C<landscape()>
@@ -340,8 +351,6 @@ Deprecated: use C<south( 'flip', 1 )>
 Deprecated: use C<south()>
 
 =back
-
-For most cases, C<portrait()> and C<landscape()> are all you need.
 
 =head1 PARAMETERS
 
@@ -461,7 +470,7 @@ Apply this anonymous subroutine to column X. (0 index based)
 
 Or apply hash ref as attributes:
 
-  -colo => { class => 'some-class' }
+  -col4 => { class => 'some-class' }
 
 You can alias any column number by the value of the heading
 name in that column:
