@@ -31,7 +31,7 @@ sub layout {
     );
 }
 
-sub generate    {
+sub generate {
     my %args = _process( @_ );
 
     $args{theta} *= -1 if $args{flip};
@@ -71,10 +71,10 @@ sub _process {
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
     my $max_cols = scalar @{ $data->[0] };
 
-    # headings is an alias for row0
+    # headings is an alias for -row0
     $args->{-row0} = delete $args->{headings} if exists $args->{headings};
 
-    # headings to index mapping for column
+    # headings to index mapping for -colX
     my %index = ();
     if ($#{ $data->[0] }) {
         %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
@@ -97,20 +97,26 @@ sub _process {
             # -rowX
             my $attr = $args->{$tag};
             if (exists $args->{"-row$row"}) {
-                if (ref($args->{"-row$row"}) eq 'CODE') {
-                    $val = $args->{"-row$row"}->($val);
-                } elsif (ref($args->{"-row$row"}) eq 'HASH') {
-                    $attr = $args->{"-row$row"};
+                $args->{"-row$row"} = [ $args->{"-row$row"} ] unless ref( $args->{"-row$row"} ) eq 'ARRAY';
+                for (@{ $args->{"-row$row"} }) {
+                    if (ref($_) eq 'CODE') {
+                        $val = $_->($val);
+                    } elsif (ref($_) eq 'HASH') {
+                        $attr = $_;
+                    }
                 }
             }
 
             # -colX
             unless (!$args->{matrix} and $row == 0) {
                 if (exists $args->{"-col$col"}) {
-                    if (ref($args->{"-col$col"}) eq 'CODE') {
-                        $val = $args->{"-col$col"}->($val);
-                    } elsif (ref($args->{"-col$col"}) eq 'HASH') {
-                        $attr = $args->{"-col$col"};
+                    $args->{"-col$col"} = [ $args->{"-col$col"} ] unless ref( $args->{"-col$col"} ) eq 'ARRAY';
+                    for (@{ $args->{"-col$col"} }) {
+                        if (ref($_) eq 'CODE') {
+                            $val = $_->($val);
+                        } elsif (ref($_) eq 'HASH') {
+                            $attr = $_;
+                        }
                     }
                 }
             }
@@ -236,12 +242,12 @@ sub _args {
     return ( $self, Clone::clone($data), $args );
 }
 
-sub transpose   { no warnings; warn "transpose is deprecated, use landscape"; generate( @_, theta => -270, tgroups => 0 ) }
-sub earthquake  { no warnings; warn "earthquake is deprecated, use east"; generate( @_, theta =>  90, tgroups => 0 ) }
-sub reverse     { no warnings; warn "reverse is deprecated, use south with flip"; generate( @_, theta => 180, tgroups => 0 ) }
+sub transpose   { no warnings; warn "transpose is deprecated, use landscape";       generate( @_, theta => -270, tgroups => 0 ) }
+sub earthquake  { no warnings; warn "earthquake is deprecated, use east";           generate( @_, theta =>  90, tgroups => 0 ) }
+sub reverse     { no warnings; warn "reverse is deprecated, use south with flip";   generate( @_, theta => 180, tgroups => 0 ) }
 sub mirror      { no warnings; warn "mirror is deprecated, use portrait with flip"; generate( @_, theta =>    0, flip => 1 ) }
-sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip"; generate( @_, theta =>  -90, tgroups => 0 ) }
-sub flip        { no warnings; warn "flip is deprecated, use south"; generate( @_, theta => -180, tgroups => 0 ) }
+sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip";    generate( @_, theta =>  -90, tgroups => 0 ) }
+sub flip        { no warnings; warn "flip is deprecated, use south";                generate( @_, theta => -180, tgroups => 0 ) }
 
 
 1;
