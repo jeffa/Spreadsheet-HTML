@@ -33,7 +33,7 @@ Interface
 * earthquake
 <table><tr><td>1</td><td>foo</td><td>one</td><th>head1</th></tr><tr><td>2</td><td>bar</td><td>two</td><th>head2</th></tr><tr><td>3</td><td>baz</td><td>three</td><th>head3</th></tr></table>
 
-* flip
+* reverse
 <table><tr><td>3</td><td>2</td><td>1</td></tr><tr><td>baz</td><td>bar</td><td>foo</td></tr><tr><td>three</td><td>two</td><td>one</td></tr><tr><th>head3</th><th>head2</th><th>head1</th></tr></table>
 
 * tornado
@@ -45,7 +45,7 @@ Interface
 * tsunami
 <table><tr><td>3</td><td>baz</td><td>three</td><th>head3</th></tr><tr><td>2</td><td>bar</td><td>two</td><th>head2</th></tr><tr><td>1</td><td>foo</td><td>one</td><th>head1</th></tr></table>
 
-* reverse
+* flip
 <table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><th>head1</th><th>head2</th><th>head3</th></tr></table>
 
 * landscape

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.18
+    - swapped flip() and reverse()
     - deprecated transpose()
     - all front end generating methods call generate()
     - refactored _args() to allow any named args
