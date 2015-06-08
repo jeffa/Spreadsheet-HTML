@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 0.19
+    - -rowX and -colX accepts array ref to
+        allow subs and hashes (no longer either/or)
     - layout is not a method
 
 0.18
