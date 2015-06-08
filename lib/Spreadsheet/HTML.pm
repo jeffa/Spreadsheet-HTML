@@ -70,15 +70,15 @@ sub _process {
         }
     }
 
-    # headings is an alias for row_0
-    $args->{-row_0} = delete $args->{headings} if exists $args->{headings};
+    # headings is an alias for row0
+    $args->{-row0} = delete $args->{headings} if exists $args->{headings};
 
     # headings to index mapping for column
     my %index = ();
     if ($#{ $data->[0] }) {
         %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
         for (grep /^-/, keys %$args) {
-            $args->{"-col_$index{$_}" } = delete $args->{$_} if exists $index{$_};
+            $args->{"-col$index{$_}" } = delete $args->{$_} if exists $index{$_};
         }
     }
 
@@ -93,23 +93,23 @@ sub _process {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
 
-            # -row_X
+            # -rowX
             my $attr = $args->{$tag};
-            if (exists $args->{"-row_$row"}) {
-                if (ref($args->{"-row_$row"}) eq 'CODE') {
-                    $val = $args->{"-row_$row"}->($val);
-                } elsif (ref($args->{"-row_$row"}) eq 'HASH') {
-                    $attr = $args->{"-row_$row"};
+            if (exists $args->{"-row$row"}) {
+                if (ref($args->{"-row$row"}) eq 'CODE') {
+                    $val = $args->{"-row$row"}->($val);
+                } elsif (ref($args->{"-row$row"}) eq 'HASH') {
+                    $attr = $args->{"-row$row"};
                 }
             }
 
-            # -col_X
+            # -colX
             unless (!$args->{matrix} and $row == 0) {
-                if (exists $args->{"-col_$col"}) {
-                    if (ref($args->{"-col_$col"}) eq 'CODE') {
-                        $val = $args->{"-col_$col"}->($val);
-                    } elsif (ref($args->{"-col_$col"}) eq 'HASH') {
-                        $attr = $args->{"-col_$col"};
+                if (exists $args->{"-col$col"}) {
+                    if (ref($args->{"-col$col"}) eq 'CODE') {
+                        $val = $args->{"-col$col"}->($val);
+                    } elsif (ref($args->{"-col$col"}) eq 'HASH') {
+                        $attr = $args->{"-col$col"};
                     }
                 }
             }
@@ -441,25 +441,25 @@ Or apply hash ref as attributes:
 
   headings => { class => 'some-class' }
 
-=item * C<-row_X: \& or \%>
+=item * C<-rowX: \& or \%>
 
 Apply this anonymous subroutine to row X. (0 index based)
 
-  -row_3 => sub { uc shift }
+  -row3 => sub { uc shift }
 
 Or apply hash ref as attributes:
 
-  -row_3 => { class => 'some-class' }
+  -row3 => { class => 'some-class' }
 
-=item * C<-col_X: \& or \%>
+=item * C<-colX: \& or \%>
 
 Apply this anonymous subroutine to column X. (0 index based)
 
-  -col_4 => sub { sprintf "%02d", shift || 0 }
+  -col4 => sub { sprintf "%02d", shift || 0 }
 
 Or apply hash ref as attributes:
 
-  -col_4 => { class => 'some-class' }
+  -colo => { class => 'some-class' }
 
 You can alias any column number by the value of the heading
 name in that column:
