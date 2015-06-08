@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.19
+
 0.18
     - added north(), east(), west() and south()
     - deprecated transpose, flip, mirror, reverse, earthquake and tsunami

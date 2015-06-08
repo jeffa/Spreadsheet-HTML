@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 use Exporter 'import';
 our @EXPORT_OK = qw( portrait generate landscape tornado flip mirror reverse earthquake tsunami );
