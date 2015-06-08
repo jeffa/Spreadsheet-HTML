@@ -381,14 +381,14 @@ array references.
 
 =over 4
 
-=item * C<data: [ [], [], [], ... ]>
+=item * C<data>
 
 The data to be rendered into table cells. Should be
 an array ref of array refs.
 
   data => [["a".."c"],[1..3],[4..6],[7..9]]
 
-=item * C<file: $str>
+=item * C<file>
 
 The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML and HTML (first table found).
@@ -406,7 +406,7 @@ Rotates table clockwise. Default to 0: headers at top.
 Flips table horizontally.
 Can be used in conjunction with C<theta>.
 
-=item * C<indent: $str>
+=item * C<indent>
 
 Render the table with nested indentation. Defaults to
 undefined which produces no indentation. Adds newlines
@@ -414,7 +414,7 @@ when set to any value that is defined.
 
   indent => '    '
 
-=item * C<encodes: $str>
+=item * C<encodes>
 
 HTML Encode contents of td tags. Defaults to empty string
 which performs no encoding of entities. Pass a string like
@@ -424,7 +424,7 @@ encoded as HTML entites.
 
   encodes => '<>"'
 
-=item * C<empty: $str>
+=item * C<empty>
 
 Replace empty cells with this value. Defaults to &nbsp;
 Set value to undef to avoid any substitutions.
@@ -449,43 +449,6 @@ Render the table with without the headings row, if true.
 
   headless => 1
 
-=item * C<headings: \& or \%>
-
-Apply anonymous subroutine to each cell in headings row.
-
-  headings => sub {join(" ",map{ucfirst lc$_}split"_",shift)}
-
-Or apply hash ref as attributes:
-
-  headings => { class => 'some-class' }
-
-=item * C<-rowX: \& or \%>
-
-Apply this anonymous subroutine to row X. (0 index based)
-
-  -row3 => sub { uc shift }
-
-Or apply hash ref as attributes:
-
-  -row3 => { class => 'some-class' }
-
-=item * C<-colX: \& or \%>
-
-Apply this anonymous subroutine to column X. (0 index based)
-
-  -col4 => sub { sprintf "%02d", shift || 0 }
-
-Or apply hash ref as attributes:
-
-  -col4 => { class => 'some-class' }
-
-You can alias any column number by the value of the heading
-name in that column:
-
-  -my_heading3 => sub { "<b>$_[0]"</b>" }
-
-  -my_heading3 => { class => 'special-row' }
-
 =item * C<tgroups: 0 or 1>
 
 Group table rows into <thead> <tfoot> and <tbody>
@@ -495,7 +458,58 @@ C<portrait()> and C<mirror()>.
 
   tgroups => 1
 
-=item * C<caption: $str or \%>
+=item * C<headings>
+
+Apply anonymous subroutine to each cell in headings row.
+
+  headings => sub {join(" ",map{ucfirst lc$_}split"_",shift)}
+
+Or apply hash ref as attributes:
+
+  headings => { class => 'some-class' }
+
+Or both:
+
+  headings => [ sub { uc shift }, { class => "foo" } ]
+
+=item * C<-rowX>
+
+Apply this anonymous subroutine to row X. (0 index based)
+
+  -row3 => sub { uc shift }
+
+Or apply hash ref as attributes:
+
+  -row3 => { class => 'some-class' }
+
+Or both:
+
+  -row3 => [ sub { uc shift }, { class => "foo" } ]
+
+=item * C<-colX>
+
+Apply this anonymous subroutine to column X. (0 index based)
+
+  -col4 => sub { sprintf "%02d", shift || 0 }
+
+Or apply hash ref as attributes:
+
+  -col4 => { class => 'some-class' }
+
+Or both:
+
+  -col4 => [ sub { uc shift }, { class => "foo" } ]
+
+You can alias any column number by the value of the heading
+name in that column:
+
+  -my_heading3 => sub { "<b>$_[0]"</b>" }
+
+  -my_heading3 => { class => 'special-row' }
+
+  -my_heading3 => [ sub { uc shift }, { class => "foo" } ]
+
+=item * C<caption>
 
 Caption is special in that you can either pass a string to
 be used as CDATA or a hash whose only key is the string
@@ -505,7 +519,7 @@ to be used as CDATA:
 
   caption => { "With Attributes" => { align => "bottom" } }
 
-=item * C<colgroup: \@ or \%>
+=item * C<colgroup>
 
 Add colgroup tag(s) to the table. Use an AoH for multiple.
 
@@ -513,7 +527,7 @@ Add colgroup tag(s) to the table. Use an AoH for multiple.
 
   colgroup => [ { span => 20 }, { span => 1, class => 'end' } ]
 
-=item * C<col: \@ or \%>
+=item * C<col>
 
 Add col tag(s) to the table. Use an AoH for multiple. Wraps
 tags within a colgroup tag.
@@ -522,33 +536,33 @@ tags within a colgroup tag.
 
   col => [ { span => 20 }, { span => 1, class => 'end' } ]
 
-=item * C<table: \%>
+=item * C<table>
 
 Apply these attributes to the table tag.
 
   table => { class => 'spreadsheet' }
 
-=item * C<thead: \%>
+=item * C<thead>
 
   thead => { style => 'background: color' }
 
-=item * C<tfoot: \%>
+=item * C<tfoot>
 
   tfoot => { style => 'background: color' }
 
-=item * C<tbody: \%>
+=item * C<tbody>
 
   tbody => { style => 'background: color' }
 
-=item * C<tr: \%>
+=item * C<tr>
 
   tr => { style => { background => [qw( color1 color2 )]' } }
 
-=item * C<th: \%>
+=item * C<th>
 
   th => { style => 'background: color' }
 
-=item * C<td: \%>
+=item * C<td>
 
   td => { style => 'background: color' }
 
