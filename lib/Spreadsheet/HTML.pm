@@ -13,12 +13,12 @@ use Spreadsheet::HTML::File::Loader;
 
 sub portrait    { generate( @_, flip => 0, theta =>   0 ) }
 sub earthquake  { generate( @_, flip => 0, theta =>  90, tgroups => 0 ) }
-sub reverse     { generate( @_, flip => 0, theta => 180, tgroups => 0 ) } # this should be flip
+sub reverse     { generate( @_, flip => 0, theta => 180, tgroups => 0 ) }
 sub tornado     { generate( @_, flip => 0, theta => 270, tgroups => 0 ) }
 
 sub mirror      { generate( @_, flip => 1, theta =>   0 ) }
 sub tsunami     { generate( @_, flip => 1, theta =>  90, tgroups => 0 ) }
-sub flip        { generate( @_, flip => 1, theta => 180, tgroups => 0 ) } # this should be reverse
+sub flip        { generate( @_, flip => 1, theta => 180, tgroups => 0 ) }
 sub landscape   { generate( @_, flip => 1, theta => 270, tgroups => 0 ) }
 
 sub generate    {
