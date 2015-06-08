@@ -21,6 +21,11 @@ sub tsunami     { generate( @_, theta =>  -90, tgroups => 0 ) }
 sub flip        { generate( @_, theta => -180, tgroups => 0 ) }
 sub landscape   { generate( @_, theta => -270, tgroups => 0 ) }
 
+sub north   { generate( @_, theta =>    0 ) }
+sub east    { generate( @_, theta =>   90, tgroups => 0 ) }
+sub south   { generate( @_, theta => -180, tgroups => 0 ) }
+sub west    { generate( @_, theta => -270, tgroups => 0 ) }
+
 sub generate    {
     my %args = _process( @_ );
 
@@ -303,13 +308,19 @@ unless you specify otherwise (see PARAMETERS).
 
 =item * C<portrait( %args )>
 
+=item * C<north( %args )>
+
 Headers on top.
 
 =item * C<landscape( %args )>
 
+=item * C<west( %args )>
+
 Headers on left.
 
 =item * C<flip( %args )>
+
+=item * C<south( %args )>
 
 Headers on bottom.
 
@@ -322,6 +333,8 @@ Headers on top, reversed.
 Headers on bottom, reversed.
 
 =item * C<earthquake( %args )>
+
+=item * C<east( %args )>
 
 Headers on right, ascending.
 
@@ -360,23 +373,23 @@ an array ref of array refs.
 
   data => [["a".."c"],[1..3],[4..6],[7..9]]
 
-=item * C<theta: 0, 90, 180, 270, -90, -180, -270>
-
-Rotates table clockwise. Default to 0: headers at top.
-90: headers at right. 180: headers at bottom.
-270: headers at left. To achieve landscape, use -90.
-
-=item * C<flip: 0 or 1>
-
-Flips table horizontally. Can be used in conjunction
-with C<theta> to achieve counter-clockwise table rotation.
-
 =item * C<file: $str>
 
 The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML and HTML (first table found).
 
   file => 'foo.json'
+
+=item * C<theta: 0, 90, 180, 270, -90, -180, -270>
+
+Rotates table clockwise. Default to 0: headers at top.
+90: headers at right. 180: headers at bottom.
+270: headers at left. To achieve landscape, use -270.
+
+=item * C<flip: 0 or 1>
+
+Flips table horizontally.
+Can be used in conjunction with C<theta>.
 
 =item * C<indent: $str>
 

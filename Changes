@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.18
+    - added north(), east(), west() and south()
     - renamed -row_X and -col_X to -rowX and -colX
     - added theta and flip arguments
     - swapped flip() and reverse()
