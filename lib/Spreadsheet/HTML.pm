@@ -12,13 +12,6 @@ use Math::Matrix;
 use Spreadsheet::HTML::File::Loader;
 
 sub portrait    { generate( @_, theta =>   0 ) }
-sub earthquake  { generate( @_, theta =>  90, tgroups => 0 ) }
-sub reverse     { generate( @_, theta => 180, tgroups => 0 ) }
-sub tornado     { generate( @_, theta => 270, tgroups => 0 ) }
-
-sub mirror      { generate( @_, theta =>    0, flip => 1 ) }
-sub tsunami     { generate( @_, theta =>  -90, tgroups => 0 ) }
-sub flip        { generate( @_, theta => -180, tgroups => 0 ) }
 sub landscape   { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub north   { generate( @_, theta =>    0 ) }
@@ -240,7 +233,12 @@ sub _args {
     return ( $self, Clone::clone($data), $args );
 }
 
-sub transpose   { no warnings; warn "transpose is deprecated, use landscape"; landscape( @_ ) }
+sub transpose   { no warnings; warn "transpose is deprecated, use landscape"; generate( @_, theta => -270, tgroups => 0 ) }
+sub earthquake  { no warnings; warn "earthquake is deprecated, use east"; generate( @_, theta =>  90, tgroups => 0 ) }
+sub reverse     { no warnings; warn "reverse is deprecated, use south with flip"; generate( @_, theta => 180, tgroups => 0 ) }
+sub mirror      { no warnings; warn "mirror is deprecated, use portrait with flip"; generate( @_, theta =>    0, flip => 1 ) }
+sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip"; generate( @_, theta =>  -90, tgroups => 0 ) }
+sub flip        { no warnings; warn "flip is deprecated, use south"; generate( @_, theta => -180, tgroups => 0 ) }
 
 
 1;
@@ -279,14 +277,9 @@ what tags and attributes to use.
 
 =head1 METHODS
 
-All methods (except C<new>) are exportable as functions too. With the
-exception of C<new>, all methods return HTML as a scalar string. Any
-named parameters supplied to the method are applied to the data before
-any table rotations are performed. If it helps, work with the table
-using, for example, C<portrait()> until you have the parameters
-correct and then switch to C<landscape()> for the final product.
-All methods accept the same named parameters, although some methods
-override certain ones, hopefully in ways that make sense.
+All methods (except C<new>) are exportable as functions. With the
+exception of C<new>, all methods return HTML as a scalar string and
+they accept the same named parameters (see PARAMETERS below).
 
 =over 4
 
@@ -294,12 +287,8 @@ override certain ones, hopefully in ways that make sense.
 
   my $table = Spreadsheet::HTML->new( data => $data );
 
-Constructs object. Accepts named parameters (see PARAMETERS).
-Unless you give it a list of array refs. Or an array ref
-of array refs. Otherwise it expects named parameters. The
-most favorite being 'data' which is exactly an array ref
-of array refs. The first row will be treated as the headings
-unless you specify otherwise (see PARAMETERS).
+Constructs object. Accepts the same named parameters as the table
+generating functions below:
 
 =item * C<generate( %args )>
 
@@ -310,45 +299,45 @@ unless you specify otherwise (see PARAMETERS).
 
 =item * C<north( %args )>
 
-Headers on top.
+Headers on top C<generate( 'theta', 0 )>
 
 =item * C<landscape( %args )>
 
 =item * C<west( %args )>
 
-Headers on left.
-
-=item * C<flip( %args )>
+Headers on left: C<generate( 'theta', -270 )>
 
 =item * C<south( %args )>
 
-Headers on bottom.
-
-=item * C<mirror( %args )>
-
-Headers on top, reversed.
-
-=item * C<reverse( %args )>
-
-Headers on bottom, reversed.
-
-=item * C<earthquake( %args )>
+Headers on bottom: C<generate( 'theta', -180 )>
 
 =item * C<east( %args )>
 
-Headers on right, ascending.
-
-=item * C<tsunami( %args )>
-
-Headers on right, descending.
-
-=item * C<tornado( %args )>
-
-Combines transpose/landscape with reverse.
+Headers on right: C<generate( 'theta', 90 )>
 
 =item * C<transpose( %args )>
 
 Deprecated: use C<landscape()>
+
+=item * C<earthquake( %args )>
+
+Deprecated: use C<east()>
+
+=item * C<tsunami( %args )>
+
+Deprecated: use C<east( 'flip', 1 )>
+
+=item * C<mirror( %args )>
+
+Deprecated: use C<north( 'flip', 1 )>
+
+=item * C<reverse( %args )>
+
+Deprecated: use C<south( 'flip', 1 )>
+
+=item * C<flip( %args )>
+
+Deprecated: use C<south()>
 
 =back
 

@@ -2,11 +2,10 @@ Revision history for Spreadsheet-HTML
 
 0.18
     - added north(), east(), west() and south()
+    - deprecated transpose, flip, mirror, reverse, earthquake and tsunami
     - renamed -row_X and -col_X to -rowX and -colX
     - added theta and flip arguments
-    - swapped flip() and reverse()
-    - deprecated transpose()
-    - all front end generating methods call generate()
+    - all front end generating methods call generate() now
     - refactored _args() to allow any named args
 
 0.17
