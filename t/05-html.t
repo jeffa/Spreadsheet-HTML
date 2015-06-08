@@ -66,10 +66,9 @@ is Spreadsheet::HTML::generate( data => $data, headless => 1, %attrs ), $no_head
 
 my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>&</td></tr><tr><td><</td><td>></td></tr></table>';
 $table = Spreadsheet::HTML->new;
-is $table->generate ( layout => 1, data => [ ['&'],['<','>'] ] ), $layout,                    "correct HTML for layout via method";
-is Spreadsheet::HTML::portrait( layout => 1, data => [ ['&'],['<','>'] ] ), $layout,          "correct HTML for layout via method";
+is $table->layout( data => [ ['&'],['<','>'] ] ), $layout,                              "correct HTML for layout via method";
+is Spreadsheet::HTML::layout( data => [ ['&'],['<','>'] ] ), $layout,                   "correct HTML for layout via procedure";
 
-$layout = '<table><tr><th>&</th></tr><tr><td><</td><td>></td></tr></table>';
 $table = Spreadsheet::HTML->new;
-is $table->generate ( layout => 1, table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,                    "can still override defaults for layout via method";
-is Spreadsheet::HTML::portrait( layout => 1, table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,          "can still override defaults for layout via method";
+is $table->layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,                    "can not override defaults for layout via method";
+is Spreadsheet::HTML::layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,          "can not override defaults for layout via method";

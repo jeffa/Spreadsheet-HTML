@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 our $VERSION = '0.19';
 
 use Exporter 'import';
-our @EXPORT_OK = qw( portrait generate landscape tornado flip mirror reverse earthquake tsunami );
+our @EXPORT_OK = qw( generate portrait landscape north east south west );
 
 use Clone;
 use HTML::AutoTag;
@@ -18,6 +18,18 @@ sub north   { generate( @_, theta =>    0 ) }
 sub east    { generate( @_, theta =>   90, tgroups => 0 ) }
 sub south   { generate( @_, theta => -180, tgroups => 0 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
+
+sub layout {
+    generate( @_,
+        encodes => '',
+        matrix  => 1,
+        table   => {
+            role => 'presentation',
+            ( map {$_ => 0} qw( border cellspacing cellpadding ) ),
+        },
+        _layout => 1,
+    );
+}
 
 sub generate    {
     my %args = _process( @_ );
@@ -59,15 +71,6 @@ sub _process {
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
     my $max_cols = scalar @{ $data->[0] };
 
-    if ($args->{layout}) {
-        $args->{encodes} = '' unless exists $args->{encodes}; 
-        $args->{matrix} = 1 unless exists $args->{matrix};
-        unless (exists $args->{table}) {
-            $args->{table}{role} = 'presentation';
-            $args->{table}{$_}   = 0 for qw( border cellspacing cellpadding );
-        }
-    }
-
     # headings is an alias for row0
     $args->{-row0} = delete $args->{headings} if exists $args->{headings};
 
@@ -82,7 +85,7 @@ sub _process {
 
     for my $row (0 .. $#$data) {
 
-        unless ($args->{layout}) {
+        unless ($args->{_layout}) {
             push @{ $data->[$row] }, undef for 1 .. $max_cols - $#{ $data->[$row] } + 1;  # pad
             pop  @{ $data->[$row] } for $max_cols .. $#{ $data->[$row] };                 # truncate
         }
@@ -315,6 +318,14 @@ Headers on bottom: C<generate( 'theta', -180 )>
 
 Headers on right: C<generate( 'theta', 90 )>
 
+=item * C<layout( %args )>
+
+Layout tables are not recommended, but if you choose to
+use them you should label them as such. This adds W3C
+recommended layout attributes to the table tag and features:
+emiting only <td> tags, no padding or pruning of rows, forces
+no HTML entity encoding in table cells.
+
 =back
 
 For most cases, C<portrait()> and C<landscape()> are all you need.
@@ -425,16 +436,6 @@ Preserve data after it has been processed (and loaded).
 Render the table with only td tags, no th tags, if true.
 
   matrix => 1
-
-=item * C<layout: 0 or 1>
-
-Layout tables are not recommended, but if you choose to
-use them you should label them as such. This adds W3C
-recommended layout attributes to the table tag and features:
-emiting only <td> tags, no padding or pruning of rows, forces
-no HTML entity encoding in table cells.
-
-  layout => 1
 
 =item * C<headless: 0 or 1>
 
