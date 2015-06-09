@@ -1,9 +1,10 @@
 Revision history for Spreadsheet-HTML
 
 0.19
+    - added pinhead attr to produce sensible rotations
     - -rowX and -colX accepts array ref to
         allow subs and hashes (no longer either/or)
-    - layout is not a method
+    - layout is now a method
 
 0.18
     - added north(), east(), west() and south()
