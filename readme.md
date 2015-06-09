@@ -28,16 +28,16 @@ my $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 Interface
 ---------
 * portrait (aka north)
-<table><tr><th>head1</th><th>head2</th><th>head3</th></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>
+<table><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>
 
 * landscape (aka west)
-<table><tr><th>head1</th><td>one</td><td>foo</td><td>1</td></tr><tr><th>head2</th><td>two</td><td>bar</td><td>2</td></tr><tr><th>head3</th><td>three</td><td>baz</td><td>3</td></tr></table>
+<table><tr><th>a</th><td>1</td><td>4</td></tr><tr><th>b</th><td>2</td><td>5</td></tr><tr><th>c</th><td>3</td><td>6</td></tr></table>
 
 * east
-<table><tr><td>1</td><td>foo</td><td>one</td><th>head1</th></tr><tr><td>2</td><td>bar</td><td>two</td><th>head2</th></tr><tr><td>3</td><td>baz</td><td>three</td><th>head3</th></tr></table>
+<table><tr><td>1</td><td>4</td><th>a</th></tr><tr><td>2</td><td>5</td><th>b</th></tr><tr><td>3</td><td>6</td><th>c</th></tr></table>
 
 * south
-<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><th>head1</th><th>head2</th><th>head3</th></tr></table>
+<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr><tr><th>a</th><th>b</th><th>c</th></tr></table>
 
 Installation
 ------------
