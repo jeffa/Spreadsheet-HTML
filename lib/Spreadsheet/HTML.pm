@@ -15,8 +15,8 @@ sub portrait    { generate( @_, theta =>   0 ) }
 sub landscape   { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub north   { generate( @_, theta =>    0 ) }
-sub east    { generate( @_, theta =>   90, tgroups => 0, pinhead => 0 ) }
-sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 0 ) }
+sub east    { generate( @_, theta =>   90, tgroups => 0, pinhead => 1 ) }
+sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout {
@@ -50,7 +50,7 @@ sub generate {
 
     } elsif ($args{theta} == -180) { # south
 
-        $args{data} = $args{pinhead}
+        $args{data} = ($args{pinhead} and !$args{headless})
             ? [ @{ $args{data} }[1 .. $#{ $args{data} }], $args{data}[0] ]
             : [ CORE::reverse @{ $args{data} } ];
 
@@ -446,6 +446,15 @@ Set value to undef to avoid any substitutions.
 
   empty => '&#160;'
 
+=item * C<tgroups: 0 or 1>
+
+Group table rows into <thead> <tfoot> and <tbody>
+sections. The <tfoot> section is always found before
+the <tbody> section. Only available for C<generate()>,
+C<portrait()> and C<mirror()>.
+
+  tgroups => 1
+
 =item * C<cache: 0 or 1>
 
   cache => 1
@@ -464,14 +473,13 @@ Render the table with without the headings row, if true.
 
   headless => 1
 
-=item * C<tgroups: 0 or 1>
+=item * C<pinhead: 0 or 1>
 
-Group table rows into <thead> <tfoot> and <tbody>
-sections. The <tfoot> section is always found before
-the <tbody> section. Only available for C<generate()>,
-C<portrait()> and C<mirror()>.
+Works in conjunction with C<theta> to produces tables with
+headings placed on sides other than the top and perserve
+data alignment for reporting readability.
 
-  tgroups => 1
+  pinhead => 1
 
 =item * C<headings>
 

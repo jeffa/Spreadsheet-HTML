@@ -70,19 +70,19 @@ is Spreadsheet::HTML::east( data => $data, flip => 1, headless => 1 ),
    "flip east: correct HTML when headless is specified";
 
 
-$expected = '<table><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></table>';
+$expected = '<table><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></table>';
 is $table->south, $expected,                            "south: correct HTML from method call";
 is Spreadsheet::HTML::south( $data ), $expected,        "south: correct HTML from procedural call (array ref arg)";
 is Spreadsheet::HTML::south( @$data ), $expected,       "south: correct HTML from procedural call (list arg)";
 
 is Spreadsheet::HTML::south( data => $data, matrix => 1 ),
-    '<table><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr></table>',
+    '<table><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr></table>',
    "south: correct HTML when matrix is specified"
 ;
 
 is Spreadsheet::HTML::south( data => $data, headless => 1 ),
     '<table><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr></table>',
-   "south: correct HTML when headless is specified"
+   "south: loses pin when headless is specified"
 ;
 
 
