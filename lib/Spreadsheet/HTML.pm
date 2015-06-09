@@ -34,7 +34,7 @@ sub layout {
 sub generate {
     my %args = _process( @_ );
 
-    $args{theta} *= -1 if $args{flip};
+    $args{theta} *= -1 if $args{theta} and $args{flip};
 
     if (!$args{theta}) { # north
 
@@ -46,7 +46,10 @@ sub generate {
 
     } elsif ($args{theta} == 90) { # east
 
-        $args{data} = [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = Math::Matrix::transpose( $args{data} );
+        $args{data} = ($args{pinhead} and !$args{headless})
+            ? [ map [ @$_[1 .. $#$_], $_->[0] ], @{ $args{data} } ]
+            : [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
 
     } elsif ($args{theta} == -180) { # south
 
