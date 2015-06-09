@@ -15,8 +15,8 @@ sub portrait    { generate( @_, theta =>   0 ) }
 sub landscape   { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub north   { generate( @_, theta =>    0 ) }
-sub east    { generate( @_, theta =>   90, tgroups => 0 ) }
-sub south   { generate( @_, theta => -180, tgroups => 0 ) }
+sub east    { generate( @_, theta =>   90, tgroups => 0, pinhead => 0 ) }
+sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 0 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout {
@@ -36,19 +36,34 @@ sub generate {
 
     $args{theta} *= -1 if $args{flip};
 
-    if (!$args{theta}) {
+    if (!$args{theta}) { # north
+
         $args{data} = $args{flip} ? [ map [ CORE::reverse @$_ ], @{ $args{data} } ] : $args{data};
+
     } elsif ($args{theta} == -90) {
-        $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }]
-    } elsif ($args{theta} == 90) {
+
+        $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+
+    } elsif ($args{theta} == 90) { # east
+
         $args{data} = [ map [ CORE::reverse @$_ ], @{ Math::Matrix::transpose( $args{data} ) }];
-    } elsif ($args{theta} == -180) {
-        $args{data} = [ CORE::reverse @{ $args{data} } ]
+
+    } elsif ($args{theta} == -180) { # south
+
+        $args{data} = $args{pinhead}
+            ? [ @{ $args{data} }[1 .. $#{ $args{data} }], $args{data}[0] ]
+            : [ CORE::reverse @{ $args{data} } ];
+
     } elsif ($args{theta} == 180) {
+
         $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
-    } elsif ($args{theta} == -270) {
-        $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }]
+
+    } elsif ($args{theta} == -270) { # west
+
+        $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
+
     } elsif ($args{theta} == 270) {
+
         $args{data} = [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
     }
 
