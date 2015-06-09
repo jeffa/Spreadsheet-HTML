@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.20
+
 0.19
     - added pinhead attr to produce sensible rotations
     - -rowX and -colX accepts array ref to
