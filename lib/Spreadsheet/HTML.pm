@@ -62,7 +62,9 @@ sub generate {
 
     } elsif ($args{theta} == 180) {
 
-        $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
+        $args{data} = ($args{pinhead} and !$args{headless})
+            ? [ map [ CORE::reverse @$_ ], @{ $args{data} }[1 .. $#{ $args{data} }], $args{data}[0] ]
+            : [ map [ CORE::reverse @$_ ], CORE::reverse @{ $args{data} } ];
 
     } elsif ($args{theta} == -270) { # west
 

@@ -103,8 +103,8 @@ is Spreadsheet::HTML::generate( $data, theta => 180 ), $expected,     "theta => 
 is Spreadsheet::HTML::generate( @$data, theta => 180 ), $expected,    "theta => 180: correct HTML from procedural call (list arg)";
 
 is Spreadsheet::HTML::generate( data => $data, theta => 180, pinhead => 1 ),
-    $expected,
-   "theta => 180: pinhead does not impact";
+    '<table><tr><td>qux1</td><td>baz1</td><td>bar1</td><td>foo1</td></tr><tr><td>qux2</td><td>baz2</td><td>bar2</td><td>foo2</td></tr><tr><td>qux3</td><td>baz3</td><td>bar3</td><td>foo3</td></tr><tr><td>qux4</td><td>baz4</td><td>bar4</td><td>foo4</td></tr><tr><th>header4</th><th>header3</th><th>header2</th><th>header1</th></tr></table>',
+   "theta => 180: pinhead impacts rotation";
 
 is Spreadsheet::HTML::generate( data => $data, theta => 180, matrix => 1 ),
     '<table><tr><td>qux4</td><td>baz4</td><td>bar4</td><td>foo4</td></tr><tr><td>qux3</td><td>baz3</td><td>bar3</td><td>foo3</td></tr><tr><td>qux2</td><td>baz2</td><td>bar2</td><td>foo2</td></tr><tr><td>qux1</td><td>baz1</td><td>bar1</td><td>foo1</td></tr><tr><td>header4</td><td>header3</td><td>header2</td><td>header1</td></tr></table>',
