@@ -211,7 +211,7 @@ sub _make_table {
     my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
 
     my $encodes = exists $args{encodes} ? $args{encodes} : '';
-    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent} );
+    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent}, level => $args{level} );
 
     return $auto->tag(
         tag => 'table',
@@ -437,6 +437,14 @@ when set to any value that is defined.
 
   indent => '    '
 
+=item * C<level>
+
+Start indentation at this level. Useful for matching
+nesting styles of original HTML text that you may want
+to insert into to.
+
+  level => 4
+
 =item * C<encodes>
 
 HTML Encode contents of td tags. Defaults to empty string
@@ -561,11 +569,7 @@ Add colgroup tag(s) to the table. Use an AoH for multiple.
 =item * C<col>
 
 Add col tag(s) to the table. Use an AoH for multiple. Wraps
-tags within a colgroup tag.
-
-  col => { span => 2, style => { 'background-color' => 'orange' } }
-
-  col => [ { span => 20 }, { span => 1, class => 'end' } ]
+tags within a colgroup tag. Same usage as C<colgroup>.
 
 =item * C<table>
 
@@ -575,15 +579,9 @@ Apply these attributes to the table tag.
 
 =item * C<thead>
 
-  thead => { style => 'background: color' }
-
 =item * C<tfoot>
 
-  tfoot => { style => 'background: color' }
-
 =item * C<tbody>
-
-  tbody => { style => 'background: color' }
 
 =item * C<tr>
 
@@ -594,8 +592,6 @@ Apply these attributes to the table tag.
   th => { style => 'background: color' }
 
 =item * C<td>
-
-  td => { style => 'background: color' }
 
 =back
 
