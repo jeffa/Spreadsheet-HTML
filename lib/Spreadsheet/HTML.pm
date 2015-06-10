@@ -42,7 +42,10 @@ sub generate {
 
     } elsif ($args{theta} == -90) {
 
-        $args{data} = [ map [ CORE::reverse @$_ ], CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = ($args{pinhead} and !$args{headless})
+            ? [ map [ @$_[1 .. $#$_], $_->[0] ], @{ $args{data} } ]
+            : [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
 
     } elsif ($args{theta} == 90) { # east
 

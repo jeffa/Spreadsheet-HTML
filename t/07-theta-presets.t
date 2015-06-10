@@ -56,13 +56,13 @@ is Spreadsheet::HTML::east( data => $data, headless => 1 ),
    "east: correct HTML when headless is specified";
 
 
-$expected = '<table><tr><td>qux4</td><td>qux3</td><td>qux2</td><td>qux1</td><th>header4</th></tr><tr><td>baz4</td><td>baz3</td><td>baz2</td><td>baz1</td><th>header3</th></tr><tr><td>bar4</td><td>bar3</td><td>bar2</td><td>bar1</td><th>header2</th></tr><tr><td>foo4</td><td>foo3</td><td>foo2</td><td>foo1</td><th>header1</th></tr></table>';
+$expected = '<table><tr><td>qux1</td><td>qux2</td><td>qux3</td><td>qux4</td><th>header4</th></tr><tr><td>baz1</td><td>baz2</td><td>baz3</td><td>baz4</td><th>header3</th></tr><tr><td>bar1</td><td>bar2</td><td>bar3</td><td>bar4</td><th>header2</th></tr><tr><td>foo1</td><td>foo2</td><td>foo3</td><td>foo4</td><th>header1</th></tr></table>';
 is $table->east( flip => 1 ), $expected,                        "flip east: correct HTML from method call";
 is Spreadsheet::HTML::east( $data, flip => 1 ), $expected,      "flip east: correct HTML from procedural call (array ref arg)";
 is Spreadsheet::HTML::east( @$data, flip => 1 ), $expected,     "flip east: correct HTML from procedural call (list arg)";
 
 is Spreadsheet::HTML::east( data => $data, flip => 1, matrix => 1 ),
-    '<table><tr><td>qux4</td><td>qux3</td><td>qux2</td><td>qux1</td><td>header4</td></tr><tr><td>baz4</td><td>baz3</td><td>baz2</td><td>baz1</td><td>header3</td></tr><tr><td>bar4</td><td>bar3</td><td>bar2</td><td>bar1</td><td>header2</td></tr><tr><td>foo4</td><td>foo3</td><td>foo2</td><td>foo1</td><td>header1</td></tr></table>',
+    '<table><tr><td>qux1</td><td>qux2</td><td>qux3</td><td>qux4</td><td>header4</td></tr><tr><td>baz1</td><td>baz2</td><td>baz3</td><td>baz4</td><td>header3</td></tr><tr><td>bar1</td><td>bar2</td><td>bar3</td><td>bar4</td><td>header2</td></tr><tr><td>foo1</td><td>foo2</td><td>foo3</td><td>foo4</td><td>header1</td></tr></table>',
    "flip east: correct HTML when matrix is specified";
 
 is Spreadsheet::HTML::east( data => $data, flip => 1, headless => 1 ),
