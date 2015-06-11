@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.21
+    - fixed hidden bug: headings incorrectly clobbered th attrs
 
 0.20
     - tgroup only uses <tfoot> section when its value > 1

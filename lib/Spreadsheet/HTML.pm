@@ -125,9 +125,10 @@ sub _process {
 
             # -rowX (overides -colX)
             if (exists $args->{"-row$row"}) {
-                ( $val, $attr ) = _expand_code_or_hash( $args->{"-row$row"}, $val );
+                my $new_attr;
+                ( $val, $new_attr ) = _expand_code_or_hash( $args->{"-row$row"}, $val );
+                $attr = $new_attr if ref( $new_attr );
             }
-
             # --empty
             do{ no warnings; $val =~ s/^\s*$/$empty/g };
 

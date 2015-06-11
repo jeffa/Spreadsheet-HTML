@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 20;
+use Test::More tests => 22;
 
 use Spreadsheet::HTML;
 
@@ -96,3 +96,12 @@ is $table->generate( td => [ sub {ucfirst shift}, { style => { color => [qw(blue
 is $table->generate( headings => { bccolor => 'white' }, -header2 => { bcolor => 'red' } ),
     '<table><tr><th bccolor="white">header1</th><th bccolor="white">header2</th><th bccolor="white">header3</th><th bccolor="white">header4</th></tr><tr><td>foo1</td><td bcolor="red">bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td bcolor="red">bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td bcolor="red">bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td bcolor="red">bar4</td><td>baz4</td><td>qux4</td></tr></table>',
     "headings override -colX";
+
+
+is $table->generate( headings => sub { uc shift }, -row1 => sub { uc shift }, th => { class => 'foo' } ),
+    '<table><tr><th class="foo">HEADER1</th><th class="foo">HEADER2</th><th class="foo">HEADER3</th><th class="foo">HEADER4</th></tr><tr><td>FOO1</td><td>BAR1</td><td>BAZ1</td><td>QUX1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>',
+    "th attrs are not clobbered by headings or row subs";
+
+is $table->generate( headings => sub { uc shift }, -row1 => sub { uc shift }, td => { class => 'foo' } ),
+    '<table><tr><th>HEADER1</th><th>HEADER2</th><th>HEADER3</th><th>HEADER4</th></tr><tr><td class="foo">FOO1</td><td class="foo">BAR1</td><td class="foo">BAZ1</td><td class="foo">QUX1</td></tr><tr><td class="foo">foo2</td><td class="foo">bar2</td><td class="foo">baz2</td><td class="foo">qux2</td></tr><tr><td class="foo">foo3</td><td class="foo">bar3</td><td class="foo">baz3</td><td class="foo">qux3</td></tr><tr><td class="foo">foo4</td><td class="foo">bar4</td><td class="foo">baz4</td><td class="foo">qux4</td></tr></table>',
+    "th attrs are not clobbered by headings or row subs";
