@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.20
+    - td and th parameters now accept code refs
     - -rowX overrides -colX and -colX now impacts headings
     - added level parameter (for indentation)
     - pinhead now consistent with thetas -90 and 180

@@ -115,31 +115,17 @@ sub _process {
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my $val = $data->[$row][$col];
-            my $attr = $args->{$tag};
+            my ( $val, $attr ) = _code_hash( $args->{$tag}, $data->[$row][$col] );
+            $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
 
             # -colX
             if (exists $args->{"-col$col"}) {
-                $args->{"-col$col"} = [ $args->{"-col$col"} ] unless ref( $args->{"-col$col"} ) eq 'ARRAY';
-                for (@{ $args->{"-col$col"} }) {
-                    if (ref($_) eq 'CODE') {
-                        $val = $_->($val);
-                    } elsif (ref($_) eq 'HASH') {
-                        $attr = $_;
-                    }
-                }
+                ( $val, $attr ) = _code_hash( $args->{"-col$col"}, $val );
             }
 
             # -rowX (overides -colX)
             if (exists $args->{"-row$row"}) {
-                $args->{"-row$row"} = [ $args->{"-row$row"} ] unless ref( $args->{"-row$row"} ) eq 'ARRAY';
-                for (@{ $args->{"-row$row"} }) {
-                    if (ref($_) eq 'CODE') {
-                        $val = $_->($val);
-                    } elsif (ref($_) eq 'HASH') {
-                        $attr = $_;
-                    }
-                }
+                ( $val, $attr ) = _code_hash( $args->{"-row$row"}, $val );
             }
 
             # --empty
@@ -165,7 +151,10 @@ sub _process {
 
 sub _make_table {
     my %args = @_;
-    $args{$_} ||= {} for qw( table tr thead tbody tfoot );
+
+    for (qw( table tr thead tbody tfoot )) {
+        delete $args{$_} unless ref($args{$_}) eq 'HASH';
+    }
 
     if ($args{tgroups}) {
         if (scalar @{ $args{data} } > 2) {
@@ -261,6 +250,20 @@ sub _args {
     $data = [ [undef] ] if !scalar @{ $data->[0] };
 
     return ( $self, Clone::clone($data), $args );
+}
+
+sub _code_hash {
+    my ( $thingy, $val ) = @_;
+    my $attr;
+    $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
+    for (@{ $thingy }) {
+        if (ref($_) eq 'CODE') {
+            $val = $_->($val);
+        } elsif (ref($_) eq 'HASH') {
+            $attr = $_;
+        }
+    }
+    return ( $val, $attr );
 }
 
 sub transpose   { no warnings; warn "transpose is deprecated, use landscape";       generate( @_, theta => -270, tgroups => 0 ) }
@@ -435,6 +438,8 @@ when set to any value that is defined.
 
   indent => '    '
 
+  indent => "\t"
+
 =item * C<level>
 
 Start indentation at this level. Useful for matching
@@ -467,11 +472,7 @@ sections. The <tfoot> section is always found before
 the <tbody> section. Only available for C<generate()>,
 C<portrait()> and C<mirror()>.
 
-  tgroups => 1
-
 =item * C<cache: 0 or 1>
-
-  cache => 1
 
 Preserve data after it has been processed (and loaded).
 
@@ -479,21 +480,15 @@ Preserve data after it has been processed (and loaded).
 
 Render the table with only td tags, no th tags, if true.
 
-  matrix => 1
-
 =item * C<headless: 0 or 1>
 
 Render the table with without the headings row, if true. 
-
-  headless => 1
 
 =item * C<pinhead: 0 or 1>
 
 Works in conjunction with C<theta> to produces tables with
 headings placed on sides other than the top and perserve
 data alignment for reporting readability.
-
-  pinhead => 1
 
 =item * C<headings>
 
@@ -571,10 +566,6 @@ tags within a colgroup tag. Same usage as C<colgroup>.
 
 =item * C<table>
 
-Apply these attributes to the table tag.
-
-  table => { class => 'spreadsheet' }
-
 =item * C<thead>
 
 =item * C<tfoot>
@@ -583,13 +574,21 @@ Apply these attributes to the table tag.
 
 =item * C<tr>
 
+Apply these attributes to the table tag.
+
+  table => { class => 'spreadsheet' }
+
   tr => { style => { background => [qw( color1 color2 )]' } }
 
 =item * C<th>
 
-  th => { style => 'background: color' }
-
 =item * C<td>
+
+<th> and <td> can also accept sub refs
+
+  th => sub { uc shift }
+
+  td => [ sub { uc shift }, { class => 'foo' } ]
 
 =back
 
