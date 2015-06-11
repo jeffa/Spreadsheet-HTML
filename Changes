@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.20
+    - -rowX overrides -colX and -colX now impacts headings
+    - added level parameter (for indentation)
+    - pinhead now consistent with thetas -90 and 180
 
 0.19
     - added pinhead attr to produce sensible rotations

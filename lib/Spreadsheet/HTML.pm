@@ -116,12 +116,12 @@ sub _process {
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my $val = $data->[$row][$col];
-
-            # -rowX
             my $attr = $args->{$tag};
-            if (exists $args->{"-row$row"}) {
-                $args->{"-row$row"} = [ $args->{"-row$row"} ] unless ref( $args->{"-row$row"} ) eq 'ARRAY';
-                for (@{ $args->{"-row$row"} }) {
+
+            # -colX
+            if (exists $args->{"-col$col"}) {
+                $args->{"-col$col"} = [ $args->{"-col$col"} ] unless ref( $args->{"-col$col"} ) eq 'ARRAY';
+                for (@{ $args->{"-col$col"} }) {
                     if (ref($_) eq 'CODE') {
                         $val = $_->($val);
                     } elsif (ref($_) eq 'HASH') {
@@ -130,16 +130,14 @@ sub _process {
                 }
             }
 
-            # -colX
-            unless (!$args->{matrix} and $row == 0) {
-                if (exists $args->{"-col$col"}) {
-                    $args->{"-col$col"} = [ $args->{"-col$col"} ] unless ref( $args->{"-col$col"} ) eq 'ARRAY';
-                    for (@{ $args->{"-col$col"} }) {
-                        if (ref($_) eq 'CODE') {
-                            $val = $_->($val);
-                        } elsif (ref($_) eq 'HASH') {
-                            $attr = $_;
-                        }
+            # -rowX (overides -colX)
+            if (exists $args->{"-row$row"}) {
+                $args->{"-row$row"} = [ $args->{"-row$row"} ] unless ref( $args->{"-row$row"} ) eq 'ARRAY';
+                for (@{ $args->{"-row$row"} }) {
+                    if (ref($_) eq 'CODE') {
+                        $val = $_->($val);
+                    } elsif (ref($_) eq 'HASH') {
+                        $attr = $_;
                     }
                 }
             }
