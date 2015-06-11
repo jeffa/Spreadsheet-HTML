@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.21
+
 0.20
     - tgroup only uses <tfoot> section when its value > 1
     - td and th parameters now accept code refs

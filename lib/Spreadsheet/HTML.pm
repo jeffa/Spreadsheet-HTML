@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use Exporter 'import';
 our @EXPORT_OK = qw( generate portrait landscape north east south west );
