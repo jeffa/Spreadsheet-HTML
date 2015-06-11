@@ -290,7 +290,7 @@ sub flip        { no warnings; warn "flip is deprecated, use south";            
 __END__
 =head1 NAME
 
-Spreadsheet::HTML - Render HTML5 tables with ease.
+Spreadsheet::HTML - Generate HTML tables with ease.
 
 =head1 SYNOPSIS
 
@@ -312,12 +312,12 @@ Spreadsheet::HTML - Render HTML5 tables with ease.
 
 =head1 DESCRIPTION
 
-THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
-
-Renders HTML5 tables with ease. Provides a handful of distinctly
+Generates HTML4, XHTML and HTML5 tables with ease. Provides a handful of distinctly
 named methods to control overall table orientation. These methods
 in turn accept a number of distinctly named attributes for directing
 what tags and attributes to use.
+
+THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
 =head1 METHODS
 
@@ -343,21 +343,35 @@ generating functions below:
 
 =item * C<north( %args )>
 
-Headers on top C<generate( 'theta', 0 )>
+Headers on top. Same as
+
+  generate( theta => 0 )
 
 =item * C<landscape( %args )>
 
 =item * C<west( %args )>
 
-Headers on left: C<generate( 'theta', -270 )>
+Headers on left. Same as
+
+  generate( theta => -270 )
 
 =item * C<south( %args )>
 
-Headers on bottom: C<generate( 'theta', -180 )>
+Headers on bottom. Same as
+
+  generate( theta => -180, pinhead => 1 )
 
 =item * C<east( %args )>
 
-Headers on right: C<generate( 'theta', 90 )>
+Headers on right. Same as
+
+  generate( theta => 90, pinhead => 1 )
+
+Note that C<tgroups> are not allowed for C<south()> because the table
+is inverted horizontally and not allowed for C<west()> and C<east()>
+because the table rows contain both headings and cells. You can override
+this behavior by using C<generate> with args listed above instead of 
+C<south()>, C<east()> or C<west()>.
 
 =item * C<layout( %args )>
 
@@ -370,6 +384,7 @@ no HTML entity encoding in table cells.
 =back
 
 For most cases, C<portrait()> and C<landscape()> are all you need.
+Everything else is C<bells_and_whistles>.
 
 =head2 DEPRECATED METHODS
 
@@ -478,32 +493,35 @@ Set value to undef to avoid any substitutions.
 
 =item * C<tgroups: 0, 1 or 2>
 
-Group table rows into <thead> <tfoot> and <tbody>
-sections. The <tfoot> section is always found before
-the <tbody> section. Only available for C<generate()>,
-C<portrait()> and C<mirror()>.
+Group table rows into <thead>, <tbody> and <tfoot> sections.
 
-When C<tgroups> is set to 2 (or higher), <tfoot> sections
-are omitted. The last row of the data is found at the end
-of the <tbody> section instead.
+When C<tgroups> is set to 1, the <tfoot> section is
+omitted. The last row of the data is found at the end
+of the <tbody> section instead. (loose)
+
+When C<tgroups> is set to 2, the <tfoot> section is found
+in between the <thead> and <tbody> sections. (strict)
 
 =item * C<cache: 0 or 1>
 
 Preserve data after it has been processed (and loaded).
+Useful for loading data from files only once.
 
 =item * C<matrix: 0 or 1>
 
-Render the table with only td tags, no th tags, if true.
+Treat headings as a regular row. Render the table with
+only td tags, no th tags.
 
 =item * C<headless: 0 or 1>
 
-Render the table with without the headings row, if true. 
+Render the table with without the headings row at all. 
 
 =item * C<pinhead: 0 or 1>
 
 Works in conjunction with C<theta> to produces tables with
 headings placed on sides other than the top and perserve
-data alignment for reporting readability.
+data alignment for reporting readability. Used by C<south()>
+and C<east()>.
 
 =item * C<headings>
 
@@ -521,7 +539,8 @@ Or both:
 
 =item * C<-rowX>
 
-Apply this anonymous subroutine to row X. (0 index based)
+Apply this anonymous subroutine to the entire row X.
+(0 index based)
 
   -row3 => sub { uc shift }
 
@@ -535,7 +554,8 @@ Or both:
 
 =item * C<-colX>
 
-Apply this anonymous subroutine to column X. (0 index based)
+Apply this anonymous subroutine to the entire column X.
+(0 index based)
 
   -col4 => sub { sprintf "%02d", shift || 0 }
 
@@ -555,6 +575,9 @@ name in that column:
   -my_heading3 => { class => 'special-row' }
 
   -my_heading3 => [ sub { uc shift }, { class => "foo" } ]
+
+Override headings with either C<headings> or C<th> or indirectly
+with <thead> via CSS definitions for a class you assign.
 
 =item * C<caption>
 
@@ -589,7 +612,7 @@ tags within a colgroup tag. Same usage as C<colgroup>.
 
 =item * C<tr>
 
-Apply these attributes to the table tag.
+Hash ref. Apply these attributes to the specified tag.
 
   table => { class => 'spreadsheet' }
 
@@ -599,7 +622,7 @@ Apply these attributes to the table tag.
 
 =item * C<td>
 
-<th> and <td> can also accept sub refs
+<th> and <td> can additionally accept sub refs
 
   th => sub { uc shift }
 

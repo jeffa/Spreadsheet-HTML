@@ -1,6 +1,6 @@
 Spreadsheet-HTML
 ================
-Render HTML5 tables with ease.
+Generate HTML tables with ease.
 
 Synopsis
 --------
