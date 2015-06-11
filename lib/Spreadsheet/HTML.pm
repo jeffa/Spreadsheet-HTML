@@ -115,17 +115,17 @@ sub _process {
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my ( $val, $attr ) = _code_hash( $args->{$tag}, $data->[$row][$col] );
+            my ( $val, $attr ) = _expand_code_or_hash( $args->{$tag}, $data->[$row][$col] );
             $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
 
             # -colX
             if (exists $args->{"-col$col"}) {
-                ( $val, $attr ) = _code_hash( $args->{"-col$col"}, $val );
+                ( $val, $attr ) = _expand_code_or_hash( $args->{"-col$col"}, $val );
             }
 
             # -rowX (overides -colX)
             if (exists $args->{"-row$row"}) {
-                ( $val, $attr ) = _code_hash( $args->{"-row$row"}, $val );
+                ( $val, $attr ) = _expand_code_or_hash( $args->{"-row$row"}, $val );
             }
 
             # --empty
@@ -156,16 +156,37 @@ sub _make_table {
         delete $args{$_} unless ref($args{$_}) eq 'HASH';
     }
 
+    my @cdata = ( _caption( %args ), _colgroup( %args ) );
+
     if ($args{tgroups}) {
-        if (scalar @{ $args{data} } > 2) {
-            # replace last row between 1st and 2nd rows
-            splice @{ $args{data} }, 1, 0, pop @{ $args{data} };
-        } else {
-            delete $args{tgroups};
-        }
+
+        my ($head, @body) = @{ $args{data} };
+        my $foot = pop @body if $args{tgroups} > 1 and scalar @{ $args{data} } > 2;
+
+        my $head_row  =     { tag => 'tr', attr => $args{tr}, cdata => $head };
+        my $foot_row  =     { tag => 'tr', attr => $args{tr}, cdata => $foot };
+        my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
+
+        push @cdata, (
+            { tag => 'thead', attr => $args{thead}, cdata => $head_row },
+            ( $foot ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row } : () ),
+            { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] }
+        );
+
+    } else {
+        push @cdata, map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @{ $args{data} };
     }
 
+    my $encodes = exists $args{encodes} ? $args{encodes} : '';
+    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent}, level => $args{level} );
+    return $auto->tag( tag => 'table', attr => $args{table}, cdata => [ @cdata ] );
+}
+
+sub _caption {
+    my %args = @_;
+
     my $caption;
+
     if (ref($args{caption}) eq 'HASH') {
         (my $cdata) = keys %{ $args{caption} };
         (my $attr)  = values %{ $args{caption} };
@@ -173,9 +194,16 @@ sub _make_table {
     } elsif (defined $args{caption} ) {
         $caption = { tag => 'caption', cdata => $args{caption} };
     } 
+    
+    return $caption ? $caption : ();
+}
+
+sub _colgroup {
+    my %args = @_;
 
     my @colgroup;
     $args{col} = [ $args{col} ] if ref($args{col}) eq 'HASH';
+
     if (ref($args{col}) eq 'ARRAY') {
 
         @colgroup = ({
@@ -192,25 +220,7 @@ sub _make_table {
         }
     }
 
-    my ($head, $foot, @body) = @{ $args{data} };
-    my $head_row  = { tag => 'tr', attr => $args{tr}, cdata => $head };
-    my $foot_row  = { tag => 'tr', attr => $args{tr}, cdata => $foot };
-    my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
-
-    my $encodes = exists $args{encodes} ? $args{encodes} : '';
-    my $auto = HTML::AutoTag->new( encodes => $encodes, indent => $args{indent}, level => $args{level} );
-
-    return $auto->tag(
-        tag => 'table',
-        attr => $args{table},
-        cdata => [
-            ( ref( $caption ) ? $caption : () ),
-            ( @colgroup ? @colgroup : () ),
-            ( $args{tgroups} ? { tag => 'thead', attr => $args{thead}, cdata => $head_row }  : $head_row ),
-            ( $args{tgroups} ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row }  : $foot ? $foot_row : () ),
-              $args{tgroups} ? { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] } : @body_rows
-        ],
-    );
+    return @colgroup;
 }
 
 sub _args {
@@ -252,7 +262,7 @@ sub _args {
     return ( $self, Clone::clone($data), $args );
 }
 
-sub _code_hash {
+sub _expand_code_or_hash {
     my ( $thingy, $val ) = @_;
     my $attr;
     $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
@@ -465,12 +475,16 @@ Set value to undef to avoid any substitutions.
 
   empty => '&#160;'
 
-=item * C<tgroups: 0 or 1>
+=item * C<tgroups: 0, 1 or 2>
 
 Group table rows into <thead> <tfoot> and <tbody>
 sections. The <tfoot> section is always found before
 the <tbody> section. Only available for C<generate()>,
 C<portrait()> and C<mirror()>.
+
+When C<tgroups> is set to 2 (or higher), <tfoot> sections
+are omitted. The last row of the data is found at the end
+of the <tbody> section instead.
 
 =item * C<cache: 0 or 1>
 

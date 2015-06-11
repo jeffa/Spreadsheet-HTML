@@ -17,7 +17,7 @@ is $table->generate,
     '<table><caption key="value">My Table</caption><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>',
     "caption present from generate()";
 
-is $table->generate( tgroups => 1 ),
+is $table->generate( tgroups => 2 ),
     '<table><caption key="value">My Table</caption><thead><tr><th>a</th><th>b</th><th>c</th></tr></thead><tfoot><tr><td>4</td><td>5</td><td>6</td></tr></tfoot><tbody><tr><td>1</td><td>2</td><td>3</td></tr></tbody></table>',
     "caption present from generate() with tgroups";
 
