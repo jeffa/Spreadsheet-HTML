@@ -255,12 +255,22 @@ sub _args {
         $data = $self->{data} unless $data or $args->{file};
     }
 
+    $data = _fill_data( $args ) if $args->{fill};
     $data = Spreadsheet::HTML::File::Loader::parse( $args->{file} ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
     $data = [ [undef] ] if !scalar @{ $data->[0] };
 
     return ( $self, Clone::clone($data), $args );
+}
+
+sub _fill_data {
+    my $args = shift;
+    my ($rows,$cols) = $args->{fill} =~ /(\d+)\D+(\d+)/;
+    $rows = 1 if $rows < 1;
+    $cols = 1 if $cols < 1;
+    $args->{matrix} = 1 unless defined $args->{matrix};
+    return [ map [ map {''} 1 .. $cols ], 1 .. $rows ];
 }
 
 sub _expand_code_or_hash {
@@ -444,6 +454,13 @@ The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML and HTML (first table found).
 
   file => 'foo.json'
+
+=item * C<fill>
+
+Can be supplied instead of C<data> to generate empty
+cells.
+
+  fill => '5x12'
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 

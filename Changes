@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.21
+    - added fill parameter
     - fixed hidden bug: headings incorrectly clobbered th attrs
 
 0.20
