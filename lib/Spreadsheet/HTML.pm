@@ -7,7 +7,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west
-    chessboard layout
+    chessboard layout dk
 );
 
 use Clone;
@@ -26,6 +26,7 @@ sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout      { Spreadsheet::HTML::Presets::layout( @_ ) }
 sub chessboard  { Spreadsheet::HTML::Presets::chessboard( @_ ) }
+sub dk          { Spreadsheet::HTML::Presets::dk( @_ ) }
 
 sub generate {
     my %args = _process( @_ );
@@ -113,6 +114,11 @@ sub _process {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
             my ( $val, $attr ) = _expand_code_or_hash( $args->{$tag}, $data->[$row][$col] );
             $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
+
+            # -rowXcolX
+            if (exists $args->{"-row${row}col${col}"}) {
+                ( $val, $attr ) = _expand_code_or_hash( $args->{"-row${row}col${col}"}, $val );
+            }
 
             # -colX
             if (exists $args->{"-col$col"}) {
@@ -382,6 +388,9 @@ C<south()>, C<east()> or C<west()>.
 
 =back
 
+For most cases, C<portrait()> and C<landscape()> are all you need.
+Everything else is C<bells_and_whistles>.
+
 =head2 PRESETS
 
 See L<Spreadsheet::HTML::Presets> for full documentation.
@@ -392,10 +401,9 @@ See L<Spreadsheet::HTML::Presets> for full documentation.
 
 =item * C<chessboard( %args )>
 
-=back
+=item * C<dk( %args )>
 
-For most cases, C<portrait()> and C<landscape()> are all you need.
-Everything else is C<bells_and_whistles>.
+=back
 
 =head2 DEPRECATED METHODS
 
@@ -596,6 +604,11 @@ name in that column:
 
 Override headings with either C<headings> or C<th> or indirectly
 with <thead> via CSS definitions for a class you assign.
+
+=item * C<-rowXcolX>
+
+Apply this anonymous subroutine or hash ref of attributres
+to the cell at row X and column X.  (0 index based)
 
 =item * C<caption>
 
