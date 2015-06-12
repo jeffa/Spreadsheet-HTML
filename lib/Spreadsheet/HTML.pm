@@ -298,19 +298,27 @@ sub chessboard {
     my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
     my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
     generate( @_,
+        tgroups  => 0,
+        headless => 0,
         -row0 => sub { shift @black },
         -row1 => sub {'&#9823;'},
         -row6 => sub {'&#9817;'},
         -row7 => sub { shift @white },
-        table => { width=>'100%'},
         fill  => '8x8',
+        table => {
+            width => '65%',
+            style => {
+                border => 'thick outset',
+            },
+        },
         td => {
-            height => 75,
-            width  => 75,
+            height => 65,
+            width  => 65,
             align  => 'center',
             style  => { 
                 'font-size' => 'xx-large',
-                'background-color' => [ (qw(white gray))x4, (qw(gray white))x4]
+                border => 'thin inset',
+                'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
             }
         }
     );
