@@ -305,11 +305,11 @@ sub chessboard {
         table => { width=>'100%'},
         fill  => '8x8',
         td => {
-            height => 100,
-            width  => 100,
+            height => 75,
+            width  => 75,
             align  => 'center',
             style  => { 
-                'font-size' => 75,
+                'font-size' => 'xx-large',
                 'background-color' => [ (qw(white gray))x4, (qw(gray white))x4]
             }
         }
