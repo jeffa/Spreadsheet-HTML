@@ -4,11 +4,16 @@ use warnings FATAL => 'all';
 our $VERSION = '0.22';
 
 use Exporter 'import';
-our @EXPORT_OK = qw( generate portrait landscape north east south west chessboard );
+our @EXPORT_OK = qw(
+    generate portrait landscape
+    north east south west
+    chessboard layout
+);
 
 use Clone;
 use HTML::AutoTag;
 use Math::Matrix;
+use Spreadsheet::HTML::Presets;
 use Spreadsheet::HTML::File::Loader;
 
 sub portrait    { generate( @_, theta =>   0 ) }
@@ -19,17 +24,8 @@ sub east    { generate( @_, theta =>   90, tgroups => 0, pinhead => 1 ) }
 sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
-sub layout {
-    generate( @_,
-        encodes => '',
-        matrix  => 1,
-        table   => {
-            role => 'presentation',
-            ( map {$_ => 0} qw( border cellspacing cellpadding ) ),
-        },
-        _layout => 1,
-    );
-}
+sub layout      { Spreadsheet::HTML::Presets::layout( @_ ) }
+sub chessboard  { Spreadsheet::HTML::Presets::chessboard( @_ ) }
 
 sub generate {
     my %args = _process( @_ );
@@ -294,35 +290,6 @@ sub mirror      { no warnings; warn "mirror is deprecated, use portrait with fli
 sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip";    generate( @_, theta =>  -90, tgroups => 0 ) }
 sub flip        { no warnings; warn "flip is deprecated, use south";                generate( @_, theta => -180, tgroups => 0 ) }
 
-sub chessboard {
-    my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
-    my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
-    generate( @_,
-        tgroups  => 0,
-        headless => 0,
-        -row0 => sub { shift @black },
-        -row1 => sub {'&#9823;'},
-        -row6 => sub {'&#9817;'},
-        -row7 => sub { shift @white },
-        fill  => '8x8',
-        table => {
-            width => '65%',
-            style => {
-                border => 'thick outset',
-            },
-        },
-        td => {
-            height => 65,
-            width  => 65,
-            align  => 'center',
-            style  => { 
-                'font-size' => 'xx-large',
-                border => 'thin inset',
-                'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
-            }
-        }
-    );
-}
 
 
 1;
@@ -413,17 +380,17 @@ because the table rows contain both headings and cells. You can override
 this behavior by using C<generate> with args listed above instead of 
 C<south()>, C<east()> or C<west()>.
 
+=back
+
+=head2 PRESETS
+
+See L<Spreadsheet::HTML::Presets> for full documentation.
+
+=over 4
+
 =item * C<layout( %args )>
 
-Layout tables are not recommended, but if you choose to
-use them you should label them as such. This adds W3C
-recommended layout attributes to the table tag and features:
-emiting only <td> tags, no padding or pruning of rows, forces
-no HTML entity encoding in table cells.
-
 =item * C<chessboard( %args )>
-
-Generates a static chess board.
 
 =back
 
