@@ -294,6 +294,28 @@ sub mirror      { no warnings; warn "mirror is deprecated, use portrait with fli
 sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip";    generate( @_, theta =>  -90, tgroups => 0 ) }
 sub flip        { no warnings; warn "flip is deprecated, use south";                generate( @_, theta => -180, tgroups => 0 ) }
 
+sub chessboard {
+    my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
+    my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
+    generate( @_,
+        -row0 => sub { shift @black },
+        -row1 => sub {'&#9823;'},
+        -row6 => sub {'&#9817;'},
+        -row7 => sub { shift @white },
+        table => { width=>'100%'},
+        fill  => '8x8',
+        td => {
+            height => 100,
+            width  => 100,
+            align  => 'center',
+            style  => { 
+                'font-size' => 75,
+                'background-color' => [ (qw(white gray))x4, (qw(gray white))x4]
+            }
+        }
+    );
+}
+
 
 1;
 
@@ -390,6 +412,10 @@ use them you should label them as such. This adds W3C
 recommended layout attributes to the table tag and features:
 emiting only <td> tags, no padding or pruning of rows, forces
 no HTML entity encoding in table cells.
+
+=item * C<chessboard( %args )>
+
+Generates a static chess board.
 
 =back
 
