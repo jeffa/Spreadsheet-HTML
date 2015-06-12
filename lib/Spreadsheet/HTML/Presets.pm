@@ -178,6 +178,62 @@ my $tmpl = '
     );
 }
 
+sub shroom {
+
+my $tmpl = '
+.....111111.....
+...1122223311...
+..133222233331..
+.13222222233331.
+.13223333222331.
+1222333333222221
+1222333333223321
+1322333333233331
+1332233332233331
+1332222222223321
+1322111111112221
+.11133133133111.
+..133313313331..
+..133333333331..
+...1333333331...
+....11111111....
+';
+
+    my %map = (
+        '.' => 'white',
+        1 => 'black',
+        2 => 'green',
+        3 => 'white',
+    );
+
+    my (@args);
+    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $tmpl;
+    my $total_rows = scalar @lines;
+    my $total_cols;
+    for my $row (0 .. $#lines) {
+        my @chars = split //, $lines[$row];
+        $total_cols ||= scalar @chars;
+        for my $col (0 .. $#chars) {
+            next unless my $color = $map{ $chars[$col] };
+            push @args, ( 
+                "-row${row}col${col}" => {
+                    width  => 16,
+                    height => 8,
+                    style  => { 'background-color' => $color },
+                }
+            );
+        }
+    }
+
+    layout( @_,
+        pinhead  => 0,
+        tgroups  => 0,
+        headless => 0,
+        fill     => join( 'x', $total_rows, $total_cols ),
+        @args,
+    );
+}
+
 =head1 NAME
 
 Spreadsheet::HTML::Presets - Preset tables for fun and games.
@@ -209,6 +265,8 @@ Generates a static checkers game board (US).
 Generates a static chess game board.
 
 =item * C<dk()>
+
+=item * C<shroom()>
 
 =back
 

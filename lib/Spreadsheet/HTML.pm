@@ -8,7 +8,7 @@ our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west layout
     chess checkers checkerboard
-    dk
+    dk shroom
 );
 
 use Clone;
@@ -30,6 +30,7 @@ sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk( @_ ) }
+sub shroom          { Spreadsheet::HTML::Presets::shroom( @_ ) }
 
 sub generate {
     my %args = _process( @_ );
@@ -401,6 +402,8 @@ See L<Spreadsheet::HTML::Presets> for full documentation.
 =item * C<checkers( %args )>
 
 =item * C<dk( %args )>
+
+=item * C<shroom( %args )>
 
 =back
 
