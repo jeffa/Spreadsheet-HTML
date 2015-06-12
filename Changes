@@ -1,7 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 0.22
-    - added chessboard, checkers, and others to Presets
+    - removed deprecated methods
+    - added chess, checkers, and checkerboard to Presets
     - moved layout to Presets
     - added Spreadsheet::HTML::Presets
 
