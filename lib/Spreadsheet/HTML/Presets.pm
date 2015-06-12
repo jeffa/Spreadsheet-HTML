@@ -16,12 +16,52 @@ sub layout {
     );
 }
 
+sub checkers {
+    my @rows;
+    $rows[0] = [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ];
+    $rows[1] = [ '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '' ];
+    $rows[2] = [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ];
+    $rows[5] = [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ];
+    $rows[6] = [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ];
+    $rows[7] = [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ];
+
+    Spreadsheet::HTML::generate( @_,
+        tgroups  => 0,
+        headless => 0,
+        pinhead  => 0,
+        -row0 => sub { shift @{ $rows[0] } },
+        -row1 => sub { shift @{ $rows[1] } },
+        -row2 => sub { shift @{ $rows[2] } },
+        -row5 => sub { shift @{ $rows[5] } },
+        -row6 => sub { shift @{ $rows[6] } },
+        -row7 => sub { shift @{ $rows[7] } },
+        fill  => '8x8',
+        table => {
+            width => '65%',
+            style => {
+                border => 'thick outset',
+            },
+        },
+        td => {
+            height => 65,
+            width  => 65,
+            align  => 'center',
+            style  => { 
+                'font-size' => 'xx-large',
+                border => 'thin inset',
+                'background-color' => [ ('white', 'red')x4, ('red', 'white')x4 ]
+            }
+        }
+    );
+}
+
 sub chessboard {
     my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
     my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
     Spreadsheet::HTML::generate( @_,
         tgroups  => 0,
         headless => 0,
+        pinhead  => 0,
         -row0 => sub { shift @black },
         -row1 => sub {'&#9823;'},
         -row6 => sub {'&#9817;'},
@@ -114,6 +154,7 @@ my $tmpl = '
     }
 
     layout( @_,
+        pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         fill     => join( 'x', $total_rows, $total_cols ),

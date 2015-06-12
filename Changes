@@ -1,7 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.22
-    - added chessboard to Presets
+    - added chessboard, checkers, and others to Presets
     - moved layout to Presets
     - added Spreadsheet::HTML::Presets
 
