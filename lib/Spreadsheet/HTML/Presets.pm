@@ -16,6 +16,22 @@ sub layout {
     );
 }
 
+sub checkerboard {
+    my $colors = _extract_arg( colors => @_ );
+
+    Spreadsheet::HTML::generate( @_,
+        td => { style  => { 'background-color' => $colors } }
+    );
+}
+
+
+sub _extract_arg {
+    my ($arg) = shift;
+    for (0 .. $#_) {
+        return $_[$_+1] if $_[$_] eq $arg;
+    }
+}
+
 sub checkers {
     my @rows;
     $rows[0] = [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ];
@@ -180,9 +196,17 @@ recommended layout attributes to the table tag and features:
 emiting only <td> tags, no padding or pruning of rows, forces
 no HTML entity encoding in table cells.
 
+=item * C<checkerboard( colors => [ ] )>
+
+Preset for tables with checkerboard colors.
+
+=item * C<checkers()>
+
+Generates a static checkers game board (US).
+
 =item * C<chessboard()>
 
-Generates a static chess board.
+Generates a static chess game board.
 
 =item * C<dk()>
 
