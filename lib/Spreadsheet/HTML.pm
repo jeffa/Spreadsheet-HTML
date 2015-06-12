@@ -7,7 +7,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west layout
-    chessboard checkers checkerboard
+    chess checkers checkerboard
     dk
 );
 
@@ -26,7 +26,7 @@ sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout( @_ ) }
-sub chessboard      { Spreadsheet::HTML::Presets::chessboard( @_ ) }
+sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk( @_ ) }
@@ -404,7 +404,7 @@ See L<Spreadsheet::HTML::Presets> for full documentation.
 
 =item * C<checkerboard( %args )>
 
-=item * C<chessboard( %args )>
+=item * C<chess( %args )>
 
 =item * C<checkers( %args )>
 

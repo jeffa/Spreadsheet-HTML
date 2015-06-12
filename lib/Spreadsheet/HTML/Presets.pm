@@ -71,7 +71,7 @@ sub checkers {
     );
 }
 
-sub chessboard {
+sub chess {
     my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
     my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
     Spreadsheet::HTML::generate( @_,
@@ -204,7 +204,7 @@ Preset for tables with checkerboard colors.
 
 Generates a static checkers game board (US).
 
-=item * C<chessboard()>
+=item * C<chess()>
 
 Generates a static chess game board.
 
