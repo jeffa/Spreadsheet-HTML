@@ -292,14 +292,6 @@ sub _expand_code_or_hash {
     return ( $val, $attr );
 }
 
-sub transpose   { no warnings; warn "transpose is deprecated, use landscape";       generate( @_, theta => -270, tgroups => 0 ) }
-sub earthquake  { no warnings; warn "earthquake is deprecated, use east";           generate( @_, theta =>  90, tgroups => 0 ) }
-sub reverse     { no warnings; warn "reverse is deprecated, use south with flip";   generate( @_, theta => 180, tgroups => 0 ) }
-sub mirror      { no warnings; warn "mirror is deprecated, use portrait with flip"; generate( @_, theta =>    0, flip => 1 ) }
-sub tsunami     { no warnings; warn "tsunami is deprecated, use east with flip";    generate( @_, theta =>  -90, tgroups => 0 ) }
-sub flip        { no warnings; warn "flip is deprecated, use south";                generate( @_, theta => -180, tgroups => 0 ) }
-
-
 
 1;
 
@@ -409,39 +401,6 @@ See L<Spreadsheet::HTML::Presets> for full documentation.
 =item * C<checkers( %args )>
 
 =item * C<dk( %args )>
-
-=back
-
-=head2 DEPRECATED METHODS
-
-These methods will be removed soon. Using them now will
-emit warning messages that inform of alternatives.
-
-=over 4
-
-=item * C<transpose( %args )>
-
-Deprecated: use C<landscape()>
-
-=item * C<earthquake( %args )>
-
-Deprecated: use C<east()>
-
-=item * C<tsunami( %args )>
-
-Deprecated: use C<east( 'flip', 1 )>
-
-=item * C<mirror( %args )>
-
-Deprecated: use C<north( 'flip', 1 )>
-
-=item * C<reverse( %args )>
-
-Deprecated: use C<south( 'flip', 1 )>
-
-=item * C<flip( %args )>
-
-Deprecated: use C<south()>
 
 =back
 
