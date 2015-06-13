@@ -20,7 +20,7 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
         var offColor = '%s';
         var onColor  = '%s';
 
-        $("td").click( function(data){
+        $("td.conway").click( function(data){
             selectedCells.push(parseInt(this.id));
             $(this).addClass("valid");
             $(this).css("background-color", onColor);

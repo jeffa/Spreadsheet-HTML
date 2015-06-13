@@ -249,6 +249,7 @@ sub conway {
             push @args,
                 sprintf( "-row%scol%s", $r - 1, $c - 1 ) => {
                     id     => ( $r . $c ),
+                    class  => 'conway',
                     width  => '30px',
                     height => '30px',
                     style  => { 'background-color' => $off },
