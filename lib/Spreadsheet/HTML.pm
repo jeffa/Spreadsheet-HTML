@@ -6,8 +6,9 @@ our $VERSION = '0.23';
 use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
-    north east south west layout
-    chess checkers checkerboard
+    north east south west
+    layout checkerboard
+    chess checkers conway
     dk shroom
 );
 
@@ -26,6 +27,7 @@ sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout( @_ ) }
+sub conway          { Spreadsheet::HTML::Presets::conway( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
@@ -394,6 +396,8 @@ See L<Spreadsheet::HTML::Presets> for full documentation.
 =over 4
 
 =item * C<layout( %args )>
+
+=item * C<conway( %args )>
 
 =item * C<checkerboard( %args )>
 
