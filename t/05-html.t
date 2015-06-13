@@ -69,6 +69,7 @@ $table = Spreadsheet::HTML->new;
 is $table->layout( data => [ ['&'],['<','>'] ] ), $layout,                              "correct HTML for layout via method";
 is Spreadsheet::HTML::layout( data => [ ['&'],['<','>'] ] ), $layout,                   "correct HTML for layout via procedure";
 
+my $override = '<table><tr><th>&</th></tr><tr><td><</td><td>></td></tr></table>';
 $table = Spreadsheet::HTML->new;
-is $table->layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,                    "can not override defaults for layout via method";
-is Spreadsheet::HTML::layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $layout,          "can not override defaults for layout via method";
+is $table->layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $override,                        "can override defaults for layout via method";
+is Spreadsheet::HTML::layout( table => undef, encodes => '', matrix => 0, data => [ ['&'],['<','>'] ] ), $override,             "can override defaults for layout via method";

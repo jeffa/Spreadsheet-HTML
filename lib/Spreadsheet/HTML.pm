@@ -233,28 +233,34 @@ sub _colgroup {
 }
 
 sub _args {
-    my ($self,$data,$args);
+    my ($self,@data,$data,@args,$args);
     $self = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
 
-    if (@_ > 1 && defined($_[0]) && !ref($_[0]) ) {
-        $args = {@_};
-        $data = delete $args->{data} if exists $args->{data};
-    } elsif (@_ > 1 && ref($_[0]) eq 'ARRAY') {
-        if (ref($_[0]->[0]) eq 'ARRAY') {
-            $data = shift;
-        }
-        my @args;
-        for (@_) {
-            if (ref($_) eq 'ARRAY') {
-                push @$data, $_;
+    if (@_ == 1) {
+        $data = shift;
+    } else {
+        while (@_) {
+            my $key = shift;
+            my $val = shift;
+
+            if (ref( $key )) {
+                push @data, $key;
+                if (ref( $val )) {
+                    push @data, $val;
+                } elsif (defined $val) {
+                    push @args, $val, shift;
+                }
             } else {
-                push @args, $_; 
+                push @args, $key, $val;
             }
         }
-        $args = {@args};
-    } elsif (@_ == 1) {
-        $data = $_[0];
+        if (@data) {
+            $data = @data == 1 ? $data[0] : [ @data ];
+        }
     }
+
+    $args = scalar @args ? { @args } : {};
+    $data = delete $args->{data} if exists $args->{data};
 
     if ($self) {
         return ( $self, $self->{data}, $args ) if $self->{is_cached};

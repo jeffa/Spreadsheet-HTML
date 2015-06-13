@@ -2,6 +2,7 @@ Revision history for Spreadsheet-HTML
 
 0.23
     - added shroom and conway to Presets
+    - refactored _args to allow stray array refs among named args
 
 0.22
     - removed deprecated methods

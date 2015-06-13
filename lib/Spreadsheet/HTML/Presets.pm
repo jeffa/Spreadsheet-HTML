@@ -6,7 +6,7 @@ use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Conway;
 
 sub layout {
-    Spreadsheet::HTML::generate( @_,
+    Spreadsheet::HTML::generate(
         encodes => '',
         matrix  => 1,
         table   => {
@@ -14,14 +14,16 @@ sub layout {
             ( map {$_ => 0} qw( border cellspacing cellpadding ) ),
         },
         _layout => 1,
+        @_,
     );
 }
 
 sub checkerboard {
     my $colors = _extract_arg( colors => @_ );
 
-    Spreadsheet::HTML::generate( @_,
-        td => { style  => { 'background-color' => $colors } }
+    Spreadsheet::HTML::generate(
+        td => { style  => { 'background-color' => $colors } },
+        @_,
     );
 }
 
@@ -34,7 +36,7 @@ sub checkers {
     $rows[6] = [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ];
     $rows[7] = [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ];
 
-    Spreadsheet::HTML::generate( @_,
+    Spreadsheet::HTML::generate(
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
@@ -60,14 +62,15 @@ sub checkers {
                 border => 'thin inset',
                 'background-color' => [ ('white', 'red')x4, ('red', 'white')x4 ]
             }
-        }
+        },
+        @_,
     );
 }
 
 sub chess {
     my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
     my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
-    Spreadsheet::HTML::generate( @_,
+    Spreadsheet::HTML::generate(
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
@@ -91,7 +94,8 @@ sub chess {
                 border => 'thin inset',
                 'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
             }
-        }
+        },
+        @_,
     );
 }
 
@@ -162,12 +166,13 @@ my $tmpl = '
         }
     }
 
-    layout( @_,
+    layout(
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         fill     => join( 'x', $total_rows, $total_cols ),
         @args,
+        @_,
     );
 }
 
@@ -218,12 +223,13 @@ my $tmpl = '
         }
     }
 
-    layout( @_,
+    layout(
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         fill     => join( 'x', $total_rows, $total_cols ),
         @args,
+        @_,
     );
 }
 
@@ -258,13 +264,14 @@ sub conway {
     }
 
     Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $off, $on ) .
-    Spreadsheet::HTML::generate( @_,
+    Spreadsheet::HTML::generate(
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
         caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
         @args,
+        @_,
     );
 }
 
