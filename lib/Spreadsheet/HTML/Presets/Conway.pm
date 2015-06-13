@@ -1,3 +1,26 @@
+package Spreadsheet::HTML::Presets::Conway;
+use strict;
+use warnings FATAL => 'all';
+
+sub _conway_css {
+    my $css = <<'END_CSS';
+<style type="text/css">
+td {
+    width: 30px;
+    height: 30px;
+    background: #EEEEEE;
+}
+.valid {
+    background: #00BFA5;
+}
+</style>
+END_CSS
+    return $css;
+}
+
+sub _conway_javascript {
+    my ($row,$col) = @_;
+    my $javascript = <<'END_JAVASCRIPT';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
 /*
@@ -10,6 +33,8 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
     $(document).ready(function(){
         var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [], maxValue;
 
+        var noOfRow = %s;
+        var noOfColumn = %s;
         maxValue = %s;
 
         $("td").click( function(data){
@@ -285,3 +310,16 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
     });
 })();
 </script>
+END_JAVASCRIPT
+    return sprintf $javascript, $row, $col, $row . $col;
+}
+
+=head1 NAME
+
+Spreadsheet::HTML::Presets::Conway - Assets for Conway.
+
+See L<Spreadsheet::HTML::Presets>
+
+=cut
+
+1;

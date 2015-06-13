@@ -2,9 +2,8 @@ package Spreadsheet::HTML::Presets;
 use strict;
 use warnings FATAL => 'all';
 
-use FindBin qw($Bin);
-
 use Spreadsheet::HTML;
+use Spreadsheet::HTML::Presets::Conway;
 
 sub layout {
     Spreadsheet::HTML::generate( @_,
@@ -25,7 +24,6 @@ sub checkerboard {
         td => { style  => { 'background-color' => $colors } }
     );
 }
-
 
 sub checkers {
     my @rows;
@@ -249,8 +247,8 @@ sub conway {
         }
     }
 
-    _conway_javascript( $row, $col ) .
-    _conway_css( $off, $on ) .
+    Spreadsheet::HTML::Presets::Conway::_conway_javascript( $row, $col ) .
+    Spreadsheet::HTML::Presets::Conway::_conway_css( $off, $on ) .
     Spreadsheet::HTML::generate( @_,
         fill     => $fill,
         pinhead  => 0,
@@ -260,20 +258,6 @@ sub conway {
         caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
         @args,
     );
-}
-
-sub _conway_css {
-    open FH, '<', "$Bin/assets/conway.css" or die "Can't find conway css\n";
-    my $css = do{ local $/; <FH> };
-    close FH;
-    return sprintf $css, @_;
-}
-
-sub _conway_javascript {
-    my ($row,$col) = @_;
-    open FH, '<', "$Bin/assets/conway.js" or die "Can't find conway js\n";
-    my $javascript = do{ local $/; <FH> };
-    return sprintf $javascript, $row . $col;
 }
 
 sub _extract_arg {
