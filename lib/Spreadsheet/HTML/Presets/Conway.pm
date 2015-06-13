@@ -2,24 +2,17 @@ package Spreadsheet::HTML::Presets::Conway;
 use strict;
 use warnings FATAL => 'all';
 
-sub _conway_css {
+sub _css {
     my $css = <<'END_CSS';
 <style type="text/css">
-td {
-    width: 30px;
-    height: 30px;
-    background: %s;
-}
-.valid {
-    background: %s;
-}
+td      { background-color: %s; }
+.valid  { background-color: %s; }
 </style>
 END_CSS
     return sprintf $css, @_;
 }
 
-sub _conway_javascript {
-    my ($row,$col) = @_;
+sub _javascript {
     my $javascript = <<'END_JAVASCRIPT';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -34,6 +27,8 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
         var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [];
 
         var maxValue = %s;
+        var offColor = '%s';
+        var onColor  = '%s';
 
         $("td").click( function(data){
             selectedCells.push(parseInt(this.id));
@@ -309,7 +304,7 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
 })();
 </script>
 END_JAVASCRIPT
-    return sprintf $javascript, $row . $col;
+    return sprintf $javascript, @_;
 }
 
 =head1 NAME
