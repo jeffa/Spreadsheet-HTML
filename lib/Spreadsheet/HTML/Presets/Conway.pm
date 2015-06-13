@@ -8,14 +8,14 @@ sub _conway_css {
 td {
     width: 30px;
     height: 30px;
-    background: #EEEEEE;
+    background: %s;
 }
 .valid {
-    background: #00BFA5;
+    background: %s;
 }
 </style>
 END_CSS
-    return $css;
+    return sprintf $css, @_;
 }
 
 sub _conway_javascript {
@@ -31,11 +31,9 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
 */
 (function(){
     $(document).ready(function(){
-        var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [], maxValue;
+        var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [];
 
-        var noOfRow = %s;
-        var noOfColumn = %s;
-        maxValue = %s;
+        var maxValue = %s;
 
         $("td").click( function(data){
             selectedCells.push(parseInt(this.id));
@@ -311,7 +309,7 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
 })();
 </script>
 END_JAVASCRIPT
-    return sprintf $javascript, $row, $col, $row . $col;
+    return sprintf $javascript, $row . $col;
 }
 
 =head1 NAME
