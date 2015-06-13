@@ -2,16 +2,6 @@ package Spreadsheet::HTML::Presets::Conway;
 use strict;
 use warnings FATAL => 'all';
 
-sub _css {
-    my $css = <<'END_CSS';
-<style type="text/css">
-td      { background-color: %s; }
-.valid  { background-color: %s; }
-</style>
-END_CSS
-    return sprintf $css, @_;
-}
-
 sub _javascript {
     my $javascript = <<'END_JAVASCRIPT';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -33,6 +23,7 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
         $("td").click( function(data){
             selectedCells.push(parseInt(this.id));
             $(this).addClass("valid");
+            $(this).css("background-color", onColor);
         });
 
         var checkAgain = function(selectedCells){
@@ -270,10 +261,12 @@ http://codepen.io/SrSandeepKumar/pen/bNZMyg
             
             for(var i=0; i<toRemoveClass.length; i++){
                 $("#"+toRemoveClass[i]).removeClass("valid");
+                $("#"+toRemoveClass[i]).css("background-color", offColor);
             }
             
             for(var i=0; i<toAddClass.length; i++){
                 $("#"+toAddClass[i]).addClass("valid");
+                $("#"+toAddClass[i]).css("background-color", onColor);
             }
             
             toBeReplaced = toAddClass;  

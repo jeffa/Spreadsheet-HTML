@@ -248,13 +248,12 @@ sub conway {
                     id     => ( $r . $c ),
                     width  => '30px',
                     height => '30px',
-                    #style  => { 'background-color' => $off },
+                    style  => { 'background-color' => $off },
                 };
         }
     }
 
     Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $off, $on ) .
-    Spreadsheet::HTML::Presets::Conway::_css( $off, $on ) .
     Spreadsheet::HTML::generate( @_,
         fill     => $fill,
         pinhead  => 0,
