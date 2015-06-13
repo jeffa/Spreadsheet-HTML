@@ -237,8 +237,8 @@ sub conway {
 
     my ($row,$col);
     if ($data) {
-        $row = scalar @{ $data->[0] };
-        $col = scalar @{ $data };
+        $row = scalar @{ $data };
+        $col = scalar @{ $data->[0] };
     } else {
         ($row,$col) = $fill =~ /^(\d)+\D(\d+)$/;
     }
