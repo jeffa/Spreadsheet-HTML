@@ -234,19 +234,16 @@ my $tmpl = '
 }
 
 sub conway {
-    my $data = _extract_arg( data => @_ );
-    my $fill = _extract_arg( fill => @_ );
-    my $on   = _extract_arg( on   => @_ );
-    my $off  = _extract_arg( off  => @_ );
-    $on    ||= '#00BFA5';
-    $off   ||= '#EEE';
+    my ($self,$data,$args) = Spreadsheet::HTML::_args( @_ );
+    $args->{on}    ||= '#00BFA5';
+    $args->{off}   ||= '#EEE';
 
     my ($row,$col);
     if ($data) {
         $row = scalar @{ $data };
         $col = scalar @{ $data->[0] };
     } else {
-        ($row,$col) = $fill =~ /^(\d)+\D(\d+)$/;
+        ($row,$col) = $args->{fill} =~ /^(\d)+\D(\d+)$/;
     }
 
     my @args;
@@ -258,12 +255,12 @@ sub conway {
                     class  => 'conway',
                     width  => '30px',
                     height => '30px',
-                    style  => { 'background-color' => $off },
+                    style  => { 'background-color' => $args->{off} },
                 };
         }
     }
 
-    Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $off, $on ) .
+    Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $args->{off}, $args->{on} ) .
     Spreadsheet::HTML::generate(
         pinhead  => 0,
         tgroups  => 0,
