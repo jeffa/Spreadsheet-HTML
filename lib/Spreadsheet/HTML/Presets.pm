@@ -2,6 +2,8 @@ package Spreadsheet::HTML::Presets;
 use strict;
 use warnings FATAL => 'all';
 
+use FindBin qw($Bin);
+
 use Spreadsheet::HTML;
 
 sub layout {
@@ -228,342 +230,50 @@ my $tmpl = '
 }
 
 sub conway {
-    my $fill  = _extract_arg( fill => @_ ) || '';
-    my $color = _extract_arg( color => @_ ) || '#EEEEEE';
+    my $fill = _extract_arg( fill => @_ );
+    my $on   = _extract_arg( on   => @_ );
+    my $off  = _extract_arg( off  => @_ );
+    $fill  ||= '8x8';
+    $on    ||= '#00BFA5';
+    $off   ||= '#EEE';
+
     my ($row,$col) = $fill =~ /^(\d)+\D(\d+)$/;
     $row = 8 if $row > 8;
     $col = 8 if $col > 8;
+    $fill = join 'x', $row, $col;
 
     my @args;
     for my $r ( 1 .. $row ) {
         for my $c ( 1 .. $col ) {
-            push @args, ( 
-                sprintf( "-row%scol%s", $r - 1, $c - 1 ) => { id => ( $r . $c ) }
-            );
+            push @args, sprintf( "-row%scol%s", $r - 1, $c - 1 ) => { id => ( $r . $c ) };
         }
     }
 
     _conway_javascript( $row, $col ) .
-    _conway_css() .
+    _conway_css( $off, $on ) .
     Spreadsheet::HTML::generate( @_,
+        fill     => $fill,
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
-        caption  => { '<input type="submit" onClick="start()" />' => { align => 'bottom' } },
+        matrix   => 1,
+        caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
         @args,
     );
 }
 
 sub _conway_css {
-    my $css = <<'END_CSS';
-<style type="text/css">
-td {
-    width: 30px;
-    height: 30px;
-    background: #EEEEEE;
-}
-.valid {
-    background: #00BFA5;
-}
-</style>
-END_CSS
-    return $css;
+    open FH, '<', "$Bin/assets/conway.css" or die "Can't find conway css\n";
+    my $css = do{ local $/; <FH> };
+    close FH;
+    return sprintf $css, @_;
 }
 
 sub _conway_javascript {
     my ($row,$col) = @_;
-    my $javascript = <<'END_JAVASCRIPT';
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript">
-/*
-Javascript Copyright 2015 Sandeep kumar H R
-http://codereview.stackexchange.com/users/68298/sandeep-kumar-h-r
-http://codereview.stackexchange.com/questions/85368/game-of-life-in-javascript-using-table
-http://codepen.io/SrSandeepKumar/pen/bNZMyg
-*/
-(function(){
-    $(document).ready(function(){
-        var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [], maxValue;
-
-        var noOfRow = %s;
-        var noOfColumn = %s;
-        maxValue = %s;
-
-        $("td").click( function(data){
-            selectedCells.push(parseInt(this.id));
-            $(this).addClass("valid");
-        });
-
-        var checkAgain = function(selectedCells){
-            var check = 0, toBeReplaced = [], inArray = [], livingCell;
-            var currentNumber = 0;
-            var north, northEast, East, southEast, south, southWest, west, northWest;
-
-            for(var i=0; i<selectedCells.length; i++){
-                check = 0;
-                currentNumber = parseInt(selectedCells[i]);
-
-                if($("#"+(currentNumber)).hasClass("valid")){
-                    livingCell = true;
-                } else {
-                    livingCell = false;
-                }
-
-                if(currentNumber > 0 && currentNumber < maxValue){
-                
-                    /*North*/
-                    if((currentNumber-10) > 0 && (currentNumber-10) < maxValue){    
-                        if($("#"+(currentNumber-10)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*North East*/
-                    if((currentNumber-9) > 0 && (currentNumber-9) < maxValue){  
-                        if($("#"+(currentNumber-9)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*East*/
-                    if((currentNumber+1) > 0 && (currentNumber+1) < maxValue){  
-                        if($("#"+(currentNumber+1)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South East*/
-                    if((currentNumber+11) > 0 && (currentNumber+11) < maxValue){    
-                        if($("#"+(currentNumber+11)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South*/
-                    if((currentNumber+10) > 0 && (currentNumber+10) < maxValue){    
-                        if($("#"+(currentNumber+10)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South West*/
-                    if((currentNumber+9) > 0 && (currentNumber+9) < maxValue){  
-                        if($("#"+(currentNumber+9)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*West*/
-                    if((currentNumber-1) > 0 && (currentNumber-1) < maxValue){  
-                        if($("#"+(currentNumber-1)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*North West*/
-                    if((currentNumber-11) > 0 && (currentNumber-11) < maxValue){    
-                        if($("#"+(currentNumber-11)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    if(livingCell){
-                        if(check === 0 || check === 1 ){
-                            if(toRemoveClass.indexOf(currentNumber) == -1){
-                                toRemoveClass.push(currentNumber);
-                            }
-                        } 
-                        if(check == 4 || check == 5 || check == 6 || check == 7 || check == 8 ){
-                            if(toRemoveClass.indexOf(currentNumber) == -1){
-                                toRemoveClass.push(currentNumber);
-                            }
-                        } 
-                        if(check == 2 || check == 3){
-                            if(toAddClass.indexOf(currentNumber) == -1){
-                                toAddClass.push(currentNumber);
-                            }
-                        } 
-                    } else {
-                        if(check == 3){
-                            if(toAddClass.indexOf(currentNumber) == -1){
-                                toAddClass.push(currentNumber);
-                            }
-                        } 
-                    }
-
-                }
-            }
-        };
-
-        var gol = function(selectedCells){
-            var check = 0, inArray = [];
-             var currentNumber = 0, livingCell;
-            for(var i=0; i<selectedCells.length; i++){
-                    toBeReplaced = [];
-                    check = 0;
-                    currentNumber = parseInt(selectedCells[i]);
-
-                    if($("#"+(currentNumber)).hasClass("valid")){
-                        livingCell = true;
-                    } else {
-                        livingCell = false;
-                    }
-                    
-                    if(currentNumber > 0 && currentNumber < maxValue){
-                    
-                        /*North*/
-                        if((currentNumber-10) > 0 && (currentNumber-10) < maxValue){    
-                            if($("#"+(currentNumber-10)).hasClass("valid")){
-                                check ++;
-                            }
-                        
-                            if(toBeReplaced.indexOf((currentNumber-10)) == -1){
-                                toBeReplaced.push(currentNumber-10);
-                            }
-                        }
-
-                        /*North East*/
-                        if((currentNumber-9) > 0 && (currentNumber-9) < maxValue){  
-                            if($("#"+(currentNumber-9)).hasClass("valid")){
-                                check ++;
-                            }
-                        
-                            if(toBeReplaced.indexOf((currentNumber-9)) == -1){
-                                toBeReplaced.push(currentNumber-9);
-                            }
-                        }
-
-                        /*East*/
-                        if((currentNumber+1) > 0 && (currentNumber+1) < maxValue){  
-                            if($("#"+(currentNumber+1)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+1)) == -1){
-                                toBeReplaced.push(currentNumber+1);
-                            }
-                        }
-
-                        /*South East*/
-                        if((currentNumber+11) > 0 && (currentNumber+11) < maxValue){    
-                            if($("#"+(currentNumber+11)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+11)) == -1){
-                                toBeReplaced.push(currentNumber+11);
-                            }
-                        }
-
-                        /*South*/
-                        if((currentNumber+10) > 0 && (currentNumber+10) < maxValue){    
-                            if($("#"+(currentNumber+10)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+10)) == -1){
-                                toBeReplaced.push(currentNumber+10);
-                            }
-                        }
-
-                        /*South West*/
-                        if((currentNumber+9) > 0 && (currentNumber+9) < maxValue){  
-                            if($("#"+(currentNumber+9)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+9)) == -1){
-                                toBeReplaced.push(currentNumber+9);
-                            }
-                        }
-
-                        /*West*/
-                        if((currentNumber-1) > 0 && (currentNumber-1) < maxValue){  
-                            if($("#"+(currentNumber-1)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber-1)) == -1){
-                                toBeReplaced.push(currentNumber-1);
-                            }
-                        }
-
-                        /*North West*/
-                        if((currentNumber-11) > 0 && (currentNumber-11) < maxValue){    
-                            if($("#"+(currentNumber-11)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber-11)) == -1){
-                                toBeReplaced.push(currentNumber-11);
-                            }
-                        }
-
-                        if(livingCell){
-                            if(check == 0 || check == 1 ){
-                                if(toRemoveClass.indexOf(currentNumber) == -1){
-                                    toRemoveClass.push(currentNumber);
-                                }
-                            } 
-                            if(check == 4 || check == 5 || check == 6 || check == 7 || check == 8 ){
-                                if(toRemoveClass.indexOf(currentNumber) == -1){
-                                    toRemoveClass.push(currentNumber);
-                                }
-                            } 
-                            if(check == 2 || check == 3){
-                                if(toAddClass.indexOf(currentNumber) == -1){
-                                    toAddClass.push(currentNumber);
-                                }
-                            } 
-                        } else {
-                            if(check == 3){
-                                if(toAddClass.indexOf(currentNumber) == -1){
-                                    toAddClass.push(currentNumber);
-                                }
-                            } 
-                        }
-
-                    }
-                checkAgain(toBeReplaced);
-            }
-            
-            for(var i=0; i<toRemoveClass.length; i++){
-                $("#"+toRemoveClass[i]).removeClass("valid");
-            }
-            
-            for(var i=0; i<toAddClass.length; i++){
-                $("#"+toAddClass[i]).addClass("valid");
-            }
-            
-            toBeReplaced = toAddClass;  
-            
-            if(toAddClass.length == 0){
-                //exit
-                return;
-            } else {
-                setInterval(function(){
-                    gol($.unique(toBeReplaced));
-                },1000);
-            }
-    
-            selectedCells = [];
-            toAddClass =[];
-            toRemoveClass = [];
-    
-        };
-
-        start = function(){
-            if(selectedCells.length == 0){
-                alert("select cell");
-            } else {
-                gol(selectedCells);
-            }
-        };
-    });
-})();
-</script>
-END_JAVASCRIPT
-    return sprintf $javascript, $row, $col, $row . $col;
+    open FH, '<', "$Bin/assets/conway.js" or die "Can't find conway js\n";
+    my $javascript = do{ local $/; <FH> };
+    return sprintf $javascript, $row . $col;
 }
 
 sub _extract_arg {
@@ -583,7 +293,7 @@ See L<Spreadsheet::HTML>
 
 =over 4
 
-=item * C<layout()>
+=item * C<layout( %args )>
 
 Layout tables are not recommended, but if you choose to
 use them you should label them as such. This adds W3C
@@ -591,26 +301,30 @@ recommended layout attributes to the table tag and features:
 emiting only <td> tags, no padding or pruning of rows, forces
 no HTML entity encoding in table cells.
 
-=item * C<checkerboard( colors => [ ] )>
+=item * C<checkerboard( colors, %args )>
 
 Preset for tables with checkerboard colors.
 
-=item * C<conway()>
+  checkerboard( data => [], colors => [qw(red green orange)] )
+
+=item * C<conway( fill, on, off, %args )>
 
 Game of life. Current Javascript implementation
 Copyright 2015 Sandeep kumar H R.
 
-=item * C<checkers()>
+  conway( fill => '8x8', on => 'red' )
+
+=item * C<checkers( %args )>
 
 Generates a static checkers game board (US).
 
-=item * C<chess()>
+=item * C<chess( %args )>
 
 Generates a static chess game board.
 
-=item * C<dk()>
+=item * C<dk( %args )>
 
-=item * C<shroom()>
+=item * C<shroom( %args )>
 
 =back
 

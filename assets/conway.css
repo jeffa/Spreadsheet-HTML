@@ -1,0 +1,10 @@
+<style type="text/css">
+td {
+    width: 30px;
+    height: 30px;
+    background: %s;
+}
+.valid {
+    background: %s;
+}
+</style>
