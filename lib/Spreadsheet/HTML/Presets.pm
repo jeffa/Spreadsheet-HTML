@@ -228,17 +228,20 @@ my $tmpl = '
 }
 
 sub conway {
+    my $data = _extract_arg( data => @_ );
     my $fill = _extract_arg( fill => @_ );
     my $on   = _extract_arg( on   => @_ );
     my $off  = _extract_arg( off  => @_ );
-    $fill  ||= '8x8';
     $on    ||= '#00BFA5';
     $off   ||= '#EEE';
 
-    my ($row,$col) = $fill =~ /^(\d)+\D(\d+)$/;
-    $row = 8 if $row > 8;
-    $col = 8 if $col > 8;
-    $fill = join 'x', $row, $col;
+    my ($row,$col);
+    if ($data) {
+        $row = scalar @{ $data->[0] };
+        $col = scalar @{ $data };
+    } else {
+        ($row,$col) = $fill =~ /^(\d)+\D(\d+)$/;
+    }
 
     my @args;
     for my $r ( 1 .. $row ) {
@@ -255,7 +258,6 @@ sub conway {
 
     Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $off, $on ) .
     Spreadsheet::HTML::generate( @_,
-        fill     => $fill,
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
