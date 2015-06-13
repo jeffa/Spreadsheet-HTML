@@ -235,30 +235,22 @@ sub _colgroup {
 sub _args {
     my ($self,@data,$data,@args,$args);
     $self = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
+    $data = shift if (@_ == 1);
 
-    if (@_ == 1) {
-        $data = shift;
-    } else {
-        while (@_) {
-            my $key = shift;
-            my $val = shift;
-
-            if (ref( $key )) {
-                push @data, $key;
-                if (ref( $val )) {
-                    push @data, $val;
-                } elsif (defined $val) {
-                    push @args, $val, shift;
-                }
-            } else {
-                push @args, $key, $val;
+    while (@_) {
+        if (ref( $_[0] )) {
+            push @data, shift;
+            if (ref( $_[0] )) {
+                push @data, shift;
+            } elsif (defined $_[0]) {
+                push @args, shift, shift;
             }
-        }
-        if (@data) {
-            $data = @data == 1 ? $data[0] : [ @data ];
+        } else {
+            push @args, shift, shift;
         }
     }
 
+    $data ||= (@data == 1) ? $data[0] : (@data) ? [ @data ] : undef;
     $args = scalar @args ? { @args } : {};
     $data = delete $args->{data} if exists $args->{data};
 
