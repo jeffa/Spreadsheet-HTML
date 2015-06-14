@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.25
+    - fixed checkerboard bug
     - fixed use presets by method bug
     - added (very simple) tests for presets
 
