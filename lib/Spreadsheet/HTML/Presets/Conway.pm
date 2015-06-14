@@ -6,295 +6,91 @@ sub _javascript {
     my $javascript = <<'END_JAVASCRIPT';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
-/*
-Javascript Copyright 2015 Sandeep kumar H R
-http://codereview.stackexchange.com/users/68298/sandeep-kumar-h-r
-http://codereview.stackexchange.com/questions/85368/game-of-life-in-javascript-using-table
-http://codepen.io/SrSandeepKumar/pen/bNZMyg
-*/
-(function(){
-    $(document).ready(function(){
-        var column = "", appendRow = "", inc = 1, selectedCells = [], toRemoveClass = [], toAddClass = [];
+var ROW = %s;
+var COL = %s;
+var off = '%s';
+var on  = '%s';
+var MATRIX;
 
-        var maxValue = %s;
-        var offColor = '%s';
-        var onColor  = '%s';
+function Cell (id) {
+    this.id         = id;
+    this.neighbors  = 0;
+    this.alive      = false;
 
-        $("td.conway").click( function(data){
-            selectedCells.push(parseInt(this.id));
-            $(this).addClass("valid");
-            $(this).css("background-color", onColor);
-        });
-
-        var checkAgain = function(selectedCells){
-            var check = 0, toBeReplaced = [], inArray = [], livingCell;
-            var currentNumber = 0;
-            var north, northEast, East, southEast, south, southWest, west, northWest;
-
-            for(var i=0; i<selectedCells.length; i++){
-                check = 0;
-                currentNumber = parseInt(selectedCells[i]);
-
-                if($("#"+(currentNumber)).hasClass("valid")){
-                    livingCell = true;
-                } else {
-                    livingCell = false;
-                }
-
-                if(currentNumber > 0 && currentNumber < maxValue){
-                
-                    /*North*/
-                    if((currentNumber-10) > 0 && (currentNumber-10) < maxValue){    
-                        if($("#"+(currentNumber-10)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*North East*/
-                    if((currentNumber-9) > 0 && (currentNumber-9) < maxValue){  
-                        if($("#"+(currentNumber-9)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*East*/
-                    if((currentNumber+1) > 0 && (currentNumber+1) < maxValue){  
-                        if($("#"+(currentNumber+1)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South East*/
-                    if((currentNumber+11) > 0 && (currentNumber+11) < maxValue){    
-                        if($("#"+(currentNumber+11)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South*/
-                    if((currentNumber+10) > 0 && (currentNumber+10) < maxValue){    
-                        if($("#"+(currentNumber+10)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*South West*/
-                    if((currentNumber+9) > 0 && (currentNumber+9) < maxValue){  
-                        if($("#"+(currentNumber+9)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*West*/
-                    if((currentNumber-1) > 0 && (currentNumber-1) < maxValue){  
-                        if($("#"+(currentNumber-1)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    /*North West*/
-                    if((currentNumber-11) > 0 && (currentNumber-11) < maxValue){    
-                        if($("#"+(currentNumber-11)).hasClass("valid")){
-                            check ++;
-                        }
-                    }
-
-                    if(livingCell){
-                        if(check === 0 || check === 1 ){
-                            if(toRemoveClass.indexOf(currentNumber) == -1){
-                                toRemoveClass.push(currentNumber);
-                            }
-                        } 
-                        if(check == 4 || check == 5 || check == 6 || check == 7 || check == 8 ){
-                            if(toRemoveClass.indexOf(currentNumber) == -1){
-                                toRemoveClass.push(currentNumber);
-                            }
-                        } 
-                        if(check == 2 || check == 3){
-                            if(toAddClass.indexOf(currentNumber) == -1){
-                                toAddClass.push(currentNumber);
-                            }
-                        } 
-                    } else {
-                        if(check == 3){
-                            if(toAddClass.indexOf(currentNumber) == -1){
-                                toAddClass.push(currentNumber);
-                            }
-                        } 
-                    }
-
-                }
+    this.update = function() {
+        if (this.alive) {
+            if ((this.neighbors >= 4) || (this.neighbors <= 1)) {
+                this.alive = false;
+                $('#' + this.id).css( 'background-color', off );
             }
-        };
-
-        var gol = function(selectedCells){
-            var check = 0, inArray = [];
-             var currentNumber = 0, livingCell;
-            for(var i=0; i<selectedCells.length; i++){
-                    toBeReplaced = [];
-                    check = 0;
-                    currentNumber = parseInt(selectedCells[i]);
-
-                    if($("#"+(currentNumber)).hasClass("valid")){
-                        livingCell = true;
-                    } else {
-                        livingCell = false;
-                    }
-                    
-                    if(currentNumber > 0 && currentNumber < maxValue){
-                    
-                        /*North*/
-                        if((currentNumber-10) > 0 && (currentNumber-10) < maxValue){    
-                            if($("#"+(currentNumber-10)).hasClass("valid")){
-                                check ++;
-                            }
-                        
-                            if(toBeReplaced.indexOf((currentNumber-10)) == -1){
-                                toBeReplaced.push(currentNumber-10);
-                            }
-                        }
-
-                        /*North East*/
-                        if((currentNumber-9) > 0 && (currentNumber-9) < maxValue){  
-                            if($("#"+(currentNumber-9)).hasClass("valid")){
-                                check ++;
-                            }
-                        
-                            if(toBeReplaced.indexOf((currentNumber-9)) == -1){
-                                toBeReplaced.push(currentNumber-9);
-                            }
-                        }
-
-                        /*East*/
-                        if((currentNumber+1) > 0 && (currentNumber+1) < maxValue){  
-                            if($("#"+(currentNumber+1)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+1)) == -1){
-                                toBeReplaced.push(currentNumber+1);
-                            }
-                        }
-
-                        /*South East*/
-                        if((currentNumber+11) > 0 && (currentNumber+11) < maxValue){    
-                            if($("#"+(currentNumber+11)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+11)) == -1){
-                                toBeReplaced.push(currentNumber+11);
-                            }
-                        }
-
-                        /*South*/
-                        if((currentNumber+10) > 0 && (currentNumber+10) < maxValue){    
-                            if($("#"+(currentNumber+10)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+10)) == -1){
-                                toBeReplaced.push(currentNumber+10);
-                            }
-                        }
-
-                        /*South West*/
-                        if((currentNumber+9) > 0 && (currentNumber+9) < maxValue){  
-                            if($("#"+(currentNumber+9)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber+9)) == -1){
-                                toBeReplaced.push(currentNumber+9);
-                            }
-                        }
-
-                        /*West*/
-                        if((currentNumber-1) > 0 && (currentNumber-1) < maxValue){  
-                            if($("#"+(currentNumber-1)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber-1)) == -1){
-                                toBeReplaced.push(currentNumber-1);
-                            }
-                        }
-
-                        /*North West*/
-                        if((currentNumber-11) > 0 && (currentNumber-11) < maxValue){    
-                            if($("#"+(currentNumber-11)).hasClass("valid")){
-                                check ++;
-                            }
-
-                            if(toBeReplaced.indexOf((currentNumber-11)) == -1){
-                                toBeReplaced.push(currentNumber-11);
-                            }
-                        }
-
-                        if(livingCell){
-                            if(check == 0 || check == 1 ){
-                                if(toRemoveClass.indexOf(currentNumber) == -1){
-                                    toRemoveClass.push(currentNumber);
-                                }
-                            } 
-                            if(check == 4 || check == 5 || check == 6 || check == 7 || check == 8 ){
-                                if(toRemoveClass.indexOf(currentNumber) == -1){
-                                    toRemoveClass.push(currentNumber);
-                                }
-                            } 
-                            if(check == 2 || check == 3){
-                                if(toAddClass.indexOf(currentNumber) == -1){
-                                    toAddClass.push(currentNumber);
-                                }
-                            } 
-                        } else {
-                            if(check == 3){
-                                if(toAddClass.indexOf(currentNumber) == -1){
-                                    toAddClass.push(currentNumber);
-                                }
-                            } 
-                        }
-
-                    }
-                checkAgain(toBeReplaced);
+        }
+        else {
+            if (this.neighbors == 3) {
+                this.alive = true;
+                $('#' + this.id).css( 'background-color', on );
             }
-            
-            for(var i=0; i<toRemoveClass.length; i++){
-                $("#"+toRemoveClass[i]).removeClass("valid");
-                $("#"+toRemoveClass[i]).css("background-color", offColor);
-            }
-            
-            for(var i=0; i<toAddClass.length; i++){
-                $("#"+toAddClass[i]).addClass("valid");
-                $("#"+toAddClass[i]).css("background-color", onColor);
-            }
-            
-            toBeReplaced = toAddClass;  
-            
-            if(toAddClass.length == 0){
-                //exit
-                return;
-            } else {
-                setInterval(function(){
-                    gol($.unique(toBeReplaced));
-                },1000);
-            }
-    
-            selectedCells = [];
-            toAddClass =[];
-            toRemoveClass = [];
-    
-        };
+        }
+        this.neighbors = 0;
+    }
+}
 
-        start = function(){
-            if(selectedCells.length == 0){
-                alert("select cell");
-            } else {
-                gol(selectedCells);
-            }
-        };
+$(document).ready(function(){
+
+    $('td.conway').click( function( data ) {
+        var matches  = this.id.match( /(\d+)-(\d+)/ );
+        var selected = MATRIX[matches[1]][matches[2]];
+        if (selected.alive) {
+            selected.alive = false;
+            $(this).css( 'background-color', off );
+        } else {
+            selected.alive = true;
+            $(this).css( 'background-color', on );
+        }
     });
-})();
+
+    MATRIX = new Array( ROW );
+    for (var row = 0; row < ROW; row++) {
+        MATRIX[row] = new Array( COL );
+        for (var col = 0; col < COL; col++) {
+            MATRIX[row][col] = new Cell( row + '-' + col );
+        }
+    }
+
+});
+
+function start() {
+    count();
+    update_matrix();
+}
+
+function update_matrix() {
+    for (var row = 0; row < ROW; row++) {
+        for (var col = 0; col < COL; col++) {
+            MATRIX[row][col].update();    
+        }
+    }
+}
+
+function count() {
+
+    for (var row = 0; row < ROW; row++) {
+    for (var col = 0; col < COL; col++) {
+
+        for (var r = -1; r <= 1; r++) {
+        if ( (row + r >=0) & (row + r < ROW) ) {
+
+            for (var c = -1; c <= 1; c++) {
+            if ( ((col+c >= 0) & (col+c < COL)) & ((row+r != row) | (col+c != col))) {
+                if (MATRIX[row + r][col + c].alive) {
+                    MATRIX[row][col].neighbors++;
+                }
+            }
+            }
+        }
+        }
+    }
+    }
+}
 </script>
 END_JAVASCRIPT
     return sprintf $javascript, @_;

@@ -241,11 +241,11 @@ sub conway {
     $args->{off}   ||= '#EEE';
 
     my @args;
-    for my $r ( 1 .. $args->{_max_rows} ) {
-        for my $c ( 1 .. $args->{_max_cols} ) {
+    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
+        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
             push @args,
-                sprintf( "-row%scol%s", $r - 1, $c - 1 ) => {
-                    id     => ( $r . $c ),
+                sprintf( "-row%scol%s", $r, $c ) => {
+                    id     => join( '-', $r, $c ),
                     class  => 'conway',
                     width  => '30px',
                     height => '30px',
@@ -254,7 +254,7 @@ sub conway {
         }
     }
 
-    Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows} . $args->{_max_cols}, $args->{off}, $args->{on} ) .
+    Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows}, $args->{_max_cols}, $args->{off}, $args->{on} ) .
     Spreadsheet::HTML::generate(
         pinhead  => 0,
         tgroups  => 0,
