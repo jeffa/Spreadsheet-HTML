@@ -62,7 +62,7 @@ sub conway {
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
-        caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
+        caption  => { '<button onClick="start()">Step</button>' => { align => 'bottom' } },
         @cells,
         @_,
     );
