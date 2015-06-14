@@ -329,9 +329,9 @@ THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
 =head1 METHODS
 
-All methods (except C<new>) are exportable as functions. With the
-exception of C<new>, all methods return HTML as a scalar string and
-they accept the same named parameters (see PARAMETERS below).
+All methods (except C<new>) are exportable as functions. They all
+accept the same named parameters (see PARAMETERS below).  With the
+exception of C<new>, all methods return an HTML table as a scalar string.
 
 =over 4
 
@@ -439,14 +439,21 @@ cells.
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 
-Rotates table clockwise. Default to 0: headers at top.
-90: headers at right. 180: headers at bottom.
+Rotates table clockwise for positive values and 
+counter-clockwise for negative values. Default to 0:
+headers at top.  90: headers at right. 180: headers at bottom.
 270: headers at left. To achieve landscape, use -270.
 
 =item * C<flip: 0 or 1>
 
-Flips table horizontally.
-Can be used in conjunction with C<theta>.
+Flips table horizontally by negating the value of C<theta>.
+
+=item * C<pinhead: 0 or 1>
+
+Works in conjunction with C<theta> to produces tables with
+headings placed on sides other than the top and perserve
+data alignment for reporting readability. Used by C<south()>
+and C<east()>.
 
 =item * C<indent>
 
@@ -508,13 +515,6 @@ only td tags, no th tags.
 
 Render the table with without the headings row at all. 
 
-=item * C<pinhead: 0 or 1>
-
-Works in conjunction with C<theta> to produces tables with
-headings placed on sides other than the top and perserve
-data alignment for reporting readability. Used by C<south()>
-and C<east()>.
-
 =item * C<headings>
 
 Apply anonymous subroutine to each cell in headings row.
@@ -529,7 +529,7 @@ Or both:
 
   headings => [ sub { uc shift }, { class => "foo" } ]
 
-C<headings> can also be specified with C<-row0>.
+C<headings> is a natural alias for C<-row0>.
 
 =item * C<-rowX>
 
@@ -564,14 +564,11 @@ Or both:
 You can alias any column number by the value of the heading
 name in that column:
 
-  -my_heading3 => sub { "<b>$_[0]"</b>" }
+  -occupation => sub { "<b>$_[0]"</b>" }
 
-  -my_heading3 => { class => 'special-row' }
+  -salary => { class => 'special-row' }
 
-  -my_heading3 => [ sub { uc shift }, { class => "foo" } ]
-
-Override headings with either C<headings> or C<th> or indirectly
-with <thead> via CSS definitions for a class you assign.
+  -employee_no => [ sub { sprintf "%08d", shift }, { class => "foo" } ]
 
 =item * C<-rowXcolX>
 
@@ -586,7 +583,7 @@ to be used as CDATA:
 
   caption => "Just Another Title"
 
-  caption => { "With Attributes" => { align => "bottom" } }
+  caption => { "A Title With Attributes" => { align => "bottom" } }
 
 =item * C<colgroup>
 
@@ -688,6 +685,15 @@ value contol, rotating attributes and totals/subtotals.
 =back
 
 =head1 BUGS AND LIMITATIONS
+
+Support for <col> and <colgroup> has not been adequately tested
+as i honestly do not fully understand why two tags exist when
+one should do the trick. If you cannot achieve the behavior you
+desire from this module's generation of <col> and <colgroup>
+tags please feel free to submit a detailed bug report. The same
+goes for colspan and rowspan attributes -- very little testing
+has been done because this module can limit its problem domain
+to grid like tables of equal sized cells. But if there's a way ...
 
 Please report any bugs or feature requests to either
 
