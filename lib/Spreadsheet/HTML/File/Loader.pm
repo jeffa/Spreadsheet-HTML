@@ -29,15 +29,35 @@ Spreadsheet::HTML::File::Loader - Load data from files.
 
 =item * CSV
 
+First tries to load L<Text::CSV_XS>, then L<Text::CSV>
+and if neither are installed, uses a brute force
+CSV parsing implementation.
+
 =item * HTML
+
+Parses with L<HTML::TableExtract>. Does not preserve
+existing table attributes, although this should be
+possible in the future ...
 
 =item * JSON
 
+Parses with L<JSON>.
+
 =item * XLS
+
+Parses with L<Spreadsheet::ParseExcel>.
 
 =item * YAML
 
+Parses with L<YAML>.
+
 =back
+
+=head1 BEGIN REQUISITE DOCUMENTATION
+
+The rest of this document exists to make POD tests happy. 
+
+You may stop reading now :)
 
 =head1 METHODS
 
