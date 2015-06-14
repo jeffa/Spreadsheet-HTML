@@ -35,6 +35,44 @@ sub checkerboard {
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
+sub conway {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    $args->{on}    ||= '#00BFA5';
+    $args->{off}   ||= '#EEE';
+
+    my @cells;
+    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
+        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
+            push @cells,
+                sprintf( "-row%scol%s", $r, $c ) => {
+                    id     => join( '-', $r, $c ),
+                    class  => 'conway',
+                    width  => '30px',
+                    height => '30px',
+                    style  => { 'background-color' => $args->{off} },
+                };
+        }
+    }
+
+    my @args = (
+        pinhead  => 0,
+        tgroups  => 0,
+        headless => 0,
+        matrix   => 1,
+        caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
+        @cells,
+        @_,
+    );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    my $js = Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows}, $args->{_max_cols}, $args->{off}, $args->{on} );
+
+    return $js . $table;
+}
+
 sub checkers {
     my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
 
@@ -260,51 +298,6 @@ my $tmpl = '
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
-sub conway {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
-    $args->{on}    ||= '#00BFA5';
-    $args->{off}   ||= '#EEE';
-
-    my @cells;
-    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
-        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            push @cells,
-                sprintf( "-row%scol%s", $r, $c ) => {
-                    id     => join( '-', $r, $c ),
-                    class  => 'conway',
-                    width  => '30px',
-                    height => '30px',
-                    style  => { 'background-color' => $args->{off} },
-                };
-        }
-    }
-
-    my @args = (
-        pinhead  => 0,
-        tgroups  => 0,
-        headless => 0,
-        matrix   => 1,
-        caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
-        @cells,
-        @_,
-    );
-
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    my $js = Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows}, $args->{_max_cols}, $args->{off}, $args->{on} );
-
-    return $js . $table;
-}
-
-sub _extract_arg {
-    my ($arg) = shift;
-    for (0 .. $#_) {
-        return $_[$_+1] if $_[$_] eq $arg;
-    }
-}
-
 =head1 NAME
 
 Spreadsheet::HTML::Presets - Preset tables for fun and games.
@@ -317,7 +310,7 @@ This is a container for preset methods for L<Spreadsheet::HTML>.
 
 =over 4
 
-=item * C<layout( %args )>
+=item * C<layout( %params )>
 
 Layout tables are not recommended, but if you choose to
 use them you should label them as such. This adds W3C
@@ -325,29 +318,29 @@ recommended layout attributes to the table tag and features:
 emiting only <td> tags, no padding or pruning of rows, forces
 no HTML entity encoding in table cells.
 
-=item * C<checkerboard( colors, %args )>
+=item * C<checkerboard( colors, %params )>
 
 Preset for tables with checkerboard colors.
 
-  checkerboard( data => [], colors => [qw(red green orange)] )
+  checkerboard( colors => [qw(red green orange)] )
 
-=item * C<conway( on, off, %args )>
+=item * C<conway( on, off, %params )>
 
 Game of life.
 
-  conway( fill => '8x8', on => 'red' )
+  conway( on => 'red', off => 'gray' )
 
-=item * C<checkers( %args )>
+=item * C<checkers( %params )>
 
 Generates a static checkers game board (US).
 
-=item * C<chess( %args )>
+=item * C<chess( %params )>
 
 Generates a static chess game board.
 
-=item * C<dk( %args )>
+=item * C<dk( %params )>
 
-=item * C<shroom( %args )>
+=item * C<shroom( %params )>
 
 =back
 

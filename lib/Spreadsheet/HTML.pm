@@ -335,41 +335,41 @@ they accept the same named parameters (see PARAMETERS below).
 
 =over 4
 
-=item * C<new( %args )>
+=item * C<new( %params )>
 
   my $table = Spreadsheet::HTML->new( data => $data );
 
 Constructs object. Accepts the same named parameters as the table
 generating functions below:
 
-=item * C<generate( %args )>
+=item * C<generate( %params )>
 
   $html = $table->generate( table => {border => 1}, encode => '<>' );
   print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
 
-=item * C<portrait( %args )>
+=item * C<portrait( %params )>
 
-=item * C<north( %args )>
+=item * C<north( %params )>
 
 Headers on top. Same as
 
   generate( theta => 0 )
 
-=item * C<landscape( %args )>
+=item * C<landscape( %params )>
 
-=item * C<west( %args )>
+=item * C<west( %params )>
 
 Headers on left. Same as
 
   generate( theta => -270 )
 
-=item * C<south( %args )>
+=item * C<south( %params )>
 
 Headers on bottom. Same as
 
   generate( theta => -180, pinhead => 1 )
 
-=item * C<east( %args )>
+=item * C<east( %params )>
 
 Headers on right. Same as
 
@@ -378,7 +378,7 @@ Headers on right. Same as
 Note that C<tgroups> are not allowed for C<south()> because the table
 is inverted horizontally and not allowed for C<west()> and C<east()>
 because the table rows contain both headings and cells. You can override
-this behavior by using C<generate> with args listed above instead of 
+this behavior by using C<generate> with params listed above instead of 
 C<south()>, C<east()> or C<west()>.
 
 =back
@@ -388,35 +388,31 @@ Everything else is C<bells_and_whistles>.
 
 =head2 PRESETS
 
-See L<Spreadsheet::HTML::Presets> for full documentation.
+See L<Spreadsheet::HTML::Presets> for more documentation.
 
 =over 4
 
-=item * C<layout( %args )>
+=item * C<layout( %params )>
 
-=item * C<conway( %args )>
+=item * C<conway( on, off, %params )>
 
-=item * C<checkerboard( %args )>
+=item * C<checkerboard( colors, %params )>
 
-=item * C<chess( %args )>
+=item * C<chess( %params )>
 
-=item * C<checkers( %args )>
+=item * C<checkers( %params )>
 
-=item * C<dk( %args )>
+=item * C<dk( %params )>
 
-=item * C<shroom( %args )>
+=item * C<shroom( %params )>
 
 =back
 
 =head1 PARAMETERS
 
 All methods/procedures accept the same named parameters.
-If named parameters are detected: the data has to be
-an array ref assigned to the key 'data'. If no
-named args are detected then the parameter list is
-treated as the data itself, either an array containing
-array references or an array reference containing
-array references.
+You do not have to specify C<data>, any bare array references
+will be collected and assigned to C<data>.
 
 =over 4
 
@@ -532,6 +528,8 @@ Or apply hash ref as attributes:
 Or both:
 
   headings => [ sub { uc shift }, { class => "foo" } ]
+
+C<headings> can also be specified with C<-row0>.
 
 =item * C<-rowX>
 
@@ -690,37 +688,6 @@ value contol, rotating attributes and totals/subtotals.
 =back
 
 =head1 BUGS AND LIMITATIONS
-
-Benchmarks have improved since switching from HTML::Element
-to HTML::AutoTag but we are still a C- student at best.
-The following benchmark was performed by rendering a
-500x500 cell table 20 times:
-
-Before switch to HTML::AutoTag
-
-                     s/iter  S::H  H::E H::AT  H::T D::XT
-  Spreadsheet::HTML    8.58    --  -13%  -53%  -66%  -78%
-  HTML::Element        7.50   14%    --  -47%  -62%  -74%
-  HTML::AutoTag        4.01  114%   87%    --  -28%  -52%
-  HTML::Tiny           2.87  198%  161%   39%    --  -33%
-  DBIx::XHTML_Table    1.92  347%  291%  109%   50%    --
-
-
-After switch to HTML::AutoTag
-
-                    s/iter  H::E  S::H H::AT  H::T D::XT
-  HTML::Element       7.56    --  -34%  -46%  -60%  -74%
-  Spreadsheet::HTML   4.96   53%    --  -17%  -39%  -60%
-  HTML::AutoTag       4.12   84%   21%    --  -26%  -52%
-  HTML::Tiny          3.05  148%   63%   35%    --  -35%
-  DBIx::XHTML_Table   1.99  281%  150%  107%   53%    --
-
-Switching to HTML::Tiny would improve speed but this would
-complicate rotating attributes. The suggestion from these
-benchmarks is to do it the way DBIx::XHTML_Table does it:
-by complete brute force. This does not interest me ...
-if 1 second can be shaved off of HTML::AutoTag's time this
-would suffice.
 
 Please report any bugs or feature requests to either
 
