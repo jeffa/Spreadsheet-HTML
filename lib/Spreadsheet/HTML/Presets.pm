@@ -304,7 +304,62 @@ Spreadsheet::HTML::Presets - Preset tables for fun and games.
 
 =head1 DESCRIPTION
 
-This is a container for preset methods for L<Spreadsheet::HTML>.
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $table = Spreadsheet::HTML->new( data => [[1],[2]] );
+
+  # or
+  use Spreadsheet::HTML qw( layout );
+  print layout( data => [[1],[2]] );
+
+=head1 CUSTOMIZATION
+
+You can use the methods in this package as an example for
+constructing your own custom Spreadsheet::HTML generators.
+
+  use Spreadsheet::HTML;
+
+  sub my_generator {
+      my ($self,$data,$params);
+      $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+      ($self,$data,$params) = $self 
+          ? $self->_args( @_ ) 
+          : Spreadsheet::HTML::_args( @_ );
+
+      # pull out custom named parameters from $params
+      my $color = $params->{color};
+
+      my @args = (
+          # add custom args here
+          @_,
+      );
+
+      $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+  }
+
+It is not pretty, but it keeps the named parameters in line even
+if stray, bare array references are used by the client:
+
+  $table->my_generator( [ 'data here' ], color => 'red' );
+
+A simpler, less flexible form is available if you do not need to
+pull out custom args:
+
+  use Spreadsheet::HTML;
+
+  sub my_generator {
+      my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+
+      my @args = (
+          # add custom args here
+          @_,
+      );
+
+      $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+  }
 
 =head1 METHODS
 
@@ -326,7 +381,7 @@ Preset for tables with checkerboard colors.
 
 =item * C<conway( on, off, %params )>
 
-Game of life.
+Game of life. From an implementation i wrote back in college.
 
   conway( on => 'red', off => 'gray' )
 
