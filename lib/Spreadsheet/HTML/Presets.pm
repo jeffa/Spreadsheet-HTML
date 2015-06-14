@@ -166,7 +166,8 @@ my $tmpl = '
         }
     }
 
-    layout(
+    Spreadsheet::HTML::generate(
+        matrix   => 1,
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
@@ -223,7 +224,8 @@ my $tmpl = '
         }
     }
 
-    layout(
+    Spreadsheet::HTML::generate(
+        matrix   => 1,
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
