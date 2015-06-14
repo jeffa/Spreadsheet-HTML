@@ -299,8 +299,7 @@ Preset for tables with checkerboard colors.
 
 =item * C<conway( on, off, %args )>
 
-Game of life. Current Javascript implementation
-Copyright 2015 Sandeep kumar H R.
+Game of life.
 
   conway( fill => '8x8', on => 'red' )
 
