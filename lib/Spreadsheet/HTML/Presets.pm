@@ -344,8 +344,6 @@ Generates a static chess game board.
 
 =back
 
-=cut
-
 =head1 AUTHOR
 
 Jeff Anderson, C<< <jeffa at cpan.org> >>

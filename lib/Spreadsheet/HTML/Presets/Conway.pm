@@ -98,7 +98,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Conway - Assets for Conway.
+Spreadsheet::HTML::Presets::Conway - Javascript implementation of Conway's Game of Life.
 
 See L<Spreadsheet::HTML::Presets>
 
