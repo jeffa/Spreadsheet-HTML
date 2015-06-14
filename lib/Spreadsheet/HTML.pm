@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.24';
+our $VERSION = '0.25';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(

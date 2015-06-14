@@ -6,7 +6,8 @@ use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Conway;
 
 sub layout {
-    Spreadsheet::HTML::generate(
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my @args = (
         encodes => '',
         matrix  => 1,
         table   => {
@@ -16,18 +17,22 @@ sub layout {
         _layout => 1,
         @_,
     );
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub checkerboard {
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     my $colors = _extract_arg( colors => @_ );
-
-    Spreadsheet::HTML::generate(
+    my @args = (
         td => { style  => { 'background-color' => $colors } },
         @_,
     );
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub checkers {
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+
     my @rows;
     $rows[0] = [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ];
     $rows[1] = [ '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '' ];
@@ -36,10 +41,11 @@ sub checkers {
     $rows[6] = [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ];
     $rows[7] = [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ];
 
-    Spreadsheet::HTML::generate(
+    my @args = (
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
+        matrix   => 1,
         -row0 => sub { shift @{ $rows[0] } },
         -row1 => sub { shift @{ $rows[1] } },
         -row2 => sub { shift @{ $rows[2] } },
@@ -65,15 +71,21 @@ sub checkers {
         },
         @_,
     );
+
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub chess {
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+
     my @black = ( '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' );
     my @white = ( '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' );
-    Spreadsheet::HTML::generate(
+
+    my @args = (
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
+        matrix   => 1,
         -row0 => sub { shift @black },
         -row1 => sub {'&#9823;'},
         -row6 => sub {'&#9817;'},
@@ -97,9 +109,12 @@ sub chess {
         },
         @_,
     );
+
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub dk {
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
 
 my $tmpl = '
 ..........................................
@@ -147,7 +162,7 @@ my $tmpl = '
         5 => '#FF5500',
     );
 
-    my (@args);
+    my (@cells);
     my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $tmpl;
     my $total_rows = scalar @lines;
     my $total_cols;
@@ -156,7 +171,7 @@ my $tmpl = '
         $total_cols ||= scalar @chars;
         for my $col (0 .. $#chars) {
             next unless my $color = $map{ $chars[$col] };
-            push @args, ( 
+            push @cells, ( 
                 "-row${row}col${col}" => {
                     width  => 16,
                     height => 8,
@@ -166,18 +181,21 @@ my $tmpl = '
         }
     }
 
-    Spreadsheet::HTML::generate(
-        matrix   => 1,
+    my @args = (
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
+        matrix   => 1,
         fill     => join( 'x', $total_rows, $total_cols ),
-        @args,
+        @cells,
         @_,
     );
+
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub shroom {
+    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
 
 my $tmpl = '
 .....111111.....
@@ -205,7 +223,7 @@ my $tmpl = '
         3 => 'white',
     );
 
-    my (@args);
+    my (@cells);
     my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $tmpl;
     my $total_rows = scalar @lines;
     my $total_cols;
@@ -214,7 +232,7 @@ my $tmpl = '
         $total_cols ||= scalar @chars;
         for my $col (0 .. $#chars) {
             next unless my $color = $map{ $chars[$col] };
-            push @args, ( 
+            push @cells, ( 
                 "-row${row}col${col}" => {
                     width  => 16,
                     height => 8,
@@ -224,26 +242,31 @@ my $tmpl = '
         }
     }
 
-    Spreadsheet::HTML::generate(
-        matrix   => 1,
+    my @args = (
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
+        matrix   => 1,
         fill     => join( 'x', $total_rows, $total_cols ),
-        @args,
+        @cells,
         @_,
     );
+
+    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub conway {
-    my ($self,$data,$args) = Spreadsheet::HTML::_args( @_ );
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
     $args->{on}    ||= '#00BFA5';
     $args->{off}   ||= '#EEE';
 
-    my @args;
+    my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            push @args,
+            push @cells,
                 sprintf( "-row%scol%s", $r, $c ) => {
                     id     => join( '-', $r, $c ),
                     class  => 'conway',
@@ -254,16 +277,20 @@ sub conway {
         }
     }
 
-    Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows}, $args->{_max_cols}, $args->{off}, $args->{on} ) .
-    Spreadsheet::HTML::generate(
+    my @args = (
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
         caption  => { '<button onClick="start()">start</button>' => { align => 'bottom' } },
-        @args,
+        @cells,
         @_,
     );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    my $js = Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows}, $args->{_max_cols}, $args->{off}, $args->{on} );
+
+    return $js . $table;
 }
 
 sub _extract_arg {

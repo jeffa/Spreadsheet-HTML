@@ -1,5 +1,9 @@
 Revision history for Spreadsheet-HTML
 
+0.25
+    - fixed use presets by method bug
+    - added (very simple) tests for presets
+
 0.24
     - corrected ownership typo
     - added licenses to auxilary mods
