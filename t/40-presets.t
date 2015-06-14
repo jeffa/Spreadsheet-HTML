@@ -5,7 +5,7 @@ use Test::More tests => 14;
 
 use Spreadsheet::HTML;
 
-my $table = Spreadsheet::HTML->new;
+my $table = Spreadsheet::HTML->new( data => [[1],[2]] );
 
 ok $table->layout,                          "layout by method";
 ok Spreadsheet::HTML::layout,               "layout by procedure";

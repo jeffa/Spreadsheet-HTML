@@ -1,6 +1,7 @@
 package Spreadsheet::HTML::Presets;
 use strict;
-use warnings FATAL => 'all';
+#use warnings FATAL => 'all';
+use warnings;
 
 use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Conway;
@@ -21,10 +22,14 @@ sub layout {
 }
 
 sub checkerboard {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    my $colors = _extract_arg( colors => @_ );
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my $colors = $args->{colors} ? $args->{colors} : [qw(red white)];
     my @args = (
-        td => { style  => { 'background-color' => $colors } },
+        td       => { style  => { 'background-color' => $colors } },
+        matrix   => 1,
         @_,
     );
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
@@ -304,7 +309,9 @@ sub _extract_arg {
 
 Spreadsheet::HTML::Presets - Preset tables for fun and games.
 
-See L<Spreadsheet::HTML>
+=head1 DESCRIPTION
+
+This is a container for preset methods for L<Spreadsheet::HTML>.
 
 =head1 METHODS
 
