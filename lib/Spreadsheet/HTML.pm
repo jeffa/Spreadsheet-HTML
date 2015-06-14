@@ -94,9 +94,6 @@ sub _process {
         return wantarray ? ( data => $self->{data}, %{ $args || {} } ) : $data;
     }
 
-    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
-    my $max_cols = scalar @{ $data->[0] };
-
     # headings is an alias for -row0
     $args->{-row0} = delete $args->{headings} if exists $args->{headings};
 
@@ -109,11 +106,13 @@ sub _process {
         }
     }
 
-    for my $row (0 .. $#$data) {
+    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
+
+    for my $row (0 .. $args->{_max_rows} - 1) {
 
         unless ($args->{_layout}) {
-            push @{ $data->[$row] }, undef for 1 .. $max_cols - $#{ $data->[$row] } + 1;  # pad
-            pop  @{ $data->[$row] } for $max_cols .. $#{ $data->[$row] };                 # truncate
+            push @{ $data->[$row] }, undef for 1 .. $args->{_max_cols} - $#{ $data->[$row] } + 1;  # pad
+            pop  @{ $data->[$row] } for $args->{_max_cols} .. $#{ $data->[$row] };                 # truncate
         }
 
         for my $col (0 .. $#{ $data->[$row] }) {
@@ -261,22 +260,22 @@ sub _args {
         $data = $self->{data} unless $data or $args->{file};
     }
 
-    $data = _fill_data( $args ) if $args->{fill};
     $data = Spreadsheet::HTML::File::Loader::parse( $args->{file} ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
     $data = [ [undef] ] if !scalar @{ $data->[0] };
 
-    return ( $self, Clone::clone($data), $args );
-}
+    my %fill;
+    if ($args->{fill}) {
+        ($fill{row},$fill{col}) = $args->{fill} =~ /^(\d+)\D(\d+)$/;
+    }
 
-sub _fill_data {
-    my $args = shift;
-    my ($rows,$cols) = $args->{fill} =~ /(\d+)\D+(\d+)/;
-    $rows = 1 if $rows < 1;
-    $cols = 1 if $cols < 1;
-    $args->{matrix} = 1 unless defined $args->{matrix};
-    return [ map [ map {''} 1 .. $cols ], 1 .. $rows ];
+    $args->{_max_rows} = scalar @{ $data };
+    $args->{_max_cols} = scalar @{ $data->[0] };
+    $args->{_max_rows} = $fill{row} if ($fill{row} || 0) > ($args->{max_rows} || 0);
+    $args->{_max_cols} = $fill{col} if ($fill{col} || 0) > ($args->{max_cols} || 0);
+
+    return ( $self, Clone::clone($data), $args );
 }
 
 sub _expand_code_or_hash {

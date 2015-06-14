@@ -238,17 +238,9 @@ sub conway {
     $args->{on}    ||= '#00BFA5';
     $args->{off}   ||= '#EEE';
 
-    my ($row,$col);
-    if ($data) {
-        $row = scalar @{ $data };
-        $col = scalar @{ $data->[0] };
-    } else {
-        ($row,$col) = $args->{fill} =~ /^(\d)+\D(\d+)$/;
-    }
-
     my @args;
-    for my $r ( 1 .. $row ) {
-        for my $c ( 1 .. $col ) {
+    for my $r ( 1 .. $args->{_max_rows} ) {
+        for my $c ( 1 .. $args->{_max_cols} ) {
             push @args,
                 sprintf( "-row%scol%s", $r - 1, $c - 1 ) => {
                     id     => ( $r . $c ),
@@ -260,7 +252,7 @@ sub conway {
         }
     }
 
-    Spreadsheet::HTML::Presets::Conway::_javascript( $row . $col, $args->{off}, $args->{on} ) .
+    Spreadsheet::HTML::Presets::Conway::_javascript( $args->{_max_rows} . $args->{_max_cols}, $args->{off}, $args->{on} ) .
     Spreadsheet::HTML::generate(
         pinhead  => 0,
         tgroups  => 0,
@@ -303,7 +295,7 @@ Preset for tables with checkerboard colors.
 
   checkerboard( data => [], colors => [qw(red green orange)] )
 
-=item * C<conway( fill, on, off, %args )>
+=item * C<conway( on, off, %args )>
 
 Game of life. Current Javascript implementation
 Copyright 2015 Sandeep kumar H R.
