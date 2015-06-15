@@ -298,7 +298,7 @@ sub _expand_code_or_hash {
 __END__
 =head1 NAME
 
-Spreadsheet::HTML - Generate HTML tables with ease.
+Spreadsheet::HTML - Just another HTML table generator.
 
 =head1 SYNOPSIS
 
@@ -320,10 +320,10 @@ Spreadsheet::HTML - Generate HTML tables with ease.
 
 =head1 DESCRIPTION
 
-Generates HTML4, XHTML and HTML5 tables with ease. Provides a handful of distinctly
-named methods to control overall table orientation. These methods
-in turn accept a number of distinctly named attributes for directing
-what tags and attributes to use.
+Generate HTML4, XHTML and HTML5 tables with ease. Provides a handful
+of distinctly named methods to control overall table orientation.
+These methods in turn accept a number of distinctly named attributes
+for directing what tags and attributes to use.
 
 THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
