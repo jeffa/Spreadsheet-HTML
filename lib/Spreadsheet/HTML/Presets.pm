@@ -69,13 +69,10 @@ sub conway {
         @_,
     );
 
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    my $js = Spreadsheet::HTML::Presets::Conway::_javascript(
-        @{ $args }{qw( jquery _max_rows _max_cols off on )}
-    );
-
+    my $js    = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
     delete $args->{$_} for qw( jquery off on );
 
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
 
@@ -385,11 +382,15 @@ Preset for tables with checkerboard colors.
 
   checkerboard( colors => [qw(red green orange)] )
 
-=item * C<conway( on, off, %params )>
+=item * C<conway( on, off, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 
   conway( on => 'red', off => 'gray' )
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
 
 =item * C<checkers( %params )>
 

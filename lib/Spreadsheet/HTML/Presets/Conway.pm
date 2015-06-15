@@ -2,10 +2,19 @@ package Spreadsheet::HTML::Presets::Conway;
 use strict;
 use warnings FATAL => 'all';
 
+eval "use JavaScript::Minifier";
+our $NOT_AVAILABLE = $@;
+
 sub _javascript {
-    my $javascript = <<'END_JAVASCRIPT';
+    my %args = @_;
+
+    my $html_tmpl =<<'END_HTML';
 <script src="%s"></script>
-<script type="text/javascript">
+<script type="text/javascript">%s</script>
+END_HTML
+
+    my $js_tmpl = <<'END_JAVASCRIPT';
+
 var ROW = %s;
 var COL = %s;
 var off = '%s';
@@ -91,9 +100,23 @@ function count() {
     }
     }
 }
-</script>
 END_JAVASCRIPT
-    return sprintf $javascript, @_;
+
+    my $javascript = sprintf $js_tmpl,
+        $args{_max_rows},
+        $args{_max_cols},
+        $args{off},
+        $args{on},
+    ;
+
+    unless ($NOT_AVAILABLE) {
+        $javascript = JavaScript::Minifier::minify(
+            input     => $javascript,
+            copyright => 'Copyright 2015 Jeff Anderson',
+        );
+    }
+
+    return sprintf $html_tmpl, $args{jquery}, $javascript;
 }
 
 =head1 NAME
