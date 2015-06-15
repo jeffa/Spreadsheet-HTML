@@ -1,10 +1,12 @@
 package Spreadsheet::HTML::Presets;
 use strict;
-#use warnings FATAL => 'all';
-use warnings;
+use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Conway;
+
+eval "use Color::Spectrum";
+our $NO_SPECTRUM = $@;
 
 sub layout {
     my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
@@ -42,7 +44,10 @@ sub conway {
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     $args->{on}    ||= '#00BFA5';
-    $args->{off}   ||= '#EEE';
+    $args->{off}   ||= '#EEEEEE';
+    $args->{colors} = ($NO_SPECTRUM or !$args->{fade})
+        ? [ ($args->{on}) x 10 ]
+        : [ (reverse Color::Spectrum::generate( 20, $args->{off}, $args->{on} ))[0..10] ];
 
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
@@ -69,7 +74,7 @@ sub conway {
     );
 
     my $js = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
-    delete $args->{$_} for qw( jquery off on );
+    delete $args->{$_} for qw( jquery off on colors fade );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
@@ -381,7 +386,7 @@ Preset for tables with checkerboard colors.
 
   checkerboard( colors => [qw(red green orange)] )
 
-=item * C<conway( on, off, jquery, %params )>
+=item * C<conway( on, off, fade, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 

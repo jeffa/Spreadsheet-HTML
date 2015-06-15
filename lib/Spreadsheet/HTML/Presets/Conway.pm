@@ -4,8 +4,6 @@ use warnings FATAL => 'all';
 
 eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
-eval "use Color::Spectrum";
-our $NO_SPECTRUM = $@;
 
 sub _javascript {
     my %args = @_;
@@ -16,7 +14,7 @@ sub _javascript {
         $args{_max_rows},
         $args{_max_cols},
         $args{off},
-        $args{on},
+        join( ',', map "'$_'", @{ $args{colors} } ),
     ;
 
     unless ($NO_MINIFY) {
@@ -46,11 +44,11 @@ function Cell (id) {
     this.neighbors  = 0;
     this.age        = 0;
     this.off        = '%s';
-    this.on         = '%s';
+    this.colors     = [ %s ];
 
     this.live = function() {
         this.age = 1;
-        $('#' + this.id).css( 'background-color', this.on );
+        $('#' + this.id).css( 'background-color', this.colors[this.age] );
     }
 
     this.die = function() {
@@ -62,8 +60,8 @@ function Cell (id) {
         if (this.age) {
             if ((this.neighbors <= 1) || (this.neighbors >= 4)) {
                 this.die();
-            } else if (this.age < 10) {
-                this.age++;
+            } else if (this.age < 9) {
+                $('#' + this.id).css( 'background-color', this.colors[++this.age] );
             }
         }
         else {

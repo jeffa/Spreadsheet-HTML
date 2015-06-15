@@ -2,7 +2,7 @@ Revision history for Spreadsheet-HTML
 
 0.26
     - minify javascripts
-    - conway accepts jquery param
+    - conway accepts jquery and fade params
 
 0.25
     - fixed checkerboard bug
