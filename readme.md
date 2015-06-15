@@ -1,6 +1,6 @@
 Spreadsheet-HTML
 ================
-Generate HTML tables with ease.
+Just another HTML table generator.
 
 Synopsis
 --------
