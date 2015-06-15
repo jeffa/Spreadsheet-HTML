@@ -3,40 +3,72 @@ use strict;
 use warnings FATAL => 'all';
 
 eval "use JavaScript::Minifier";
-our $NOT_AVAILABLE = $@;
+our $NO_MINIFY = $@;
+eval "use Color::Spectrum";
+our $NO_SPECTRUM = $@;
 
 sub _javascript {
     my %args = @_;
 
-    my $html_tmpl =<<'END_HTML';
+    $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+
+    my $javascript = sprintf _js_tmpl(),
+        $args{_max_rows},
+        $args{_max_cols},
+        $args{off},
+        $args{on},
+    ;
+
+    unless ($NO_MINIFY) {
+        $javascript = JavaScript::Minifier::minify( input => $javascript );
+    }
+
+    return sprintf _html_tmpl(), $args{jquery}, $javascript;
+}
+
+sub _html_tmpl {
+    return <<'END_HTML';
 <script src="%s"></script>
 <script type="text/javascript">%s</script>
 END_HTML
+}
 
-    my $js_tmpl = <<'END_JAVASCRIPT';
+sub _js_tmpl {
+    return <<'END_JAVASCRIPT';
 
+/* Copyright (C) 2015 Jeff Anderson */
+var MATRIX;
 var ROW = %s;
 var COL = %s;
-var off = '%s';
-var on  = '%s';
-var MATRIX;
 
 function Cell (id) {
     this.id         = id;
     this.neighbors  = 0;
-    this.alive      = false;
+    this.age        = 0;
+    this.off        = '%s';
+    this.on         = '%s';
+
+    this.live = function() {
+        this.age = 1;
+        $('#' + this.id).css( 'background-color', this.on );
+    }
+
+    this.die = function() {
+        this.age = 0;
+        $('#' + this.id).css( 'background-color', this.off );
+    }
 
     this.update = function() {
-        if (this.alive) {
-            if ((this.neighbors >= 4) || (this.neighbors <= 1)) {
-                this.alive = false;
-                $('#' + this.id).css( 'background-color', off );
+        if (this.age) {
+            if ((this.neighbors <= 1) || (this.neighbors >= 4)) {
+                this.die();
+            } else if (this.age < 10) {
+                this.age++;
             }
         }
         else {
             if (this.neighbors == 3) {
-                this.alive = true;
-                $('#' + this.id).css( 'background-color', on );
+                this.live();
             }
         }
         this.neighbors = 0;
@@ -48,12 +80,10 @@ $(document).ready(function(){
     $('td.conway').click( function( data ) {
         var matches  = this.id.match( /(\d+)-(\d+)/ );
         var selected = MATRIX[matches[1]][matches[2]];
-        if (selected.alive) {
-            selected.alive = false;
-            $(this).css( 'background-color', off );
+        if (selected.age) {
+            selected.die();
         } else {
-            selected.alive = true;
-            $(this).css( 'background-color', on );
+            selected.live();
         }
     });
 
@@ -73,6 +103,7 @@ function start() {
 }
 
 function update_matrix() {
+
     for (var row = 0; row < ROW; row++) {
         for (var col = 0; col < COL; col++) {
             MATRIX[row][col].update();    
@@ -83,40 +114,24 @@ function update_matrix() {
 function count() {
 
     for (var row = 0; row < ROW; row++) {
-    for (var col = 0; col < COL; col++) {
+        for (var col = 0; col < COL; col++) {
 
-        for (var r = -1; r <= 1; r++) {
-        if ( (row + r >=0) & (row + r < ROW) ) {
+            for (var r = -1; r <= 1; r++) {
+                if ( (row + r >=0) & (row + r < ROW) ) {
 
-            for (var c = -1; c <= 1; c++) {
-            if ( ((col+c >= 0) & (col+c < COL)) & ((row+r != row) | (col+c != col))) {
-                if (MATRIX[row + r][col + c].alive) {
-                    MATRIX[row][col].neighbors++;
+                    for (var c = -1; c <= 1; c++) {
+                        if ( ((col+c >= 0) & (col+c < COL)) & ((row+r != row) | (col+c != col))) {
+                            if (MATRIX[row + r][col + c].age) {
+                                MATRIX[row][col].neighbors++;
+                            }
+                        }
+                    }
                 }
             }
-            }
         }
-        }
-    }
     }
 }
 END_JAVASCRIPT
-
-    my $javascript = sprintf $js_tmpl,
-        $args{_max_rows},
-        $args{_max_cols},
-        $args{off},
-        $args{on},
-    ;
-
-    unless ($NOT_AVAILABLE) {
-        $javascript = JavaScript::Minifier::minify(
-            input     => $javascript,
-            copyright => 'Copyright 2015 Jeff Anderson',
-        );
-    }
-
-    return sprintf $html_tmpl, $args{jquery}, $javascript;
 }
 
 =head1 NAME

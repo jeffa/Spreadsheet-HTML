@@ -43,7 +43,6 @@ sub conway {
 
     $args->{on}    ||= '#00BFA5';
     $args->{off}   ||= '#EEE';
-    $args->{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
 
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
@@ -69,7 +68,7 @@ sub conway {
         @_,
     );
 
-    my $js    = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
+    my $js = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
     delete $args->{$_} for qw( jquery off on );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
