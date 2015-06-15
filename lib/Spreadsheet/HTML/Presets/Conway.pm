@@ -13,7 +13,6 @@ sub _javascript {
     my $javascript = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
-        $args{off},
         join( ',', map "'$_'", @{ $args{colors} } ),
     ;
 
@@ -43,30 +42,24 @@ function Cell (id) {
     this.id         = id;
     this.neighbors  = 0;
     this.age        = 0;
-    this.off        = '%s';
     this.colors     = [ %s ];
 
-    this.live = function() {
-        this.age = 1;
-        $('#' + this.id).css( 'background-color', this.colors[this.age] );
-    }
-
-    this.die = function() {
-        this.age = 0;
-        $('#' + this.id).css( 'background-color', this.off );
+    this.grow = function( age ) {
+        this.age = age;
+        $('#' + this.id).css( 'background-color', this.colors[age] );
     }
 
     this.update = function() {
         if (this.age) {
             if ((this.neighbors <= 1) || (this.neighbors >= 4)) {
-                this.die();
+                this.grow( 0 );
             } else if (this.age < 9) {
-                $('#' + this.id).css( 'background-color', this.colors[++this.age] );
+                this.grow( ++this.age );
             }
         }
         else {
             if (this.neighbors == 3) {
-                this.live();
+                this.grow( 1 );
             }
         }
         this.neighbors = 0;
@@ -79,9 +72,9 @@ $(document).ready(function(){
         var matches  = this.id.match( /(\d+)-(\d+)/ );
         var selected = MATRIX[matches[1]][matches[2]];
         if (selected.age) {
-            selected.die();
+            selected.grow( 0 );
         } else {
-            selected.live();
+            selected.grow( 1 );
         }
     });
 

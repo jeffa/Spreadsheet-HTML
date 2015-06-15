@@ -46,8 +46,8 @@ sub conway {
     $args->{on}    ||= '#00BFA5';
     $args->{off}   ||= '#EEEEEE';
     $args->{colors} = ($NO_SPECTRUM or !$args->{fade})
-        ? [ ($args->{on}) x 10 ]
-        : [ (reverse Color::Spectrum::generate( 20, $args->{off}, $args->{on} ))[0..10] ];
+        ? [ $args->{off}, ($args->{on}) x 9 ]
+        : [ $args->{off}, (reverse Color::Spectrum::generate( 16, $args->{off}, $args->{on} ))[0..9] ];
 
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
