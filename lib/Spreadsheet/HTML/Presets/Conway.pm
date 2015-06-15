@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 
 sub _javascript {
     my $javascript = <<'END_JAVASCRIPT';
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="%s"></script>
 <script type="text/javascript">
 var ROW = %s;
 var COL = %s;
