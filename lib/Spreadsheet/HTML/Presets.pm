@@ -30,6 +30,7 @@ sub checkerboard {
     my @args = (
         td       => { style  => { 'background-color' => $colors } },
         matrix   => 1,
+        headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
     );
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
