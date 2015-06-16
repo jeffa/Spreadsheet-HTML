@@ -359,6 +359,13 @@ my $tmpl = '
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
+sub _html_tmpl {
+    return <<'END_HTML';
+<script src="%s"></script>
+<script type="text/javascript">%s</script>
+END_HTML
+}
+
 =head1 NAME
 
 Spreadsheet::HTML::Presets - Preset tables for fun and games.

@@ -2,6 +2,8 @@ package Spreadsheet::HTML::Presets::Calculator;
 use strict;
 use warnings FATAL => 'all';
 
+use Spreadsheet::HTML::Presets;
+
 eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
 
@@ -17,14 +19,7 @@ sub _javascript {
         $javascript = JavaScript::Minifier::minify( input => $javascript );
     }
 
-    return sprintf _html_tmpl(), $args{jquery}, $javascript;
-}
-
-sub _html_tmpl {
-    return <<'END_HTML';
-<script src="%s"></script>
-<script type="text/javascript">%s</script>
-END_HTML
+    return sprintf Spreadsheet::HTML::Presets::_html_tmpl(), $args{jquery}, $javascript;
 }
 
 sub _js_tmpl {
