@@ -4,6 +4,7 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Conway;
+use Spreadsheet::HTML::Presets::Calculator;
 
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
@@ -36,6 +37,59 @@ sub checkerboard {
         @_,
     );
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+}
+
+sub calculator {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    $data = [
+        [ 'C', '+/', '/', '*' ],
+        [ 7, 8, 9, '-' ],
+        [ 4, 5, 6, '+' ],
+        [ 1, 2, 3, '=' ],
+        [ 0, '.' ],
+    ];
+
+    my %attrs = (
+        height => 65,
+        width  => 65,
+        align  => 'center',
+        style  => { 
+            'font-size' => 'xx-large',
+            padding => 0,
+            margins => 0,
+        },
+    );
+
+    my $attrs = 'font-size: xx-large; font-weight: bold; font-family: monospace;';
+
+    my @args = (
+        table => {
+            width => '20%',
+            style => {
+                border  => 'thick outset',
+                padding => 0,
+                margins => 0,
+            },
+        },
+        @_,
+        caption     => qq(<input id="display" style="background-color: #F1FACA; height: 8%; width: 80%; text-align: right; $attrs" />),
+        td          => [ { %attrs }, sub { qq(<button style="width: 100%; height: 100%; $attrs">$_[0]</button>) } ],
+        -row3col3   => { rowspan => 2, %attrs },
+        -row4col0   => { colspan => 2, %attrs },
+        _layout     => 1,
+        data        => $data,
+        tgroups     => 0,
+        headless    => 0,
+        pinhead     => 0,
+        matrix      => 1,
+    );
+
+    my $js = Spreadsheet::HTML::Presets::Calculator::_javascript( %$args );
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
 }
 
 sub conway {
@@ -391,6 +445,14 @@ Preset for tables with checkerboard colors.
 Game of life. From an implementation i wrote back in college.
 
   conway( on => 'red', off => 'gray' )
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
+
+=item * C<calculator( jquery )>
+
+Generates a (soon to be) working calculator.
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified

@@ -9,7 +9,7 @@ our @EXPORT_OK = qw(
     north east south west
     layout checkerboard
     chess checkers conway
-    dk shroom
+    calculator dk shroom
 );
 
 use Clone;
@@ -28,6 +28,7 @@ sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::conway( @_ ) }
+sub calculator      { Spreadsheet::HTML::Presets::calculator( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
@@ -394,7 +395,9 @@ See L<Spreadsheet::HTML::Presets> for more documentation.
 
 =item * C<layout( %params )>
 
-=item * C<conway( on, off, %params )>
+=item * C<conway( on, off, fade, jquery, %params )>
+
+=item * C<calculator( jquery, %params )>
 
 =item * C<checkerboard( colors, %params )>
 

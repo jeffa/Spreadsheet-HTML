@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.26
+    - added calculator
     - minify javascripts
     - conway accepts jquery and fade params
 
