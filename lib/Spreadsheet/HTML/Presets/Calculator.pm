@@ -27,22 +27,34 @@ sub _js_tmpl {
 
 /* Copyright (C) 2015 Jeff Anderson */
 
-var BUFFER = 0;
+var DISPLAY  = [ 0 ];
+var OPERANDS = [];
 
 $(document).ready(function(){
 
     update();
 
     $('button').click( function( data ) {
+
         var val = $(this).html();
-        if (+val === parseInt( val )) {
-            if (BUFFER == 0) {
-                BUFFER = val;
+
+        if (val === '.' && ( DISPLAY[0] === 0 || DISPLAY[0].indexOf('.') === -1 )) {
+
+            DISPLAY[0] += val;
+
+        } else if (+val === parseInt( val )) {
+
+            if (DISPLAY[0] === "0.") {
+                DISPLAY[0] += val;
+            } else if (DISPLAY[0] == 0) {
+                DISPLAY[0] = val;
             } else {
-                BUFFER += val;
+                DISPLAY[0] += val;
             }
-        } else if ( val === 'C' ) {
-                BUFFER = 0;
+
+        } else if (val === 'C') {
+
+            DISPLAY = [ 0 ];
         }
 
         update();
@@ -50,7 +62,7 @@ $(document).ready(function(){
 
 });
 
-function update() { $('#display').val( BUFFER ) }
+function update() { $('#display').val( DISPLAY[0] ) }
 
 END_JAVASCRIPT
 }
