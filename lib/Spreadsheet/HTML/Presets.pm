@@ -45,8 +45,8 @@ sub calculator {
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     $data = [
-        [ 'C', '+/', '/', '*' ],
-        [ 7, 8, 9, '-' ],
+        [ 'C', '&plusmn;', '&divide;', '&times;' ],
+        [ 7, 8, 9, '&minus;' ],
         [ 4, 5, 6, '+' ],
         [ 1, 2, 3, '=' ],
         [ 0, '.' ],
@@ -459,7 +459,7 @@ via L<Javascript::Minifier> if it is installed.
 
 =item * C<calculator( jquery )>
 
-Generates a (soon to be) working calculator.
+Generates a simple calculator.
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified

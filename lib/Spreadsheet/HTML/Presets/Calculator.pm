@@ -32,11 +32,12 @@ var OPERANDS = [];
 
 $(document).ready(function(){
 
-    update();
+    $('#display').prop( 'readonly', 'readonly' );
 
     $('button').click( function( data ) {
 
-        var val = $(this).html();
+        var html = $(this).html();
+        var val  = $('<div/>').html(html).text();
 
         if (val === '.' && ( DISPLAY[0] === 0 || DISPLAY[0].indexOf('.') === -1 )) {
 
@@ -52,6 +53,39 @@ $(document).ready(function(){
                 DISPLAY[0] += val;
             }
 
+        } else if (val === '+') {
+
+            OPERANDS.unshift( '+' );
+            DISPLAY.unshift( 0 );
+
+        } else if (val.charCodeAt(0) == 8722) {
+
+            OPERANDS.unshift( '-' );
+            DISPLAY.unshift( 0 );
+
+        } else if (val.charCodeAt(0) == 215) {
+
+            OPERANDS.unshift( '*' );
+            DISPLAY.unshift( 0 );
+
+        } else if (val.charCodeAt(0) == 247) {
+
+            OPERANDS.unshift( '/' );
+            DISPLAY.unshift( 0 );
+
+        } else if (val.charCodeAt(0) == 177) {
+
+            DISPLAY[0] *= -1;
+
+        } else if (val === '=') {
+
+            var operand = OPERANDS.shift();
+            var value = eval( DISPLAY[1] + operand + DISPLAY[0] );
+            DISPLAY = [ value ];
+            update();
+            DISPLAY = [ 0 ];
+            return;
+
         } else if (val === 'C') {
 
             DISPLAY = [ 0 ];
@@ -60,6 +94,7 @@ $(document).ready(function(){
         update();
     });
 
+    update();
 });
 
 function update() { $('#display').val( DISPLAY[0] ) }
