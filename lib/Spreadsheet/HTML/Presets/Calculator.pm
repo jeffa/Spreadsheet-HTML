@@ -4,19 +4,8 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
-eval "use JavaScript::Minifier";
-our $NO_MINIFY = $@;
-
 sub _javascript {
-    my %args = @_;
-
-    my $js = _js_tmpl();
-
-    unless ($NO_MINIFY) {
-        $js = JavaScript::Minifier::minify( input => $js );
-    }
-
-    return Spreadsheet::HTML::Presets::_html_tmpl( code => $js, %args );
+    return Spreadsheet::HTML::Presets::_html_tmpl( code => _js_tmpl(), @_ );
 }
 
 sub _js_tmpl {

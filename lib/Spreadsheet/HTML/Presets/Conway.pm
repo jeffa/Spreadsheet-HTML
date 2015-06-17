@@ -4,9 +4,6 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
-eval "use JavaScript::Minifier";
-our $NO_MINIFY = $@;
-
 sub _javascript {
     my %args = @_;
 
@@ -15,10 +12,6 @@ sub _javascript {
         $args{_max_cols},
         join( ',', map "'$_'", @{ $args{colors} } ),
     ;
-
-    unless ($NO_MINIFY) {
-        $js = JavaScript::Minifier::minify( input => $js );
-    }
 
     return Spreadsheet::HTML::Presets::_html_tmpl( code => $js, %args );
 }

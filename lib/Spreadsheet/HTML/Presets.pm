@@ -9,6 +9,9 @@ use Spreadsheet::HTML::Presets::Calculator;
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
 
+eval "use JavaScript::Minifier";
+our $NO_MINIFY = $@;
+
 sub layout {
     my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     my @args = (
@@ -363,7 +366,12 @@ my $tmpl = '
 
 sub _html_tmpl {
     my %args = @_;
+
     $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+
+    unless ($NO_MINIFY) {
+        $args{code} = JavaScript::Minifier::minify( input => $args{code} );
+    }
 
     my $tmpl = <<'END_HTML';
 <script src="%s"></script>
