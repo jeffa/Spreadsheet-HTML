@@ -10,16 +10,13 @@ our $NO_MINIFY = $@;
 sub _javascript {
     my %args = @_;
 
-    $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
-
-    my $javascript = sprintf _js_tmpl(),
-    ;
+    my $js = _js_tmpl();
 
     unless ($NO_MINIFY) {
-        $javascript = JavaScript::Minifier::minify( input => $javascript );
+        $js = JavaScript::Minifier::minify( input => $js );
     }
 
-    return sprintf Spreadsheet::HTML::Presets::_html_tmpl(), $args{jquery}, $javascript;
+    return Spreadsheet::HTML::Presets::_html_tmpl( code => $js, %args );
 }
 
 sub _js_tmpl {

@@ -362,10 +362,15 @@ my $tmpl = '
 }
 
 sub _html_tmpl {
-    return <<'END_HTML';
+    my %args = @_;
+    $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+
+    my $tmpl = <<'END_HTML';
 <script src="%s"></script>
 <script type="text/javascript">%s</script>
 END_HTML
+
+    return sprintf $tmpl, $args{jquery}, $args{code};
 }
 
 =head1 NAME
