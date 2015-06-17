@@ -81,6 +81,8 @@ sub calculator {
         -row4col0   => { colspan => 2, %attrs },
         _layout     => 1,
         data        => $data,
+        theta       => 0,
+        flip        => 0,
         tgroups     => 0,
         headless    => 0,
         pinhead     => 0,
