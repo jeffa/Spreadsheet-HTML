@@ -42,23 +42,31 @@ $(document).ready(function(){
 
         } else if (val === '+') {
 
+            update();
             OPERANDS.unshift( '+' );
             DISPLAY.unshift( '' );
+            return;
 
         } else if (val.charCodeAt(0) == 8722) {
 
+            update();
             OPERANDS.unshift( '-' );
             DISPLAY.unshift( '' );
+            return;
 
         } else if (val.charCodeAt(0) == 215) {
 
+            update();
             OPERANDS.unshift( '*' );
             DISPLAY.unshift( '' );
+            return;
 
         } else if (val.charCodeAt(0) == 247) {
 
+            update();
             OPERANDS.unshift( '/' );
             DISPLAY.unshift( '' );
+            return;
 
         } else if (val.charCodeAt(0) == 177) {
 
