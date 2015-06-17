@@ -12,6 +12,7 @@ sub _js_tmpl {
     return <<'END_JAVASCRIPT';
 
 /* Copyright (C) 2015 Jeff Anderson */
+/* install JavaScript::Minifier to minify this code */
 
 var DISPLAY  = [ 0 ];
 var OPERANDS = [];
@@ -42,22 +43,22 @@ $(document).ready(function(){
         } else if (val === '+') {
 
             OPERANDS.unshift( '+' );
-            DISPLAY.unshift( 0 );
+            DISPLAY.unshift( '' );
 
         } else if (val.charCodeAt(0) == 8722) {
 
             OPERANDS.unshift( '-' );
-            DISPLAY.unshift( 0 );
+            DISPLAY.unshift( '' );
 
         } else if (val.charCodeAt(0) == 215) {
 
             OPERANDS.unshift( '*' );
-            DISPLAY.unshift( 0 );
+            DISPLAY.unshift( '' );
 
         } else if (val.charCodeAt(0) == 247) {
 
             OPERANDS.unshift( '/' );
-            DISPLAY.unshift( 0 );
+            DISPLAY.unshift( '' );
 
         } else if (val.charCodeAt(0) == 177) {
 

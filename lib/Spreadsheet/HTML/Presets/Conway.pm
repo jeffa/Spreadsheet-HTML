@@ -20,6 +20,7 @@ sub _js_tmpl {
     return <<'END_JAVASCRIPT';
 
 /* Copyright (C) 2015 Jeff Anderson */
+/* install JavaScript::Minifier to minify this code */
 var MATRIX;
 var ROW = %s;
 var COL = %s;

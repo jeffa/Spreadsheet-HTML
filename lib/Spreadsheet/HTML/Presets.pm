@@ -370,7 +370,11 @@ sub _html_tmpl {
     $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
 
     unless ($NO_MINIFY) {
-        $args{code} = JavaScript::Minifier::minify( input => $args{code} );
+        $args{code} = JavaScript::Minifier::minify(
+            input      => $args{code},
+            copyright  => 'Copyright (C) 2015 Jeff Anderson',
+            stripDebug => 1,
+        );
     }
 
     my $tmpl = <<'END_HTML';
