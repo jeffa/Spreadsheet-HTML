@@ -417,6 +417,12 @@ All methods/procedures accept the same named parameters.
 You do not have to specify C<data>, any bare array references
 will be collected and assigned to C<data>.
 
+=head2 LITERAL PARAMETERS
+
+Literal parameters provides the means to modify the macro
+aspects of the table, such as indentation, encoding, data
+source and table orientation.
+
 =over 4
 
 =item * C<data>
@@ -436,7 +442,8 @@ are XLS, CSV, JSON, YAML and HTML (first table found).
 =item * C<fill>
 
 Can be supplied instead of C<data> to generate empty
-cells.
+cells, or in conjunction with C<data> to pad existing
+cells (currently only pads the right and bottom sides.)
 
   fill => '5x12'
 
@@ -478,18 +485,18 @@ to insert into to.
 
 =item * C<encodes>
 
-HTML Encode contents of td tags. Defaults to empty string
-which performs no encoding of entities. Pass a string like
-'<>&=' to perform encoding on any characters found. If the
-value is 'undef' then all unsafe characters will be
-encoded as HTML entites.
+HTML Encode contents of <tr> and/or <td> tags. Defaults to
+empty string which performs no encoding of entities. Pass
+a string like '<>&=' to perform encoding on any characters
+found.  If the value is C<undef> then all unsafe characters
+will be encoded as HTML entites. Uses L<HTML::Entities>.
 
   encodes => '<>"'
 
 =item * C<empty>
 
-Replace empty cells with this value. Defaults to &nbsp;
-Set value to undef to avoid any substitutions.
+Replace empty cells with this value. Defaults to C<&nbsp;>.
+Set value to C<undef> to avoid any substitutions.
 
   empty => '&#160;'
 
@@ -517,6 +524,7 @@ only td tags, no th tags.
 =item * C<headless: 0 or 1>
 
 Render the table with without the headings row at all. 
+The first row is still C<-row1>.
 
 =item * C<headings>
 
@@ -532,7 +540,20 @@ Or both:
 
   headings => [ sub { uc shift }, { class => "foo" } ]
 
-C<headings> is a natural alias for C<-row0>.
+C<headings> is a natural alias for C<-row0>. Be careful
+not to prepend a dash to C<headings> ... only dynamic
+parameters use leading dashes.
+
+=back
+
+=head2 DYNAMIC PARAMETERS
+
+Dynamic parameters provide a means to control the micro
+elements of the table, such as modifying headings by their
+name and rows and columns by their indices (X). They contain
+leading dashes to seperate them from Literal and Tag Parameters.
+
+=over 4
 
 =item * C<-rowX>
 
@@ -576,7 +597,46 @@ name in that column:
 =item * C<-rowXcolX>
 
 Apply this anonymous subroutine or hash ref of attributres
-to the cell at row X and column X.  (0 index based)
+to the cell at row X and column X. (0 index based)
+
+=back
+
+=head2 TAG PARAMETERS
+
+Tag parameters provide a means to control the attributes
+of the table's tags, and in the case of <td> and <tr> the
+contents via callback subroutines. Although similar in form,
+they are differentiated from Litertal Tags because they share
+the names of the actual tags.
+
+=over 4
+
+=item * C<table>
+
+=item * C<thead>
+
+=item * C<tfoot>
+
+=item * C<tbody>
+
+=item * C<tr>
+
+Hash ref. Apply these attributes to the specified tag.
+
+  table => { class => 'spreadsheet' }
+
+  tr => { style => { background => [qw( color1 color2 )]' } }
+
+=item * C<th>
+
+=item * C<td>
+
+<th> and <td> are the only Tag Parameters that may
+additionally accept sub refs.
+
+  th => sub { uc shift }
+
+  td => [ sub { uc shift }, { class => 'foo' } ]
 
 =item * C<caption>
 
@@ -601,32 +661,6 @@ Add colgroup tag(s) to the table. Use an AoH for multiple.
 Add col tag(s) to the table. Use an AoH for multiple. Wraps
 tags within a colgroup tag. Same usage as C<colgroup>.
 
-=item * C<table>
-
-=item * C<thead>
-
-=item * C<tfoot>
-
-=item * C<tbody>
-
-=item * C<tr>
-
-Hash ref. Apply these attributes to the specified tag.
-
-  table => { class => 'spreadsheet' }
-
-  tr => { style => { background => [qw( color1 color2 )]' } }
-
-=item * C<th>
-
-=item * C<td>
-
-<th> and <td> can additionally accept sub refs
-
-  th => sub { uc shift }
-
-  td => [ sub { uc shift }, { class => 'foo' } ]
-
 =back
 
 =head1 REQUIRES
@@ -636,7 +670,8 @@ Hash ref. Apply these attributes to the specified tag.
 =item * L<HTML::AutoTag>
 
 Used to generate HTML. Handles indentation and HTML entity encoding.
-Uses L<Tie::Hash::Attribute> to handle rotation of class attributes.
+Uses L<Tie::Hash::Attribute> to handle rotation of class attributes
+and L<HTML::Entities> for encoding of CDATA.
 
 =item * L<Math::Matrix>
 
