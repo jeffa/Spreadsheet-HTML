@@ -14,8 +14,8 @@ sub _js_tmpl {
 /* Copyright (C) 2015 Jeff Anderson */
 /* install JavaScript::Minifier to minify this code */
 
-var DISPLAY  = [ 0 ];
-var OPERANDS = [];
+var DISPLAY = [ 0 ];
+var OPERAND = '';
 
 $(document).ready(function(){
 
@@ -42,29 +42,49 @@ $(document).ready(function(){
 
         } else if (val === '+') {
 
+            if (OPERAND) {
+                var value = eval( DISPLAY[1] + OPERAND + DISPLAY[0] );
+                DISPLAY = [ value ];
+            }
+
             update();
-            OPERANDS.unshift( '+' );
+            OPERAND = val;
             DISPLAY.unshift( '' );
             return;
 
         } else if (val.charCodeAt(0) == 8722) {
 
+            if (OPERAND) {
+                var value = eval( DISPLAY[1] + OPERAND + DISPLAY[0] );
+                DISPLAY = [ value ];
+            }
+
             update();
-            OPERANDS.unshift( '-' );
+            OPERAND = '-';
             DISPLAY.unshift( '' );
             return;
 
         } else if (val.charCodeAt(0) == 215) {
 
+            if (OPERAND) {
+                var value = eval( DISPLAY[1] + OPERAND + DISPLAY[0] );
+                DISPLAY = [ value ];
+            }
+
             update();
-            OPERANDS.unshift( '*' );
+            OPERAND = '*';
             DISPLAY.unshift( '' );
             return;
 
         } else if (val.charCodeAt(0) == 247) {
 
+            if (OPERAND) {
+                var value = eval( DISPLAY[1] + OPERAND + DISPLAY[0] );
+                DISPLAY = [ value ];
+            }
+
             update();
-            OPERANDS.unshift( '/' );
+            OPERAND = '/';
             DISPLAY.unshift( '' );
             return;
 
@@ -74,8 +94,8 @@ $(document).ready(function(){
 
         } else if (val === '=') {
 
-            var operand = OPERANDS.shift();
-            var value = eval( DISPLAY[1] + operand + DISPLAY[0] );
+            var value = eval( DISPLAY[1] + OPERAND + DISPLAY[0] );
+            OPERAND = '';
             DISPLAY = [ value ];
             update();
             DISPLAY = [ 0 ];
