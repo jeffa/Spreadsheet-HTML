@@ -356,6 +356,9 @@ Headers on top. Same as
 
   generate( theta => 0 )
 
+=for html
+<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr></table>
+
 =item * C<landscape( %params )>
 
 =item * C<west( %params )>
@@ -364,17 +367,26 @@ Headers on left. Same as
 
   generate( theta => -270 )
 
+=for html
+<table><tr><th>header1</th><td>a1</td><td>b1</td><td>c1</td><td>d1</td></tr><tr><th>header2</th><td>a2</td><td>b2</td><td>c2</td><td>d2</td></tr><tr><th>header3</th><td>a3</td><td>b3</td><td>c3</td><td>d3</td></tr></table>
+
 =item * C<south( %params )>
 
 Headers on bottom. Same as
 
   generate( theta => -180, pinhead => 1 )
 
+=for html
+<table><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr><tr><th>header1</th><th>header2</th><th>header3</th></tr></table>
+
 =item * C<east( %params )>
 
 Headers on right. Same as
 
   generate( theta => 90, pinhead => 1 )
+
+=for html
+<table><tr><td>a1</td><td>b1</td><td>c1</td><td>d1</td><th>header1</th></tr><tr><td>a2</td><td>b2</td><td>c2</td><td>d2</td><th>header2</th></tr><tr><td>a3</td><td>b3</td><td>c3</td><td>d3</td><th>header3</th></tr></table>
 
 Note that C<tgroups> are not allowed for C<south()> because the table
 is inverted horizontally and not allowed for C<west()> and C<east()>
