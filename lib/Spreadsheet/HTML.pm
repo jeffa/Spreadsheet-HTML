@@ -118,32 +118,37 @@ sub _process {
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my ( $val, $attr ) = _expand_code_or_hash( $args->{$tag}, $data->[$row][$col] );
+            my ( $cdata, $attr ) = _expand_code_or_hash( $args->{$tag}, $data->[$row][$col] );
             $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
-
-            # -rowXcolX
-            if (exists $args->{"-row${row}col${col}"}) {
-                ( $val, $attr ) = _expand_code_or_hash( $args->{"-row${row}col${col}"}, $val );
-            }
 
             # -colX
             if (exists $args->{"-col$col"}) {
-                ( $val, $attr ) = _expand_code_or_hash( $args->{"-col$col"}, $val );
+                my $new_attr;
+                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-col$col"}, $cdata );
+                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
             }
 
             # -rowX (overides -colX)
             if (exists $args->{"-row$row"}) {
                 my $new_attr;
-                ( $val, $new_attr ) = _expand_code_or_hash( $args->{"-row$row"}, $val );
-                $attr = $new_attr if ref( $new_attr );
+                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-row$row"}, $cdata );
+                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
             }
-            # --empty
-            do{ no warnings; $val =~ s/^\s*$/$empty/g };
+
+            # -rowXcolX (overides -rowX)
+            if (exists $args->{"-row${row}col${col}"}) {
+                my $new_attr;
+                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-row${row}col${col}"}, $cdata );
+                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
+            }
+
+            # handle empty
+            do{ no warnings; $cdata =~ s/^\s*$/$empty/g };
 
             $data->[$row][$col] = { 
                 tag => $tag, 
-                (defined( $val ) ? (cdata => $val) : ()), 
-                (defined( $attr ) ? (attr => $attr) : ()),
+                (defined( $cdata ) ? (cdata => $cdata) : ()), 
+                (defined( $attr )  ? (attr => $attr)   : ()),
             };
         }
     }
@@ -280,17 +285,17 @@ sub _args {
 }
 
 sub _expand_code_or_hash {
-    my ( $thingy, $val ) = @_;
+    my ( $thingy, $cdata ) = @_;
     my $attr;
     $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
     for (@{ $thingy }) {
         if (ref($_) eq 'CODE') {
-            $val = $_->($val);
+            $cdata = $_->($cdata);
         } elsif (ref($_) eq 'HASH') {
             $attr = $_;
         }
     }
-    return ( $val, $attr );
+    return ( $cdata, $attr );
 }
 
 

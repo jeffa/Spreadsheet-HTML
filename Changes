@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 0.27
+    - Tag and Dynamic Parameters merge hash attrs now
+    - updated docs
     - more correct calculator implementation
 
 0.26
