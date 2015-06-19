@@ -448,6 +448,9 @@ pull out custom args:
       $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
   }
 
+Plans are in the works to simplify this "API," possibly even
+to provide a real plugin interface.
+
 =head1 METHODS
 
 =over 4
