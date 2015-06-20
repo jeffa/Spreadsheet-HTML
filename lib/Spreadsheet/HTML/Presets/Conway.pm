@@ -10,6 +10,7 @@ sub _javascript {
     my $js = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
+        $args{off},
         join( ',', map "'$_'", @{ $args{colors} } ),
     ;
 
@@ -29,11 +30,16 @@ function Cell (id) {
     this.id         = id;
     this.neighbors  = 0;
     this.age        = 0;
-    this.colors     = [ %s ];
+    this.off        = '%s';
+    this.on         = [ %s ];
 
     this.grow = function( age ) {
         this.age = age;
-        $('#' + this.id).css( 'background-color', this.colors[age] );
+        if (age == 0) {
+            $('#' + this.id).css( 'background-color', this.off );
+        } else {
+            $('#' + this.id).css( 'background-color', this.on[age - 1] );
+        }
     }
 
     this.update = function() {
