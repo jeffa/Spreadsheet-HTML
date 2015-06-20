@@ -708,7 +708,8 @@ Useful for preventing data from being clobbered.
 
 =head1 OPTIONAL
 
-Used to load data from various different file formats.
+The following are Used to load data from various
+different file formats:
 
 =over 4
 
@@ -723,6 +724,18 @@ Used to load data from various different file formats.
 =item * L<HTML::TableExtract>
 
 =item * L<Spreadsheet::ParseExcel>
+
+=back
+
+The following are used by some presets:
+
+=over 4
+
+=item * L<JavaScript::Minifier>
+
+=item * L<Color::Spectrum>
+
+=item * L<Color::Library>
 
 =back
 
