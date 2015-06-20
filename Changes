@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.30
+
 0.29
     - new param for checkerboard: extra
     - conway impacts th tags now
