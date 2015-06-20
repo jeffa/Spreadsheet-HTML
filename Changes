@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.29
+    - better overrides for presets
 
 0.28
     - updated/corrected docs
