@@ -708,7 +708,7 @@ Useful for preventing data from being clobbered.
 
 =head1 OPTIONAL
 
-The following are Used to load data from various
+The following are used to load data from various
 different file formats:
 
 =over 4
