@@ -727,7 +727,8 @@ different file formats:
 
 =back
 
-The following are used by some presets:
+The following are used by some presets to enhance
+their output, if installed:
 
 =over 4
 
