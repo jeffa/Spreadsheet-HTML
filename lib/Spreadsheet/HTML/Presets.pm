@@ -28,6 +28,7 @@ sub layout {
         matrix  => 1,
         _layout => 1,
     );
+
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
@@ -36,13 +37,18 @@ sub checkerboard {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my $colors = $args->{colors} ? $args->{colors} : [qw(red white)];
+    my $colors = $args->{colors} ? $args->{colors} : [qw(red green)];
+    $colors = [ $colors ] unless ref $colors;
+    $args->{extra} ||= 'white';
+    push @$colors, $args->{extra} unless $args->{_max_cols} % @$colors;
+
     my @args = (
         matrix   => 1,
         headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
         td => { %{ $args->{td} || {} }, style  => { 'background-color' => $colors } },
     );
+
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
@@ -465,20 +471,34 @@ to provide a real plugin interface.
 Layout tables are not recommended, but if you choose to
 use them you should label them as such. This adds W3C
 recommended layout attributes to the table tag and features:
-emiting only <td> tags, no padding or pruning of rows, forces
+emit only <td> tags, no padding or pruning of rows, forces
 no HTML entity encoding in table cells.
 
 =item * C<checkerboard( colors, %params )>
 
 Preset for tables with checkerboard colors.
 
-  checkerboard( colors => [qw(red green orange)] )
+  checkerboard( colors => [qw(yellow orange)], extra => 'blue' )
+
+Attempts to form diagonal patterns by adding an extra color
+if need be. C<colors> default to red and green and C<extra>
+defaults to white.
 
 =item * C<conway( on, off, fade, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 
   conway( on => 'red', off => 'gray' )
+
+If you have L<Color::Spectrum> installed (and optionally
+L<Color::Library>) then you can turn fade on for more
+effects:
+
+  # without Color::Library
+  conway( on => '#FF0000', off => '#999999', fade => 1 )
+
+  # with Color::Library
+  conway( on => 'red', off => 'gray', fade => 1 )
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
