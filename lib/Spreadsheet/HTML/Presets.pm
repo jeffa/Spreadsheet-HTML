@@ -430,12 +430,13 @@ constructing your own custom Spreadsheet::HTML generators.
       # pull out custom named parameters from $params
       my $color = $params->{color};
 
-      my @args = (
-          # add custom args here
+      my @params = (
+          # add custom params that client CAN overide here
           @_,
+          # add custom params that client can NOT overide here
       );
 
-      $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
   }
 
 It is not pretty, but it keeps the named parameters in line even
@@ -444,19 +445,20 @@ if stray, bare array references are used by the client:
   $table->my_generator( [ 'data here' ], color => 'red' );
 
 A simpler, less flexible form is available if you do not need to
-pull out custom args:
+pull out client params:
 
   use Spreadsheet::HTML;
 
   sub my_generator {
       my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
 
-      my @args = (
-          # add custom args here
+      my @params = (
+          # add custom params that client CAN overide here
           @_,
+          # add custom params that client can NOT overide here
       );
 
-      $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
   }
 
 Plans are in the works to simplify this "API," possibly even
