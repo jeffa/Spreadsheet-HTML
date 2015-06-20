@@ -321,8 +321,8 @@ Spreadsheet::HTML - Just another HTML table generator.
 
     # non OO
     use Spreadsheet::HTML qw( portrait landscape );
-    print portrait( $data );
-    print landscape( $data );
+    print portrait( $data, td => sub { sprintf "%02d, shift } );
+    print landscape( $data, tr => { class => [qw(odd even)] } );
 
 =head1 DESCRIPTION
 
@@ -346,67 +346,68 @@ exception of C<new>, all methods return an HTML table as a scalar string.
   my $table = Spreadsheet::HTML->new( data => $data );
 
 Constructs object. Accepts the same named parameters as the table
-generating functions below:
+generating methods below:
 
 =item * C<generate( %params )>
-
-  $html = $table->generate( table => {border => 1}, encode => '<>' );
-  print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
 
 =item * C<portrait( %params )>
 
 =item * C<north( %params )>
 
-Headers on top. Same as
-
-  generate( theta => 0 )
-
 =for html
-<table><tr><td><b>header1</b></td><td><b>header2</b></td><td><b>header3</b></td></tr><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr></table>
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #505050"><td>heading1</th><td>heading2</th><td>heading3</th></tr><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr></table>
+
+  $html = $table->generate( table => {border => 1}, encode => '<>' );
+  print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
+
+Headers on top. C<north()> is an alias for C<portrait()> which in turn
+calls C<generate> like so:
+
+  generate( theta => 0, %params )
 
 =item * C<landscape( %params )>
 
 =item * C<west( %params )>
 
-Headers on left. Same as
+=for html
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td style="color: #505050">heading1</th><td>row1col1</td><td>row2col1</td><td>row3col1</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading2</th><td>row1col2</td><td>row2col2</td><td>row3col2</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading3</th><td>row1col3</td><td>row2col3</td><td>row3col3</td></tr></table>
+
+Headers on left. C<west()> is an alias for C<landscape()> which
+in turn calls C<generate> like so:
 
   generate( theta => -270 )
 
-=for html
-<table><tr><td><b>header1</b></td><td>a1</td><td>b1</td><td>c1</td><td>d1</td></tr><tr><td><b>header2</b></td><td>a2</td><td>b2</td><td>c2</td><td>d2</td></tr><tr><td><b>header3</b></td><td>a3</td><td>b3</td><td>c3</td><td>d3</td></tr></table>
-
 =item * C<south( %params )>
+
+=for html
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr><tr style="color: #505050"><td>heading1</th><td>heading2</th><td>heading3</th></tr></table>
 
 Headers on bottom. Same as
 
   generate( theta => -180, pinhead => 1 )
 
-=for html
-<table><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr><tr><td><b>header1</b></td><td><b>header2</b></td><td><b>header3</b></td></tr></table>
-
 =item * C<east( %params )>
+
+=for html
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row2col1</td><td>row3col1</td><td style="color: #505050">heading1</th></tr><tr style="color: #A0A0A0"><td>row1col2</td><td>row2col2</td><td>row3col2</td><td style="color: #505050">heading2</th></tr><tr style="color: #A0A0A0"><td>row1col3</td><td>row2col3</td><td>row3col3</td><td style="color: #505050">heading3</th></tr></table>
 
 Headers on right. Same as
 
   generate( theta => 90, pinhead => 1 )
 
-=for html
-<table><tr><td>a1</td><td>b1</td><td>c1</td><td>d1</td><td><b>header1</b></td></tr><tr><td>a2</td><td>b2</td><td>c2</td><td>d2</td><td><b>header2</b></td></tr><tr><td>a3</td><td>b3</td><td>c3</td><td>d3</td><td><b>header3</b></td></tr></table>
-
-Note that C<tgroups> are not allowed for C<south()> because the table
-is inverted horizontally and not allowed for C<west()> and C<east()>
-because the table rows contain both headings and cells. You can override
-this behavior by using C<generate> with params listed above instead of 
-C<south()>, C<east()> or C<west()>.
-
 =back
+
+Because these methods are all essentially aliases for C<generate()>
+(with C<theta> being preset for you), you can override their behavior by
+calling C<generate()> with any configuration of parameters that you like.
 
 For most cases, C<portrait()> and C<landscape()> are all you need.
 Everything else is C<bells_and_whistles>.
 
 =head2 PRESETS
 
-See L<Spreadsheet::HTML::Presets> for more documentation.
+The following presets are availble for creating tables that can be used
+with little to no additional coding.
 
 =over 4
 
@@ -427,6 +428,9 @@ See L<Spreadsheet::HTML::Presets> for more documentation.
 =item * C<shroom( %params )>
 
 =back
+
+See L<Spreadsheet::HTML::Presets> for more documentation (and the source
+for more usage examples).
 
 =head1 PARAMETERS
 
@@ -473,14 +477,14 @@ headers at top.  90: headers at right. 180: headers at bottom.
 
 =item * C<flip: 0 or 1>
 
-Flips table horizontally by negating the value of C<theta>.
+Flips table horizontally from the perspective of the headings
+"row" by negating the value of C<theta>.
 
 =item * C<pinhead: 0 or 1>
 
-Works in conjunction with C<theta> to produces tables with
-headings placed on sides other than the top and perserve
-data alignment for reporting readability. Used by C<south()>
-and C<east()>.
+Works in conjunction with C<theta> to ensure reporting
+readability. Without it, C<south()> and C<east()> would
+have data cells arranged in reverse order.
 
 =item * C<indent>
 
@@ -541,13 +545,14 @@ only td tags, no th tags.
 =item * C<headless: 0 or 1>
 
 Render the table with without the headings row at all. 
-The first row is still C<-row1>.
+The first row after the headings is still C<-row1>, thus
+any reference to C<headings> will be discarded too.
 
 =item * C<headings>
 
-Apply anonymous subroutine to each cell in headings row.
+Apply callback subroutine to each cell in headings row.
 
-  headings => sub {join(" ",map{ucfirst lc$_}split"_",shift)}
+  headings => sub { join(" ", map {ucfirst lc $_} split "_", shift) }
 
 Or apply hash ref as attributes:
 
@@ -557,8 +562,9 @@ Or both:
 
   headings => [ sub { uc shift }, { class => "foo" } ]
 
-C<headings> is a natural alias for C<-row0>. Be careful
-not to prepend a dash to C<headings> ... only dynamic
+Since C<headings> is a natural alias for the dynamic parameter
+C<-row0>, it could be considered as a dynamic parameter. Be
+careful not to prepend a dash to C<headings> ... only dynamic
 parameters use leading dashes.
 
 =back
@@ -568,13 +574,13 @@ parameters use leading dashes.
 Dynamic parameters provide a means to control the micro
 elements of the table, such as modifying headings by their
 name and rows and columns by their indices (X). They contain
-leading dashes to seperate them from Literal and Tag Parameters.
+leading dashes to seperate them from literal and tag parameters.
 
 =over 4
 
 =item * C<-rowX>
 
-Apply this anonymous subroutine to the entire row X.
+Apply this callback subroutine to the entire row X.
 (0 index based)
 
   -row3 => sub { uc shift }
@@ -589,7 +595,7 @@ Or both:
 
 =item * C<-colX>
 
-Apply this anonymous subroutine to the entire column X.
+Apply this callback to the entire column X.
 (0 index based)
 
   -col4 => sub { sprintf "%02d", shift || 0 }
@@ -613,7 +619,7 @@ name in that column:
 
 =item * C<-rowXcolX>
 
-Apply this anonymous subroutine or hash ref of attributres
+Apply this callback or hash ref of attributres
 to the cell at row X and column X. (0 index based)
 
 =back
@@ -623,8 +629,8 @@ to the cell at row X and column X. (0 index based)
 Tag parameters provide a means to control the attributes
 of the table's tags, and in the case of <td> and <tr> the
 contents via callback subroutines. Although similar in form,
-they are differentiated from Litertal Tags because they share
-the names of the actual tags.
+they are differentiated from litertal parameters because they
+share the names of the actual HTML table tags.
 
 =over 4
 
@@ -649,7 +655,7 @@ Hash ref. Apply these attributes to the specified tag.
 =item * C<td>
 
 <th> and <td> are the only Tag Parameters that may
-additionally accept sub refs.
+additionally accept callback subroutines.
 
   th => sub { uc shift }
 
@@ -659,7 +665,7 @@ additionally accept sub refs.
 
 Caption is special in that you can either pass a string to
 be used as CDATA or a hash whose only key is the string
-to be used as CDATA:
+to be used as CDATA.
 
   caption => "Just Another Title"
 
