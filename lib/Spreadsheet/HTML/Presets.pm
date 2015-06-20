@@ -13,16 +13,20 @@ eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
 
 sub layout {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
     my @args = (
-        encodes => '',
-        matrix  => 1,
+        @_,
         table   => {
+            %{ $args->{table} || {} },
             role => 'presentation',
             ( map {$_ => 0} qw( border cellspacing cellpadding ) ),
         },
+        encodes => '',
+        matrix  => 1,
         _layout => 1,
-        @_,
     );
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
@@ -34,10 +38,10 @@ sub checkerboard {
 
     my $colors = $args->{colors} ? $args->{colors} : [qw(red white)];
     my @args = (
-        td       => { style  => { 'background-color' => $colors } },
         matrix   => 1,
         headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
+        td => { %{ $args->{td} || {} }, style  => { 'background-color' => $colors } },
     );
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
@@ -59,25 +63,29 @@ sub calculator {
         height => 65,
         width  => 65,
         align  => 'center',
+        %{ $args->{td} || {} },
         style  => { 
             'font-size' => 'xx-large',
             padding => 0,
             margins => 0,
+            %{ $args->{td}{style} || {} },
         },
     );
 
     my $attrs = 'font-size: xx-large; font-weight: bold; font-family: monospace;';
 
     my @args = (
+        @_,
         table => {
             width => '20%',
+            %{ $args->{table} || {} },
             style => {
                 border  => 'thick outset',
                 padding => 0,
                 margins => 0,
+                %{ $args->{table}{style} || {} },
             },
         },
-        @_,
         caption     => qq(<input id="display" style="background-color: #F1FACA; height: 8%; width: 80%; text-align: right; $attrs" />),
         td          => [ { %attrs }, sub { qq(<button style="width: 100%; height: 100%; $attrs">$_[0]</button>) } ],
         -row3col3   => { rowspan => 2, %attrs },
@@ -111,8 +119,9 @@ sub conway {
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
+            my $cell = sprintf '-row%scol%s', $r, $c;
             push @cells,
-                sprintf( "-row%scol%s", $r, $c ) => {
+                $cell => {
                     id     => join( '-', $r, $c ),
                     class  => 'conway',
                     width  => '30px',
