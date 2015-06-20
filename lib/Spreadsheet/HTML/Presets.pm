@@ -132,12 +132,8 @@ sub conway {
     }
 
     my @args = (
-        pinhead  => 0,
-        tgroups  => 0,
-        headless => 0,
-        matrix   => 1,
-        caption  => { '<button onClick="start()">Step</button>' => { align => 'bottom' } },
         @cells,
+        caption  => { '<button onClick="start()">Step</button>' => { align => 'bottom' } },
         @_,
     );
 

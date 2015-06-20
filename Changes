@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.29
+    - conway impacts th tags now
     - better fade for conway
     - better overrides for presets
 
