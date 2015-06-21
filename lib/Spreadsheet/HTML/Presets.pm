@@ -3,6 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
+use Spreadsheet::HTML::Presets::Animate;
 use Spreadsheet::HTML::Presets::Conway;
 use Spreadsheet::HTML::Presets::Calculator;
 
@@ -50,6 +51,35 @@ sub checkerboard {
     );
 
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+}
+
+sub animate {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @cells;
+    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
+        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
+            my $cell = sprintf '-row%scol%s', $r, $c;
+            push @cells, $cell => {
+                id     => join( '-', $r, $c ),
+                class  => 'animate',
+            };
+        }
+    }
+
+    my @args = (
+        @cells,
+        caption  => { '<button onClick="move()">Step</button>' => { align => 'bottom' } },
+        @_,
+    );
+
+    my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
+    delete $args->{$_} for qw( direction );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
 }
 
 sub calculator {
@@ -485,6 +515,8 @@ Preset for tables with checkerboard colors.
 Attempts to form diagonal patterns by adding an extra color
 if need be. C<colors> default to red and green and C<extra>
 defaults to white.
+
+=item * C<animate( direction, %params )>
 
 =item * C<conway( on, off, fade, jquery, %params )>
 

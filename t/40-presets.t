@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use Spreadsheet::HTML;
 
@@ -12,6 +12,9 @@ ok Spreadsheet::HTML::layout,               "layout by procedure";
 
 ok $table->checkerboard,                    "checkerboard by method";
 ok Spreadsheet::HTML::checkerboard,         "checkerboard by procedure";
+
+ok $table->animate,                         "animate by method";
+ok Spreadsheet::HTML::animate,              "animate by procedure";
 
 ok $table->checkers,                        "checkers by method";
 ok Spreadsheet::HTML::checkers,             "checkers by procedure";

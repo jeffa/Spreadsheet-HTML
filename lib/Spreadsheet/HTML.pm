@@ -7,7 +7,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west
-    layout checkerboard
+    layout checkerboard animate
     chess checkers conway
     calculator dk shroom
 );
@@ -32,6 +32,7 @@ sub calculator      { Spreadsheet::HTML::Presets::calculator( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
+sub animate         { Spreadsheet::HTML::Presets::animate( @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk( @_ ) }
 sub shroom          { Spreadsheet::HTML::Presets::shroom( @_ ) }
 
@@ -418,6 +419,8 @@ with little to no additional coding.
 =item * C<calculator( jquery, %params )>
 
 =item * C<checkerboard( colors, %params )>
+
+=item * C<animate( direction, %params )>
 
 =item * C<chess( %params )>
 
