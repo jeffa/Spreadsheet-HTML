@@ -10,6 +10,7 @@ sub _javascript {
     my $js = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
+        $args{interval},
         $args{off},
         join( ',', map "'$_'", @{ $args{colors} } ),
     ;
@@ -25,6 +26,8 @@ sub _js_tmpl {
 var MATRIX;
 var ROW = %s;
 var COL = %s;
+var INT = %s;
+var tid;
 
 function Cell (id) {
     this.id         = id;
@@ -59,6 +62,19 @@ function Cell (id) {
     }
 }
 
+function start() {
+    tid = setInterval( loop, INT );
+}
+
+function stop() {
+  clearInterval( tid );
+}
+
+function loop() {
+    count();
+    update_matrix();
+}
+
 $(document).ready(function(){
 
     $('th.conway').click( function( data ) {
@@ -90,11 +106,6 @@ $(document).ready(function(){
     }
 
 });
-
-function start() {
-    count();
-    update_matrix();
-}
 
 function update_matrix() {
 

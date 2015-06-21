@@ -2,6 +2,7 @@ Revision history for Spreadsheet-HTML
 
 0.30
     - added animate
+    - added timer for conway
 
 0.29
     - new param for checkerboard: extra

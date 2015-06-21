@@ -152,6 +152,8 @@ sub conway {
         ? [ ($args->{on}) x 10 ]
         : [ Color::Spectrum::generate( 10, $args->{on}, $args->{off} ) ];
 
+    $args->{interval} ||= 200;
+
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
@@ -169,12 +171,12 @@ sub conway {
 
     my @args = (
         @cells,
-        caption  => { '<button onClick="start()">Step</button>' => { align => 'bottom' } },
+        caption  => { '<button onClick="start()">Start</button><button onClick="stop()">Stop</button>' => { align => 'bottom' } },
         @_,
     );
 
     my $js = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
-    delete $args->{$_} for qw( jquery off on colors fade );
+    delete $args->{$_} for qw( jquery off on colors fade interval );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
@@ -518,11 +520,15 @@ defaults to white.
 
 =item * C<animate( direction, %params )>
 
-=item * C<conway( on, off, fade, jquery, %params )>
+=item * C<conway( on, off, fade, interval, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 
   conway( on => 'red', off => 'gray' )
+
+Set the timer with C<interval> (defaults to 200 miliseconds).
+
+  conway( interval => 75 )
 
 If you have L<Color::Spectrum> installed (and optionally
 L<Color::Library>) then you can turn fade on for more
