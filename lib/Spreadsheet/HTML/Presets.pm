@@ -448,57 +448,6 @@ Instead, use the Spreadsheet::HTML interface:
   use Spreadsheet::HTML qw( layout );
   print layout( data => [[1],[2]] );
 
-=head1 CUSTOMIZATION
-
-You can use the methods in this package as an example for
-constructing your own custom Spreadsheet::HTML generators.
-
-  use Spreadsheet::HTML;
-
-  sub my_generator {
-      my ($self,$data,$params);
-      $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-      ($self,$data,$params) = $self 
-          ? $self->_args( @_ ) 
-          : Spreadsheet::HTML::_args( @_ );
-
-      # pull out custom named parameters from $params
-      my $color = $params->{color};
-
-      my @params = (
-          # add custom params that client CAN overide here
-          @_,
-          # add custom params that client can NOT overide here
-      );
-
-      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
-  }
-
-It is not pretty, but it keeps the named parameters in line even
-if stray, bare array references are used by the client:
-
-  $table->my_generator( [ 'data here' ], color => 'red' );
-
-A simpler, less flexible form is available if you do not need to
-pull out client params:
-
-  use Spreadsheet::HTML;
-
-  sub my_generator {
-      my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-
-      my @params = (
-          # add custom params that client CAN overide here
-          @_,
-          # add custom params that client can NOT overide here
-      );
-
-      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
-  }
-
-Plans are in the works to simplify this "API," possibly even
-to provide a real plugin interface.
-
 =head1 METHODS
 
 =over 4
@@ -582,6 +531,57 @@ Generates a static chess game board.
 =item * C<shroom( %params )>
 
 =back
+
+=head1 CUSTOMIZATION
+
+You can use the methods in this package as an example for
+constructing your own custom Spreadsheet::HTML generators.
+
+  use Spreadsheet::HTML;
+
+  sub my_generator {
+      my ($self,$data,$params);
+      $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+      ($self,$data,$params) = $self 
+          ? $self->_args( @_ ) 
+          : Spreadsheet::HTML::_args( @_ );
+
+      # pull out custom named parameters from $params
+      my $color = $params->{color};
+
+      my @params = (
+          # add custom params that client CAN overide here
+          @_,
+          # add custom params that client can NOT overide here
+      );
+
+      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
+  }
+
+It is not pretty, but it keeps the named parameters in line even
+if stray, bare array references are used by the client:
+
+  $table->my_generator( [ 'data here' ], color => 'red' );
+
+A simpler, less flexible form is available if you do not need to
+pull out client params:
+
+  use Spreadsheet::HTML;
+
+  sub my_generator {
+      my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+
+      my @params = (
+          # add custom params that client CAN overide here
+          @_,
+          # add custom params that client can NOT overide here
+      );
+
+      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
+  }
+
+Plans are in the works to simplify this "API," possibly even
+to provide a real plugin interface.
 
 =head1 AUTHOR
 
