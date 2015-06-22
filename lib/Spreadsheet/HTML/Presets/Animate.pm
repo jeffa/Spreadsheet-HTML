@@ -10,6 +10,7 @@ sub _javascript {
     my $js = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
+        $args{interval},
     ;
 
     return Spreadsheet::HTML::Presets::_html_tmpl( code => $js, %args );
@@ -22,6 +23,18 @@ sub _js_tmpl {
 /* install JavaScript::Minifier to minify this code */
 var ROW = %s;
 var COL = %s;
+var INTERVAL = %s;
+var tid;
+
+function toggle() {
+    if ($('#toggle').html() === 'Start') {
+        tid = setInterval( move, INTERVAL );
+        $('#toggle').html( 'Stop' );
+    } else {
+        clearInterval( tid );
+        $('#toggle').html( 'Start' );
+    }
+}
 
 function move() {
 

@@ -58,6 +58,9 @@ sub animate {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
+    $args->{direction} ||= 'right';
+    $args->{interval}  ||= 200;
+
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
@@ -71,12 +74,12 @@ sub animate {
 
     my @args = (
         @cells,
-        caption  => { '<button onClick="move()">Step</button>' => { align => 'bottom' } },
+        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
         @_,
     );
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
-    delete $args->{$_} for qw( direction );
+    delete $args->{$_} for qw( direction interval jquery );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
@@ -171,7 +174,7 @@ sub conway {
 
     my @args = (
         @cells,
-        caption  => { '<button onClick="start()">Start</button><button onClick="stop()">Stop</button>' => { align => 'bottom' } },
+        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
         @_,
     );
 

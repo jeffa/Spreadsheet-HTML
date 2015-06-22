@@ -26,7 +26,7 @@ sub _js_tmpl {
 var MATRIX;
 var ROW = %s;
 var COL = %s;
-var INT = %s;
+var INTERVAL = %s;
 var tid;
 
 function Cell (id) {
@@ -62,17 +62,14 @@ function Cell (id) {
     }
 }
 
-function start() {
-    tid = setInterval( loop, INT );
-}
-
-function stop() {
-  clearInterval( tid );
-}
-
-function loop() {
-    count();
-    update_matrix();
+function toggle() {
+    if ($('#toggle').html() === 'Start') {
+        tid = setInterval( update, INTERVAL );
+        $('#toggle').html( 'Stop' );
+    } else {
+        clearInterval( tid );
+        $('#toggle').html( 'Start' );
+    }
 }
 
 $(document).ready(function(){
@@ -107,17 +104,9 @@ $(document).ready(function(){
 
 });
 
-function update_matrix() {
+function update() {
 
-    for (var row = 0; row < ROW; row++) {
-        for (var col = 0; col < COL; col++) {
-            MATRIX[row][col].update();    
-        }
-    }
-}
-
-function count() {
-
+    // count neighbors
     for (var row = 0; row < ROW; row++) {
         for (var col = 0; col < COL; col++) {
 
@@ -133,6 +122,13 @@ function count() {
                     }
                 }
             }
+        }
+    }
+
+    // update cells
+    for (var row = 0; row < ROW; row++) {
+        for (var col = 0; col < COL; col++) {
+            MATRIX[row][col].update();    
         }
     }
 }
