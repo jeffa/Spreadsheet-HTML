@@ -80,6 +80,7 @@ sub animate {
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
     delete $args->{$_} for qw( direction x y interval jquery );
+    return ( \@args, $js ) if $args->{animate};
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
