@@ -81,8 +81,8 @@ sub generate {
     }
 
     if ($args{animate}) {
-        my ($args, $js) = Spreadsheet::HTML::Presets::animate( %args );
-        return $js .  _make_table( %$args );
+        my ($js, %new_args) = Spreadsheet::HTML::Presets::animate( %args );
+        return $js .  _make_table( %new_args );
     }
 
     return _make_table( %args );
