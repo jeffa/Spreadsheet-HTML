@@ -356,7 +356,7 @@ generating methods below:
 =item * C<north( %params )>
 
 =for html
-<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #505050"><td>heading1</th><td>heading2</th><td>heading3</th></tr><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr></table>
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #505050"><td>heading1</td><td>heading2</td><td>heading3</td></tr><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr></table>
 
   $html = $table->generate( table => {border => 1}, encode => '<>' );
   print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
@@ -371,7 +371,7 @@ calls C<generate> like so:
 =item * C<west( %params )>
 
 =for html
-<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td style="color: #505050">heading1</th><td>row1col1</td><td>row2col1</td><td>row3col1</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading2</th><td>row1col2</td><td>row2col2</td><td>row3col2</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading3</th><td>row1col3</td><td>row2col3</td><td>row3col3</td></tr></table>
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td style="color: #505050">heading1</td><td>row1col1</td><td>row2col1</td><td>row3col1</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading2</td><td>row1col2</td><td>row2col2</td><td>row3col2</td></tr><tr style="color: #A0A0A0"><td style="color: #505050">heading3</td><td>row1col3</td><td>row2col3</td><td>row3col3</td></tr></table>
 
 Headers on left. C<west()> is an alias for C<landscape()> which
 in turn calls C<generate> like so:
@@ -381,7 +381,7 @@ in turn calls C<generate> like so:
 =item * C<south( %params )>
 
 =for html
-<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr><tr style="color: #505050"><td>heading1</th><td>heading2</th><td>heading3</th></tr></table>
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row1col2</td><td>row1col3</td></tr><tr style="color: #A0A0A0"><td>row2col1</td><td>row2col2</td><td>row2col3</td></tr><tr style="color: #A0A0A0"><td>row3col1</td><td>row3col2</td><td>row3col3</td></tr><tr style="color: #505050"><td>heading1</td><td>heading2</td><td>heading3</td></tr></table>
 
 Headers on bottom. Same as
 
@@ -390,7 +390,7 @@ Headers on bottom. Same as
 =item * C<east( %params )>
 
 =for html
-<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row2col1</td><td>row3col1</td><td style="color: #505050">heading1</th></tr><tr style="color: #A0A0A0"><td>row1col2</td><td>row2col2</td><td>row3col2</td><td style="color: #505050">heading2</th></tr><tr style="color: #A0A0A0"><td>row1col3</td><td>row2col3</td><td>row3col3</td><td style="color: #505050">heading3</th></tr></table>
+<table cellspacing="10" style="border: 1px dashed #A0A0A0"><tr style="color: #A0A0A0"><td>row1col1</td><td>row2col1</td><td>row3col1</td><td style="color: #505050">heading1</td></tr><tr style="color: #A0A0A0"><td>row1col2</td><td>row2col2</td><td>row3col2</td><td style="color: #505050">heading2</td></tr><tr style="color: #A0A0A0"><td>row1col3</td><td>row2col3</td><td>row3col3</td><td style="color: #505050">heading3</td></tr></table>
 
 Headers on right. Same as
 

@@ -7,9 +7,21 @@ use Spreadsheet::HTML::Presets;
 sub _javascript {
     my %args = @_;
 
+    my %map = (
+        right => { x => 1,  y => 0 },
+        left  => { x => -1, y => 0 },
+        up    => { y => 1,  x => 0 },
+        down  => { y => -1, x => 0 },
+    );
+
+    $args{x} ||= $map{ $args{direction} }{x};
+    $args{y} ||= $map{ $args{direction} }{y};
+
     my $js = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
+        $args{x},
+        $args{y},
         $args{interval},
     ;
 
@@ -23,6 +35,8 @@ sub _js_tmpl {
 /* install JavaScript::Minifier to minify this code */
 var ROW = %s;
 var COL = %s;
+var X   = %s;
+var Y   = %s;
 var INTERVAL = %s;
 var tid;
 
@@ -38,14 +52,41 @@ function toggle() {
 
 function move() {
 
-    for (var row = 0; row < ROW; row++) {
-        var vals = new Array(); 
-        for (var col = 0; col < COL; col++) {
-            vals.push( $('#' + row + '-' + col ).html() );
+    if (X) {
+        for (var row = 0; row < ROW; row++) {
+            var vals = new Array(); 
+            for (var col = 0; col < COL; col++) {
+                vals.push( $('#' + row + '-' + col ).html() );
+            }
+
+            if (X > 0) {
+                vals.unshift( vals.pop() );
+            } else {
+                vals.push( vals.shift() );
+            }
+
+            for (var col = 0; col < COL; col++) {
+                $('#' + row + '-' + col ).html( vals[col] );
+            }
         }
-        vals.unshift( vals.pop() );
+    }
+
+    if (Y) {
         for (var col = 0; col < COL; col++) {
-            $('#' + row + '-' + col ).html( vals[col] );
+            var vals = new Array(); 
+            for (var row = 0; row < ROW; row++) {
+                vals.push( $('#' + row + '-' + col ).html() );
+            }
+
+            if (Y > 0) {
+                vals.push( vals.shift() );
+            } else {
+                vals.unshift( vals.pop() );
+            }
+
+            for (var row = 0; row < ROW; row++) {
+                $('#' + row + '-' + col ).html( vals[row] );
+            }
         }
     }
 }

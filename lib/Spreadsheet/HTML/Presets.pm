@@ -79,7 +79,7 @@ sub animate {
     );
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
-    delete $args->{$_} for qw( direction interval jquery );
+    delete $args->{$_} for qw( direction x y interval jquery );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
@@ -521,7 +521,21 @@ Attempts to form diagonal patterns by adding an extra color
 if need be. C<colors> default to red and green and C<extra>
 defaults to white.
 
-=item * C<animate( direction, %params )>
+=item * C<animate( direction, interval, jquery, %params )>
+
+Moves the contents of each cell in the direction specified.
+Valid values are C<up>, C<down>, C<left> and C<right>.
+
+Set the timer with C<interval> (defaults to 200 miliseconds).
+
+  animate( direction => 'right', interval => 300 )
+
+Can optionally use C<x> and/or C<y> instead of C<direction>
+to specify which axis(es) to animate.
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
 
 =item * C<conway( on, off, fade, interval, jquery, %params )>
 
