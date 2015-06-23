@@ -3,20 +3,24 @@ use Carp;
 use strict;
 use warnings FATAL => 'all';
 
+eval "use Spreadsheet::Read";
+our $NOT_AVAILABLE = $@;
+
 sub parse {
     my $file = shift;
 
-    if ($file =~ /\.csv$/) {
-        return Spreadsheet::HTML::File::CSV::parse( $file );
-    } elsif ($file =~ /\.html?$/) {
+    if ($file =~ /\.html?$/) {
         return Spreadsheet::HTML::File::HTML::parse( $file );
     } elsif ($file =~ /\.jso?n$/) {
         return Spreadsheet::HTML::File::JSON::parse( $file );
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::File::YAML::parse( $file );
-    } elsif ($file =~ /\.xlsx?$/) {
-        return Spreadsheet::HTML::File::XLS::parse( $file );
     }
+
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
+    return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
+
+    return [ Spreadsheet::Read::rows( ReadData( $file )->[1] ) ];
 }
 
 =head1 NAME
@@ -27,25 +31,17 @@ Spreadsheet::HTML::File::Loader - Load data from files.
 
 =over 4
 
-=item * CSV
+=item * CSV/XLS
 
-First tries to load L<Text::CSV_XS>, then L<Text::CSV>
-and if neither are installed, uses a brute force
-CSV parsing implementation.
+Parses with L<Spreadsheet::Read>.
 
 =item * HTML
 
-Parses with L<HTML::TableExtract>. Does not preserve
-existing table attributes, although this should be
-possible in the future ...
+Parses with L<HTML::TableExtract>.
 
 =item * JSON
 
 Parses with L<JSON>.
-
-=item * XLS
-
-Parses with L<Spreadsheet::ParseExcel>.
 
 =item * YAML
 
@@ -161,73 +157,6 @@ sub parse {
 
 
 
-package Spreadsheet::HTML::File::CSV;
-=head1 NAME
-
-Spreadsheet::HTML::File::CSV - Load data from comma seperated value files.
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse()>
-
-=back
-
-=head1 REQUIRES
-
-=over 4
-
-=item * either L<Text::CSV_XS>
-
-=item * or L<Text::CSV>
-
-=back
-
-=cut
-
-use Carp;
-use strict;
-use warnings FATAL => 'all';
-
-our $PARSER = '';
-eval "use Text::CSV_XS";
-if ($@) {
-    eval "use Text::CSV";
-    $PARSER = 'Text::CSV' unless $@;
-} else {
-    $PARSER = 'Text::CSV_XS';
-}
-
-sub parse {
-    my @data;
-    my $file = shift;
-    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
-
-    open my $fh, '<', $file or return [[ "cannot load $file" ],[ $! ]];
-
-    if ($PARSER) {
-        my $csv = $PARSER->new;
-        while (my $row = $csv->getline( $fh )) {
-            push @data, $row;
-        }
-
-    } else {
-
-        while (<$fh>) {
-            chomp;
-            push @data, [ split /\s*,\s*/, $_ ];
-        }
-    }
-
-    close $fh;
-    return [ @data ];
-}
-
-1;
-
-
-
 package Spreadsheet::HTML::File::HTML;
 =head1 NAME
 
@@ -272,64 +201,6 @@ sub parse {
 1;
 
 
-
-package Spreadsheet::HTML::File::XLS;
-=head1 NAME
-
-Spreadsheet::HTML::File::XLS - Load data from Excel files.
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse()>
-
-=back
-
-=head1 REQUIRES
-
-=over 4
-
-=item * L<Spreadsheet::ParseExcel>
-
-=back
-
-=cut
-
-use Carp;
-use strict;
-use warnings FATAL => 'all';
-
-eval "use Spreadsheet::ParseExcel";
-our $NOT_AVAILABLE = $@;
-
-sub parse {
-    my $file = shift;
-    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
-    return [[ "cannot load $file" ],[ 'please install Spreadsheet::ParseExcel' ]] if $NOT_AVAILABLE;
-
-    my $parser   = Spreadsheet::ParseExcel->new;
-    my $workbook = $parser->parse( $file );
-    return [[ "cannot load $file" ],[ $parser->error ]] unless defined $workbook;
-
-    # can only handle first worksheet found for now
-    my ($worksheet) = $workbook->worksheets;
-    my ( $row_min, $row_max ) = $worksheet->row_range;
-    my ( $col_min, $col_max ) = $worksheet->col_range;
-     
-    my @data;
-    for my $row ( $row_min .. $row_max ) {
-        my @row;
-        for my $col ( $col_min .. $col_max ) {
-            my $cell = $worksheet->get_cell( $row, $col );
-            next unless $cell;
-            push @row, $cell ? $cell->unformatted : undef;
-        }
-        push @data, [@row];
-    }
-
-    return [ @data ];
-}
 
 =head1 AUTHOR
 

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.32
+    - now using Spreadsheet::Read for csv,xls files
 
 0.31
     - updated docs example tables

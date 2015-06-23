@@ -3,8 +3,12 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More;
 
+eval "use Spreadsheet::Read";
+plan skip_all => "Spreadsheet::Read required" if $@;
+
 eval "use Spreadsheet::ParseExcel";
-plan skip_all => "Spreadsheet::ParseExcel required" if $@;
+plan skip_all => "Spreadsheet:: ParseExcel required" if $@;
+
 plan tests => 7;
 
 use_ok 'Spreadsheet::HTML';
