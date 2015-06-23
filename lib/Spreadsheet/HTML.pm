@@ -80,6 +80,15 @@ sub generate {
         $args{data} = [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
     }
 
+    if ($args{animate}) {
+        my ($js, @new_args) = Spreadsheet::HTML::Presets::animate(
+            %args,
+            data => [ map [ map $_->{cdata}, @$_ ], @{ $args{data} } ],
+        );
+        my %new_args = _process( @new_args );
+        return $js . _make_table( %new_args );
+    }
+
     return _make_table( %args );
 }
 
