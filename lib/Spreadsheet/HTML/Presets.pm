@@ -73,9 +73,9 @@ sub animate {
     }
 
     my @args = (
-        @cells,
         caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
         @_,
+        @cells,
     );
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );

@@ -81,12 +81,16 @@ sub generate {
     }
 
     if ($args{animate}) {
-        my ($js, @new_args) = Spreadsheet::HTML::Presets::animate(
+        my ($js, %new_args) = Spreadsheet::HTML::Presets::animate(
             %args,
             data => [ map [ map $_->{cdata}, @$_ ], @{ $args{data} } ],
         );
-        my %new_args = _process( @new_args );
-        return $js . _make_table( %new_args );
+        for (keys %args) {
+            if (ref $args{$_} eq 'HASH') {
+                $new_args{$_} = { %{ $new_args{$_} || {} }, %{ $args{$_} || {} } };
+            }
+        }
+        return $js . _make_table( _process( %new_args ) );
     }
 
     return _make_table( %args );
