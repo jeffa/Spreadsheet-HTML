@@ -56,7 +56,7 @@ function move() {
         for (var row = 0; row < ROW; row++) {
             var vals = new Array(); 
             for (var col = 0; col < COL; col++) {
-                vals.push( $('#' + row + '-' + col ).html() );
+                vals.push( $('#' + row + '-' + col ).clone() );
             }
 
             if (X > 0) {
@@ -66,7 +66,8 @@ function move() {
             }
 
             for (var col = 0; col < COL; col++) {
-                $('#' + row + '-' + col ).html( vals[col] );
+                $('#' + row + '-' + col ).attr( 'style', vals[col].attr( 'style' ) );
+                $('#' + row + '-' + col ).html( vals[col].html() );
             }
         }
     }
@@ -75,7 +76,7 @@ function move() {
         for (var col = 0; col < COL; col++) {
             var vals = new Array(); 
             for (var row = 0; row < ROW; row++) {
-                vals.push( $('#' + row + '-' + col ).html() );
+                vals.push( $('#' + row + '-' + col ).clone() );
             }
 
             if (Y > 0) {
@@ -85,7 +86,8 @@ function move() {
             }
 
             for (var row = 0; row < ROW; row++) {
-                $('#' + row + '-' + col ).html( vals[row] );
+                $('#' + row + '-' + col ).attr( 'style', vals[row].attr( 'style' ) );
+                $('#' + row + '-' + col ).html( vals[row].html() );
             }
         }
     }
