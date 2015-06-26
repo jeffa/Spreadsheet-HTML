@@ -95,12 +95,36 @@ sub banner {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my @args = ();
+    my @cells = ();
     unless ($NO_FIGLET) {
 
+        my @banner;
+        eval {
+            @banner = Text::FIGlet
+                ->new(-f => $args->{font}, -d => $args->{dir} )
+                ->figify( -A => $args->{text} )
+        };
 
+        if (@banner) {
+            push @cells, ( fill => join 'x', scalar( @banner ), scalar( $banner[0] ) );
+            my $on  = $args->{on}  || 'black';
+            my $off = $args->{off} || 'white';
 
+            for my $row (0 .. $#banner) {
+                my @line = split //, $row;
+                for my $col (0 .. $#line) {
+                    my $key = sprintf '-row%scol%s', $row, $col;
+                    my $color = $col =~ /\s/ ? $off : $on;
+                    push @cells, ( $key => { style => { 'background-color' => $color } } );
+                }
+            }
+        }
     }
+
+    my @args = (
+        @_,
+        @cells,
+    );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
@@ -506,7 +530,7 @@ Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
 
-=item * C<banner( text, font, %params )>
+=item * C<banner( text, font, dir, on, off, %params )>
 
 Will generate and display a banner using the given C<text>
 in the given C<font> (default value of C<banner>) if you

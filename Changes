@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.32
+    - added banner()
     - now using Spreadsheet::Read for csv,xls files
     - better data generation for checkers/chess
     - animate now copies cell styles across
