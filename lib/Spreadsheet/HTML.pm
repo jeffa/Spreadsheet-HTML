@@ -10,6 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard animate
     chess checkers conway
     calculator dk shroom
+    banner
 );
 
 use Clone;
@@ -26,15 +27,16 @@ sub east    { generate( @_, theta =>   90, tgroups => 0, pinhead => 1 ) }
 sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
-sub layout          { Spreadsheet::HTML::Presets::layout( @_ ) }
-sub conway          { Spreadsheet::HTML::Presets::conway( @_ ) }
-sub calculator      { Spreadsheet::HTML::Presets::calculator( @_ ) }
-sub chess           { Spreadsheet::HTML::Presets::chess( @_ ) }
-sub checkers        { Spreadsheet::HTML::Presets::checkers( @_ ) }
-sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard( @_ ) }
-sub animate         { Spreadsheet::HTML::Presets::animate( @_ ) }
-sub dk              { Spreadsheet::HTML::Presets::dk( @_ ) }
-sub shroom          { Spreadsheet::HTML::Presets::shroom( @_ ) }
+sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
+sub conway          { Spreadsheet::HTML::Presets::conway(           @_ ) }
+sub calculator      { Spreadsheet::HTML::Presets::calculator(       @_ ) }
+sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
+sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
+sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
+sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
+sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
+sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
+sub shroom          { Spreadsheet::HTML::Presets::shroom(           @_ ) }
 
 sub generate {
     my %args = _process( @_ );
@@ -434,6 +436,8 @@ with little to no additional coding.
 =item * C<checkerboard( colors, %params )>
 
 =item * C<animate( direction, %params )>
+
+=item * C<banner( text, font, %params )>
 
 =item * C<chess( %params )>
 

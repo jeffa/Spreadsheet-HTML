@@ -13,6 +13,9 @@ our $NO_SPECTRUM = $@;
 eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
 
+eval "use Text::FIGlet";
+our $NO_FIGLET = $@;
+
 sub layout {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
@@ -85,6 +88,22 @@ sub animate {
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
+}
+
+sub banner {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @args = ();
+    unless ($NO_FIGLET) {
+
+
+
+    }
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $table;
 }
 
 sub calculator {
@@ -486,6 +505,12 @@ to specify which axis(es) to animate.
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
+
+=item * C<banner( text, font, %params )>
+
+Will generate and display a banner using the given C<text>
+in the given C<font> (default value of C<banner>) if you
+have L<Text::FIGlet> installed.
 
 =item * C<conway( on, off, fade, interval, jquery, %params )>
 
