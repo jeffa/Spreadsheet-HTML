@@ -106,15 +106,15 @@ sub banner {
         };
 
         if (@banner) {
-            push @cells, ( fill => join 'x', scalar( @banner ), scalar( $banner[0] ) );
+            push @cells, ( fill => join 'x', scalar( @banner ), length( $banner[0] ) );
             my $on  = $args->{on}  || 'black';
             my $off = $args->{off} || 'white';
 
             for my $row (0 .. $#banner) {
-                my @line = split //, $row;
+                my @line = split //, $banner[$row];
                 for my $col (0 .. $#line) {
                     my $key = sprintf '-row%scol%s', $row, $col;
-                    my $color = $col =~ /\s/ ? $off : $on;
+                    my $color = $line[$col] =~ /\s/ ? $off : $on;
                     push @cells, ( $key => { style => { 'background-color' => $color } } );
                 }
             }
