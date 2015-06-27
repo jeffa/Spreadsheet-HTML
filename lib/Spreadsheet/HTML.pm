@@ -337,7 +337,7 @@ Spreadsheet::HTML - Just another HTML table generator.
 
     # non OO
     use Spreadsheet::HTML qw( portrait landscape );
-    print portrait( $data, td => sub { sprintf "%02d, shift } );
+    print portrait( $data, td => sub { sprintf "%02d", shift } );
     print landscape( $data, tr => { class => [qw(odd even)] } );
 
 =head1 DESCRIPTION
