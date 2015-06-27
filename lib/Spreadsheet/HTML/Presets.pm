@@ -101,8 +101,8 @@ sub banner {
         my @banner;
         eval {
             @banner = Text::FIGlet
-                ->new(-f => $args->{font}, -d => $args->{dir} )
-                ->figify( -A => $args->{text} )
+                ->new( -d => $args->{dir}, -f => $args->{emboss} ? 'block' : 'banner' )
+                ->figify( -A => uc( $args->{text} ) );
         };
 
         if (@banner) {
@@ -114,8 +114,18 @@ sub banner {
                 my @line = split //, $banner[$row];
                 for my $col (0 .. $#line) {
                     my $key = sprintf '-row%scol%s', $row, $col;
-                    my $color = $line[$col] =~ /\s/ ? $off : $on;
-                    push @cells, ( $key => { style => { 'background-color' => $color } } );
+                    if ($args->{emboss}) {
+                        if ($line[$col] eq ' ') {
+                            push @cells, ( $key => { style => { 'background-color' => $off } } );
+                        } elsif ($line[$col] eq '_') {
+                            push @cells, ( $key => { style => { 'background-color' => $off, 'border-bottom' => "1px solid $on" } } );
+                        } else {
+                            push @cells, ( $key => { style => { 'background-color' => $off, 'border-left' => "1px solid $on" } } );
+                        }
+                    } else {
+                        my $color = $line[$col] eq ' ' ? $off : $on;
+                        push @cells, ( $key => { style => { 'background-color' => $color } } );
+                    }
                 }
             }
         }
@@ -530,11 +540,15 @@ Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
 
-=item * C<banner( text, font, dir, on, off, %params )>
+=item * C<banner( dir, text, emboss, on, off, %params )>
 
-Will generate and display a banner using the given C<text>
-in the given C<font> (default value of C<banner>) if you
-have L<Text::FIGlet> installed.
+Will generate and display a banner using the given C<text> in the
+'banner' font. Set C<emboss> to a true value and the font 'block'
+will be emulated by highlighting the left and bottom borders of the cell.
+Set the foreground color with C<on> and the background with C<off>.
+You Must have L<Text::FIGlet> installed in order to use this preset.
+
+  banner( dir => '/path/to/figlet/fonts', text => 'HI', on => 'red' )
 
 =item * C<conway( on, off, fade, interval, jquery, %params )>
 
