@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.33
+
 0.32
     - added banner()
     - now using Spreadsheet::Read for csv,xls files
