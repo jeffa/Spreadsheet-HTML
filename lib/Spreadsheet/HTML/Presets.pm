@@ -102,7 +102,7 @@ sub banner {
         eval {
             @banner = Text::FIGlet
                 ->new( -d => $args->{dir}, -f => $args->{emboss} ? 'block' : 'banner' )
-                ->figify( -A => uc( $args->{text} ) );
+                ->figify( -A => uc( $args->{text} ), -w => 9999 );
         };
 
         if (@banner) {
@@ -273,7 +273,7 @@ sub calendar {
         if ($args->{animate}) {
             push @args, ( caption => qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>} );
         } else {
-            push @args, ( caption => join( ' ', $time->fullmonth, $time->year ) );
+            push @args, ( caption => $caption );
         }
     }
 

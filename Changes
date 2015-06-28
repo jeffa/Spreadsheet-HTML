@@ -2,6 +2,7 @@ Revision history for Spreadsheet-HTML
 
 0.33
     - added calendar()
+    - banner() does not wrap
 
 0.32
     - added banner()
