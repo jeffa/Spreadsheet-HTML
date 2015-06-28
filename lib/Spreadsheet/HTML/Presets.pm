@@ -258,7 +258,7 @@ sub calendar {
         my $first = $time->wday;
         my $last  = $time->month_last_day;
         my @flat  = ( 
-            qw( Sun Mon Tue Wed Thur Fri Sat ),
+            (map Time::Piece->strptime($_,"%d")->day, 4 .. 10),
             ('') x ($first - 1),
             1 .. $last
         );
@@ -270,13 +270,18 @@ sub calendar {
 
         my $caption = join( ' ', $time->fullmonth, $time->year );
         if ($args->{animate}) {
-            push @args, ( caption => qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>} );
-        } else {
-            push @args, ( caption => $caption );
+            $caption = qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>};
         }
+
+        my $attr = { style => { 'font-weight' => 'bold' } };
+        if ($args->{caption} and ref $args->{caption} eq 'HASH') {
+            ($attr) = values %{ $args->{caption} };
+        }
+
+        push @args, ( caption => { $caption => $attr } );
     }
 
-    push @args, @_; 
+    unshift @args, @_; 
 
     return $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
