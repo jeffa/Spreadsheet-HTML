@@ -315,6 +315,8 @@ sub _expand_code_or_hash {
     return ( $cdata, $attr );
 }
 
+sub _range {grep!(($_-$_[0])%($_[2]||1)),$_[0]..$_[1]}
+
 
 1;
 

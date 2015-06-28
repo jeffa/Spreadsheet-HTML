@@ -13,6 +13,8 @@ eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
 eval "use Text::FIGlet";
 our $NO_FIGLET = $@;
+eval "use Time::Piece";
+our $NO_TIMEPIECE = $@;
 
 sub layout {
     my ($self,$data,$args);
@@ -245,9 +247,32 @@ sub calendar {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my @args = (
-        @_,
-    );
+    my @args;
+    unless ($NO_TIMEPIECE) {
+        my $time = Time::Piece->strptime(
+            join( '-', 
+                $args->{month} || (localtime)[4]+1,
+                $args->{year}  || (localtime)[5]+1900,
+            ), '%m-%Y'
+        );
+        my $first = $time->wday;
+        my $last  = $time->month_last_day;
+        my @flat  = ( 
+            qw( Sun Mon Tue Wed Thur Fri Sat ),
+            ('') x ($first - 1),
+            1 .. $last
+        );
+        
+        push @args, [
+            map [ @flat[$_ .. $_ + 6] ],
+            Spreadsheet::HTML::_range( 0, $#flat, 7 )
+        ];
+
+        my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
+        push @args, ( caption => join( ' ', $time->fullmonth, $time->year ) );
+    }
+
+    push @args, @_; 
 
     return $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
@@ -596,7 +621,7 @@ via L<Javascript::Minifier> if it is installed.
 
 =item * C<calendar( month, year, %params )>
 
-Generates a static calendar.
+Generates a static calendar. Defaults to current month and year.
 
 =item * C<checkers( %params )>
 
