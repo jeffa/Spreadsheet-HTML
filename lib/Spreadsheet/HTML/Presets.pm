@@ -269,7 +269,12 @@ sub calendar {
         ];
 
         my @abbr = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
-        push @args, ( caption => join( ' ', $time->fullmonth, $time->year ) );
+        my $caption = join( ' ', $time->fullmonth, $time->year );
+        if ($args->{animate}) {
+            push @args, ( caption => qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>} );
+        } else {
+            push @args, ( caption => join( ' ', $time->fullmonth, $time->year ) );
+        }
     }
 
     push @args, @_; 
