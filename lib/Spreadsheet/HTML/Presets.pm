@@ -9,10 +9,8 @@ use Spreadsheet::HTML::Presets::Calculator;
 
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
-
 eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
-
 eval "use Text::FIGlet";
 our $NO_FIGLET = $@;
 
@@ -119,6 +117,8 @@ sub banner {
                             push @cells, ( $key => { style => { 'background-color' => $off } } );
                         } elsif ($line[$col] eq '_') {
                             push @cells, ( $key => { style => { 'background-color' => $off, 'border-bottom' => "1px solid $on" } } );
+                        } elsif ($args->{flip}) {
+                            push @cells, ( $key => { style => { 'background-color' => $off, 'border-right' => "1px solid $on" } } );
                         } else {
                             push @cells, ( $key => { style => { 'background-color' => $off, 'border-left' => "1px solid $on" } } );
                         }
@@ -238,6 +238,18 @@ sub conway {
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
+}
+
+sub calendar {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @args = (
+        @_,
+    );
+
+    return $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
 sub checkers {
@@ -581,6 +593,10 @@ Generates a simple calculator.
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
+
+=item * C<calendar( month, year, %params )>
+
+Generates a static calendar.
 
 =item * C<checkers( %params )>
 

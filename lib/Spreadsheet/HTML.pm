@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard animate
     chess checkers conway
     calculator dk shroom
-    banner
+    calendar banner
 );
 
 use Clone;
@@ -33,6 +33,7 @@ sub calculator      { Spreadsheet::HTML::Presets::calculator(       @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
+sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
@@ -432,6 +433,8 @@ with little to no additional coding.
 =item * C<conway( on, off, fade, jquery, %params )>
 
 =item * C<calculator( jquery, %params )>
+
+=item * C<calendar( month, year, %params )>
 
 =item * C<checkerboard( colors, %params )>
 
