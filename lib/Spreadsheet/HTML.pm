@@ -35,8 +35,8 @@ sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
-sub banner          { Spreadsheet::HTML::Presets::maze(             @_ ) }
-sub maze            { Spreadsheet::HTML::Presets::banner(           @_ ) }
+sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
+sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
 sub shroom          { Spreadsheet::HTML::Presets::shroom(           @_ ) }
 
