@@ -206,7 +206,7 @@ sub maze {
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
                     $style{$map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
                 } 
-                push @cells, ( $key => { height => '50px', width => '50px', style => {%style} } );
+                push @cells, ( $key => { height => '20px', width => '20px', style => {%style} } );
             }
         }
     }
