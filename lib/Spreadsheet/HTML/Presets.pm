@@ -165,6 +165,7 @@ sub maze {
             $grid[$h] = [ map _mk_cell($h,$_), 0 .. $width - 1 ];
         }
 
+        my %neighbor = ( 0 => 2, 1 => 3, 2 => 0, 3 => 1 );
         my $visited = 1;
         my $curr = $grid[rand $height][rand $width];
         while ($visited < $height * $width) {
@@ -179,10 +180,7 @@ sub maze {
             if (@neighbors) {
                 my ($pos,$cell) = @{ $neighbors[rand @neighbors] };
                 $curr->{walls}[$pos] = 0;
-                $cell->{walls}[3] = 0 if $pos == 1;
-                $cell->{walls}[2] = 0 if $pos == 0;
-                $cell->{walls}[1] = 0 if $pos == 3;
-                $cell->{walls}[0] = 0 if $pos == 2;
+                $curr->{walls}[$neighbor{$pos}] = 0;
                 push @stack, $curr;
                 $curr = $cell;
                 $visited++;
@@ -192,7 +190,7 @@ sub maze {
             @neighbors = ();
         }
 
-        my %map = (
+        my %style_map = (
            0 => 'border-left', 
            1 => 'border-bottom', 
            2 => 'border-right', 
@@ -204,7 +202,7 @@ sub maze {
                 my $key = sprintf '-row%scol%s', $row, $col;
                 my %style = ( 'background-color' => $off );
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
-                    $style{$map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
+                    $style{$style_map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
                 } 
                 push @cells, ( $key => { height => '20px', width => '20px', style => {%style} } );
             }
