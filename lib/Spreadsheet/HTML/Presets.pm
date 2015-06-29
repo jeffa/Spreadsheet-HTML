@@ -180,7 +180,7 @@ sub maze {
             if (@neighbors) {
                 my ($pos,$cell) = @{ $neighbors[rand @neighbors] };
                 $curr->{walls}[$pos] = 0;
-                $curr->{walls}[$neighbor{$pos}] = 0;
+                $cell->{walls}[$neighbor{$pos}] = 0;
                 push @stack, $curr;
                 $curr = $cell;
                 $visited++;
