@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.33
+    - added maze()
     - added calendar()
     - banner() does not wrap
 

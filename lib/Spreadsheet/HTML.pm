@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard animate
     chess checkers conway
     calculator dk shroom
-    calendar banner
+    calendar banner maze
 );
 
 use Clone;
@@ -35,7 +35,8 @@ sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
-sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
+sub banner          { Spreadsheet::HTML::Presets::maze(             @_ ) }
+sub maze            { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
 sub shroom          { Spreadsheet::HTML::Presets::shroom(           @_ ) }
 
@@ -443,6 +444,8 @@ with little to no additional coding.
 =item * C<animate( direction, x, y, jquery, %params )>
 
 =item * C<banner( on, off, text, font, %params )>
+
+=item * C<maze( %params )>
 
 =item * C<chess( %params )>
 

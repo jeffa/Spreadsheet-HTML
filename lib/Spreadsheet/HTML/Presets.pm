@@ -15,6 +15,8 @@ eval "use Text::FIGlet";
 our $NO_FIGLET = $@;
 eval "use Time::Piece";
 our $NO_TIMEPIECE = $@;
+eval "use List::Util";
+our $NO_LISTUTIL = $@;
 
 sub layout {
     my ($self,$data,$args);
@@ -140,6 +142,80 @@ sub banner {
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
+}
+
+sub maze {
+    no warnings;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @cells = ();
+    unless ($NO_LISTUTIL) {
+
+        my $height = $args->{height} || 20;
+        my $width  = $args->{width}  || 16;
+        my $off    = $args->{off}    || 'white';
+        my $on     = $args->{off}    || 'black';
+
+        my (@grid,@stack);
+        for my $h (0 .. $height - 1) {
+            $grid[$h] = [ map _mk_cell($h,$_), 0 .. $width - 1 ];
+        }
+
+        my $visited = 1;
+        my $curr = $grid[rand $height][rand $width];
+        while ($visited < $height * $width) {
+            my @neighbors;
+            for (
+                [ 3, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # north
+                [ 2, $grid[ $curr->{y} ][ $curr->{x} + 1 ] ], # east
+                [ 1, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # south
+                [ 0, $grid[ $curr->{y} ][ $curr->{x} - 1 ] ], # west
+            ) { push @neighbors, $_ if List::Util::sum( @{ $_->[1]->{walls} } ) == 4 }
+
+            if (@neighbors) {
+                my ($pos,$cell) = @{ $neighbors[rand @neighbors] };
+                $curr->{walls}[$pos] = 0;
+                push @stack, $curr;
+                $curr = $cell;
+                $visited++;
+            } else {
+                $curr = pop @stack;
+            }
+            @neighbors = ();
+        }
+
+        my %map = (
+           0 => 'border-left', 
+           1 => 'border-bottom', 
+           2 => 'border-right', 
+           3 => 'border-top', 
+        );
+
+        for my $row (0 .. $#grid) {
+            for my $col (0 .. @{ $grid[$row] }) {
+                my $key = sprintf '-row%scol%s', $row, $col;
+                my %style = ( 'background-color' => $off );
+                for (0 .. $#{ $grid[$row][$col]{walls} } ) {
+                    $style{$map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
+                } 
+                push @cells, ( $key => {%style} );
+            }
+        }
+    }
+
+    my @args = ( @_, @cells );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $table;
+}
+
+sub _mk_cell {
+    return { x => $_[1], y => $_[0],
+        walls => [1,1,1,1],
+              #   W S E N
+    };
 }
 
 sub calculator {
@@ -631,6 +707,10 @@ via L<Javascript::Minifier> if it is installed.
 =item * C<calendar( month, year, %params )>
 
 Generates a static calendar. Defaults to current month and year.
+
+=item * C<maze( width, height, %params )>
+
+Generates a static maze.
 
 =item * C<checkers( %params )>
 
