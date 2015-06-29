@@ -158,6 +158,8 @@ sub maze {
         my $off    = $args->{off}    || 'white';
         my $on     = $args->{off}    || 'black';
 
+        push @cells, ( fill => "${height}x${width}" );
+
         my (@grid,@stack);
         for my $h (0 .. $height - 1) {
             $grid[$h] = [ map _mk_cell($h,$_), 0 .. $width - 1 ];
@@ -177,6 +179,10 @@ sub maze {
             if (@neighbors) {
                 my ($pos,$cell) = @{ $neighbors[rand @neighbors] };
                 $curr->{walls}[$pos] = 0;
+                $cell->{walls}[3] = 0 if $pos == 1;
+                $cell->{walls}[2] = 0 if $pos == 0;
+                $cell->{walls}[1] = 0 if $pos == 3;
+                $cell->{walls}[0] = 0 if $pos == 2;
                 push @stack, $curr;
                 $curr = $cell;
                 $visited++;
@@ -200,7 +206,7 @@ sub maze {
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
                     $style{$map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
                 } 
-                push @cells, ( $key => {%style} );
+                push @cells, ( $key => { height => '50px', width => '50px', style => {%style} } );
             }
         }
     }
