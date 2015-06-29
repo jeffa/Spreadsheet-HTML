@@ -440,9 +440,9 @@ with little to no additional coding.
 
 =item * C<checkerboard( colors, %params )>
 
-=item * C<animate( direction, %params )>
+=item * C<animate( direction, x, y, jquery, %params )>
 
-=item * C<banner( text, font, %params )>
+=item * C<banner( on, off, text, font, %params )>
 
 =item * C<chess( %params )>
 
