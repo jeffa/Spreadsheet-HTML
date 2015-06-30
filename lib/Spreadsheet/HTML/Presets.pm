@@ -156,7 +156,7 @@ sub maze {
         my $height = $args->{height} || 20;
         my $width  = $args->{width}  || 16;
         my $off    = $args->{off}    || 'white';
-        my $on     = $args->{off}    || 'black';
+        my $on     = $args->{on}     || 'black';
 
         push @cells, ( fill => "${height}x${width}" );
 
@@ -171,9 +171,9 @@ sub maze {
         while ($visited < $height * $width) {
             my @neighbors;
             for (
-                [ 3, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # north
+                [ 3, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # north
                 [ 2, $grid[ $curr->{y} ][ $curr->{x} + 1 ] ], # east
-                [ 1, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # south
+                [ 1, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # south
                 [ 0, $grid[ $curr->{y} ][ $curr->{x} - 1 ] ], # west
             ) { push @neighbors, $_ if List::Util::sum( @{ $_->[1]->{walls} } ) == 4 }
 
@@ -202,7 +202,7 @@ sub maze {
                 my $key = sprintf '-row%scol%s', $row, $col;
                 my %style = ( 'background-color' => $off );
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
-                    $style{$style_map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
+                    $style{$style_map{$_}} = "2px solid $on" if $grid[$row][$col]{walls}[$_]; 
                 } 
                 push @cells, ( $key => { height => '20px', width => '20px', style => {%style} } );
             }
