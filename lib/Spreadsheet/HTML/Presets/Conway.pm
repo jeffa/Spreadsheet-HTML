@@ -74,17 +74,7 @@ function toggle() {
 
 $(document).ready(function(){
 
-    $('th.conway').click( function( data ) {
-        var matches  = this.id.match( /(\d+)-(\d+)/ );
-        var selected = MATRIX[matches[1]][matches[2]];
-        if (selected.age) {
-            selected.grow( 0 );
-        } else {
-            selected.grow( 1 );
-        }
-    });
-
-    $('td.conway').click( function( data ) {
+    $('th.conway, td.conway').click( function( data ) {
         var matches  = this.id.match( /(\d+)-(\d+)/ );
         var selected = MATRIX[matches[1]][matches[2]];
         if (selected.age) {
