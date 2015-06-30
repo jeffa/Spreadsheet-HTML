@@ -332,12 +332,12 @@ Spreadsheet::HTML - Just another HTML table generator.
 
     $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
 
-    $table = Spreadsheet::HTML->new( data => $data, indent => "\t" );
-    print $table->portrait;
-    print $table->landscape;
+    $generator = Spreadsheet::HTML->new( data => $data, indent => "\t" );
+    print $generator->portrait;
+    print $generator->landscape;
 
     # load from files (first table found)
-    $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+    $generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 
     # non OO
     use Spreadsheet::HTML qw( portrait landscape );

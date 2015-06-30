@@ -630,7 +630,8 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $table = Spreadsheet::HTML->new( data => [[1],[2]] );
+  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
+  print $generator->layout();
 
   # or
   use Spreadsheet::HTML qw( layout );
