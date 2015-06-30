@@ -153,29 +153,25 @@ sub maze {
     my @cells = ();
     unless ($NO_LISTUTIL) {
 
-        my $height = 20;
-        my $width  = 16;
-        if ($args->{fill}) {
-            ($height,$width) = $args->{fill} =~ /^(\d+)\D(\d+)$/;
-            delete $args->{fill};
-        }
-        push @cells, ( fill => "${height}x${width}" );
+        my $rows = $args->{_max_rows} == 1 ? 20 : $args->{_max_rows};
+        my $cols = $args->{_max_cols} == 1 ? 16 : $args->{_max_cols};
+        my $off  = $args->{off}    || 'white';
+        my $on   = $args->{on}     || 'black';
 
-        my $off    = $args->{off}    || 'white';
-        my $on     = $args->{on}     || 'black';
+        push @cells, ( fill => "${rows}x${cols}" );
 
         my (@grid,@stack);
-        for my $h (0 .. $height - 1) {
+        for my $h (0 .. $rows - 1) {
             $grid[$h] = [ map {
                 x     => $_, y => $h,
                 walls => [1,1,1,1], # W S E N
-            }, 0 .. $width - 1 ];
+            }, 0 .. $cols - 1 ];
         }
 
         my %neighbor = ( 0 => 2, 1 => 3, 2 => 0, 3 => 1 );
         my $visited = 1;
-        my $curr = $grid[rand $height][rand $width];
-        while ($visited < $height * $width) {
+        my $curr = $grid[rand $rows][rand $cols];
+        while ($visited < $rows * $cols) {
             my @neighbors;
             for (
                 [ 3, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # north
