@@ -296,8 +296,8 @@ sub _args {
 
     $args->{_max_rows} = scalar @{ $data };
     $args->{_max_cols} = scalar @{ $data->[0] };
-    $args->{_max_rows} = $fill{row} if ($fill{row} || 0) > ($args->{max_rows} || 0);
-    $args->{_max_cols} = $fill{col} if ($fill{col} || 0) > ($args->{max_cols} || 0);
+    $args->{_max_rows} = $fill{row} if ($fill{row} || 0) > ($args->{_max_rows} || 0);
+    $args->{_max_cols} = $fill{col} if ($fill{col} || 0) > ($args->{_max_cols} || 0);
 
     return ( $self, Clone::clone($data), $args );
 }
