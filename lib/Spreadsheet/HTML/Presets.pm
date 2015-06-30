@@ -153,16 +153,23 @@ sub maze {
     my @cells = ();
     unless ($NO_LISTUTIL) {
 
-        my $height = $args->{height} || 20;
-        my $width  = $args->{width}  || 16;
-        my $off    = $args->{off}    || 'white';
-        my $on     = $args->{off}    || 'black';
-
+        my $height = 20;
+        my $width  = 16;
+        if ($args->{fill}) {
+            ($height,$width) = $args->{fill} =~ /^(\d+)\D(\d+)$/;
+            delete $args->{fill};
+        }
         push @cells, ( fill => "${height}x${width}" );
+
+        my $off    = $args->{off}    || 'white';
+        my $on     = $args->{on}     || 'black';
 
         my (@grid,@stack);
         for my $h (0 .. $height - 1) {
-            $grid[$h] = [ map _mk_cell($h,$_), 0 .. $width - 1 ];
+            $grid[$h] = [ map {
+                x     => $_, y => $h,
+                walls => [1,1,1,1], # W S E N
+            }, 0 .. $width - 1 ];
         }
 
         my %neighbor = ( 0 => 2, 1 => 3, 2 => 0, 3 => 1 );
@@ -171,9 +178,9 @@ sub maze {
         while ($visited < $height * $width) {
             my @neighbors;
             for (
-                [ 3, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # north
+                [ 3, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # north
                 [ 2, $grid[ $curr->{y} ][ $curr->{x} + 1 ] ], # east
-                [ 1, $grid[ $curr->{y} - 1 ][ $curr->{x} ] ], # south
+                [ 1, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # south
                 [ 0, $grid[ $curr->{y} ][ $curr->{x} - 1 ] ], # west
             ) { push @neighbors, $_ if List::Util::sum( @{ $_->[1]->{walls} } ) == 4 }
 
@@ -202,24 +209,25 @@ sub maze {
                 my $key = sprintf '-row%scol%s', $row, $col;
                 my %style = ( 'background-color' => $off );
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
-                    $style{$style_map{$_}} = "1px solid $on" if $grid[$row][$col]{walls}[$_]; 
+                    $style{$style_map{$_}} = "2px solid $on" if $grid[$row][$col]{walls}[$_]; 
                 } 
                 push @cells, ( $key => { height => '20px', width => '20px', style => {%style} } );
             }
         }
     }
 
-    my @args = ( @_, @cells );
+    my @args = (
+        @_,
+        @cells,
+        matrix   => 1,
+        tgroups  => 0,
+        flip     => 0,
+        theta    => 0,
+        headless => 0,
+    );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
-}
-
-sub _mk_cell {
-    return { x => $_[1], y => $_[0],
-        walls => [1,1,1,1],
-              #   W S E N
-    };
 }
 
 sub calculator {
@@ -622,7 +630,8 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $table = Spreadsheet::HTML->new( data => [[1],[2]] );
+  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
+  print $generator->layout();
 
   # or
   use Spreadsheet::HTML qw( layout );
@@ -666,7 +675,7 @@ Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
 
-=item * C<banner( dir, text, emboss, on, off, %params )>
+=item * C<banner( dir, text, emboss, on, off, fill, %params )>
 
 Will generate and display a banner using the given C<text> in the
 'banner' font. Set C<emboss> to a true value and the font 'block'
@@ -676,7 +685,7 @@ You Must have L<Text::FIGlet> installed in order to use this preset.
 
   banner( dir => '/path/to/figlet/fonts', text => 'HI', on => 'red' )
 
-=item * C<conway( on, off, fade, interval, jquery, %params )>
+=item * C<conway( on, off, fill, fade, interval, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 
@@ -712,9 +721,13 @@ via L<Javascript::Minifier> if it is installed.
 
 Generates a static calendar. Defaults to current month and year.
 
-=item * C<maze( width, height, %params )>
+  calendar( month => 7, year, 2015 )
+
+=item * C<maze( on, off, fill, %params )>
 
 Generates a static maze.
+
+  maze( fill => '10x10', on => 'red', off => 'black' ) 
 
 =item * C<checkers( %params )>
 
