@@ -355,7 +355,9 @@ sub calendar {
 
         my %day_args = map {($_ => $args->{$_})} grep /^-\d+$/, keys %$args;
         for (keys %day_args) {
-            my $index = abs($_) + $first + 5;
+            my $day = abs($_);
+            next if $day > $last;
+            my $index = $day + $first + 5;
             my $row = int($index / 7);
             my $col = $index % 7;
             push @cal_args, ( sprintf( '-row%scol%s', $row, $col ) => $day_args{$_} );
