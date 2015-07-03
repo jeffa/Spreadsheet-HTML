@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.34
+    - can style calendar by day
     - animate background and/or foreground
     - added wrap literal param
     - better handling of empty datas
