@@ -288,6 +288,14 @@ sub _args {
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
 
+    if ($args->{wrap}) {
+        my @flat = map @$_, @$data;
+        $data = [
+            map [ @flat[$_ .. $_ + $args->{wrap} - 1] ],
+            _range( 0, $#flat, $args->{wrap} )
+        ];
+    }
+
     $args->{_max_rows} = scalar @{ $data }      || 1;
     $args->{_max_cols} = scalar @{ $data->[0] } || 1;
 
@@ -494,6 +502,15 @@ cells, or in conjunction with C<data> to pad existing
 cells (currently only pads the right and bottom sides.)
 
   fill => '5x12'
+
+=item * C<wrap>
+
+Can be supplied in conjunction with a 1D C<data> to
+automatically wrap into a 2D array matrix. Can also
+"rewrap" existed 2D array matrices, but at the expense
+of likely mangling the headings.
+
+  wrap => 10 
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 

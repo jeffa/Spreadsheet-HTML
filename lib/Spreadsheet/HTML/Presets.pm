@@ -52,6 +52,7 @@ sub checkerboard {
         matrix   => 1,
         headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
+        wrap => 0,
         td => { %{ $args->{td} || {} }, style  => { 'background-color' => $colors } },
     );
 
@@ -138,6 +139,7 @@ sub banner {
     my @args = (
         @_,
         @cells,
+        wrap => 0,
     );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
@@ -277,6 +279,7 @@ sub calculator {
         tgroups     => 0,
         headless    => 0,
         pinhead     => 0,
+        wrap        => 0,
         matrix      => 1,
     );
 
@@ -331,7 +334,7 @@ sub calendar {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my @args;
+    my @cal_args;
     unless ($NO_TIMEPIECE) {
         my $time = Time::Piece->strptime(
             join( '-', 
@@ -347,10 +350,7 @@ sub calendar {
             1 .. $last
         );
         
-        push @args, [
-            map [ @flat[$_ .. $_ + 6] ],
-            Spreadsheet::HTML::_range( 0, $#flat, 7 )
-        ];
+        push @cal_args, ( data => \@flat );
 
         my $caption = join( ' ', $time->fullmonth, $time->year );
         if ($args->{animate}) {
@@ -362,10 +362,17 @@ sub calendar {
             ($attr) = values %{ $args->{caption} };
         }
 
-        push @args, ( caption => { $caption => $attr } );
+        push @cal_args, ( caption => { $caption => $attr } );
     }
 
-    unshift @args, @_; 
+    my @args = (
+        @cal_args,
+        @_,
+        wrap    => 7,
+        theta   => 0,
+        flip    => 0,
+        matrix  => 0,
+    );        
 
     return $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
@@ -405,6 +412,7 @@ sub checkers {
         headless => 0,
         pinhead  => 0,
         matrix   => 1,
+        wrap     => 0,
         fill     => '8x8',
         data     => \@data,
     );
@@ -445,6 +453,7 @@ sub chess {
         headless => 0,
         pinhead  => 0,
         matrix   => 1,
+        wrap     => 0,
         fill     => '8x8',
         data     => \@data,
     );
@@ -525,6 +534,7 @@ my $tmpl = '
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
+        wrap     => 0,
         fill     => join( 'x', $total_rows, $total_cols ),
         @cells,
         @_,
@@ -586,6 +596,7 @@ my $tmpl = '
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
+        wrap     => 0,
         fill     => join( 'x', $total_rows, $total_cols ),
         @cells,
         @_,
