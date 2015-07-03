@@ -1,6 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.34
+    - animate background and/or foreground
+    - added wrap literal param
+    - better handling of empty datas
 
 0.33
     - added maze()
