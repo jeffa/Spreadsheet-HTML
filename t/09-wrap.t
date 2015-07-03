@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 4;
+use Test::More tests => 10;
 
 use Spreadsheet::HTML;
 
@@ -24,3 +24,30 @@ is $table->generate,
 is Spreadsheet::HTML::generate( data => $data, wrap => 3 ), 
     '<table><tr><th>1</th><th>2</th><th>3</th></tr><tr><td>4</td><td>5</td><td>6</td></tr><tr><td>7</td><td>8</td><td>&nbsp;</td></tr></table>',
     "correctly re-wrapped 2D array (procedural)";
+
+$table = Spreadsheet::HTML->new( data => undef, wrap => 3 );
+is $table->generate, 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against no data (method)";
+
+is Spreadsheet::HTML::generate( data => undef, wrap => 3 ), 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against no data (procedural)";
+
+$table = Spreadsheet::HTML->new( data => [], wrap => 3 );
+is $table->generate, 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against data = [] (method)";
+
+is Spreadsheet::HTML::generate( data => [], wrap => 3 ), 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against data = [] (procedural)";
+
+$table = Spreadsheet::HTML->new( data => [[]], wrap => 3 );
+is $table->generate, 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against data = [[]] (method)";
+
+is Spreadsheet::HTML::generate( data => [[]], wrap => 3 ), 
+    '<table><tr><th>&nbsp;</th></tr></table>',
+    "guard against data = [[]] (procedural)";

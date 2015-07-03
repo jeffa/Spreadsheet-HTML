@@ -119,7 +119,7 @@ sub _process {
     # headings to index mapping for -colX
     my %index = ();
     if ($#{ $data->[0] }) {
-        %index = map { '-' . $data->[0][$_] || '' => $_ } 0 .. $#{ $data->[0] };
+        %index = map { '-' . ($data->[0][$_] || '') => $_ } 0 .. $#{ $data->[0] };
         for (grep /^-/, keys %$args) {
             $args->{"-col$index{$_}" } = delete $args->{$_} if exists $index{$_};
         }
@@ -288,7 +288,7 @@ sub _args {
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
 
-    if ($args->{wrap}) {
+    if ($args->{wrap} and defined $data->[0][0]) {
         my @flat = map @$_, @$data;
         $data = [
             map [ @flat[$_ .. $_ + $args->{wrap} - 1] ],
