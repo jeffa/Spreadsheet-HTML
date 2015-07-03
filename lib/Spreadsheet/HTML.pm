@@ -448,7 +448,7 @@ with little to no additional coding.
 
 =item * C<checkerboard( colors, %params )>
 
-=item * C<animate( direction, x, y, jquery, %params )>
+=item * C<animate( fgdirection, bgdirection, jquery, %params )>
 
 =item * C<banner( on, off, text, font, %params )>
 

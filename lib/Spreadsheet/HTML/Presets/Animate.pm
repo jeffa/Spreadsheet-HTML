@@ -7,21 +7,32 @@ use Spreadsheet::HTML::Presets;
 sub _javascript {
     my %args = @_;
 
-    my %map = (
-        right => { x => 1,  y => 0 },
-        left  => { x => -1, y => 0 },
-        up    => { y => 1,  x => 0 },
-        down  => { y => -1, x => 0 },
+    my %fmap = (
+        right => { fx => 1,  fy => 0 },
+        left  => { fx => -1, fy => 0 },
+        up    => { fy => 1,  fx => 0 },
+        down  => { fy => -1, fx => 0 },
     );
 
-    $args{x} ||= $map{ $args{direction} }{x};
-    $args{y} ||= $map{ $args{direction} }{y};
+    my %bmap = (
+        right => { bx => 1,  by => 0 },
+        left  => { bx => -1, by => 0 },
+        up    => { by => 1,  bx => 0 },
+        down  => { by => -1, bx => 0 },
+    );
+
+    $args{fx} ||= $fmap{ $args{fgdirection} }{fx};
+    $args{fy} ||= $fmap{ $args{fgdirection} }{fy};
+    $args{bx} ||= $bmap{ $args{bgdirection} }{bx};
+    $args{by} ||= $bmap{ $args{bgdirection} }{by};
 
     my $js = sprintf _js_tmpl(),
         $args{_max_rows},
         $args{_max_cols},
-        $args{x},
-        $args{y},
+        $args{fx} || 0,
+        $args{fy} || 0,
+        $args{bx} || 0,
+        $args{by} || 0,
         $args{interval},
     ;
 
@@ -35,8 +46,10 @@ sub _js_tmpl {
 /* install JavaScript::Minifier to minify this code */
 var ROW = %s;
 var COL = %s;
-var X   = %s;
-var Y   = %s;
+var FGX = %s;
+var FGY = %s;
+var BGX = %s;
+var BGY = %s;
 var INTERVAL = %s;
 var tid;
 
@@ -52,14 +65,52 @@ function toggle() {
 
 function move() {
 
-    if (X) {
+    if (FGX) {
         for (var row = 0; row < ROW; row++) {
             var vals = new Array(); 
             for (var col = 0; col < COL; col++) {
                 vals.push( $('#' + row + '-' + col ).clone() );
             }
 
-            if (X > 0) {
+            if (FGX > 0) {
+                vals.unshift( vals.pop() );
+            } else {
+                vals.push( vals.shift() );
+            }
+
+            for (var col = 0; col < COL; col++) {
+                $('#' + row + '-' + col ).html( vals[col].html() );
+            }
+        }
+    }
+
+    if (FGY) {
+        for (var col = 0; col < COL; col++) {
+            var vals = new Array(); 
+            for (var row = 0; row < ROW; row++) {
+                vals.push( $('#' + row + '-' + col ).clone() );
+            }
+
+            if (FGY > 0) {
+                vals.push( vals.shift() );
+            } else {
+                vals.unshift( vals.pop() );
+            }
+
+            for (var row = 0; row < ROW; row++) {
+                $('#' + row + '-' + col ).html( vals[row].html() );
+            }
+        }
+    }
+
+    if (BGX) {
+        for (var row = 0; row < ROW; row++) {
+            var vals = new Array(); 
+            for (var col = 0; col < COL; col++) {
+                vals.push( $('#' + row + '-' + col ).clone() );
+            }
+
+            if (BGX > 0) {
                 vals.unshift( vals.pop() );
             } else {
                 vals.push( vals.shift() );
@@ -67,19 +118,18 @@ function move() {
 
             for (var col = 0; col < COL; col++) {
                 $('#' + row + '-' + col ).attr( 'style', vals[col].attr( 'style' ) );
-                $('#' + row + '-' + col ).html( vals[col].html() );
             }
         }
     }
 
-    if (Y) {
+    if (BGY) {
         for (var col = 0; col < COL; col++) {
             var vals = new Array(); 
             for (var row = 0; row < ROW; row++) {
                 vals.push( $('#' + row + '-' + col ).clone() );
             }
 
-            if (Y > 0) {
+            if (BGY > 0) {
                 vals.push( vals.shift() );
             } else {
                 vals.unshift( vals.pop() );
@@ -87,7 +137,6 @@ function move() {
 
             for (var row = 0; row < ROW; row++) {
                 $('#' + row + '-' + col ).attr( 'style', vals[row].attr( 'style' ) );
-                $('#' + row + '-' + col ).html( vals[row].html() );
             }
         }
     }

@@ -64,8 +64,9 @@ sub animate {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    $args->{direction} ||= 'right';
-    $args->{interval}  ||= 200;
+    $args->{fgdirection} ||= $args->{bgdirection} ? '' : 'right';
+    $args->{bgdirection} ||= '';
+    $args->{interval}    ||= 200;
 
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
@@ -85,7 +86,7 @@ sub animate {
     );
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
-    delete $args->{$_} for qw( direction x y interval jquery );
+    delete $args->{$_} for qw( fgdirection bgdirection fx fy bx by interval jquery );
 
     return( $js, @args ) if $args->{animate};
 
@@ -675,17 +676,19 @@ Attempts to form diagonal patterns by adding an extra color
 if need be. C<colors> default to red and green and C<extra>
 defaults to white.
 
-=item * C<animate( direction, interval, jquery, %params )>
+=item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
 
-Moves the contents of each cell in the direction specified.
+Moves the contents (C<fg*> for CDATA, C<bg*> for
+attributes) of each cell in the direction specified.
 Valid values are C<up>, C<down>, C<left> and C<right>.
 
 Set the timer with C<interval> (defaults to 200 miliseconds).
 
-  animate( direction => 'right', interval => 300 )
+  animate( fgdirection => 'right', interval => 300 )
 
-Can optionally use C<x> and/or C<y> instead of C<direction>
-to specify which axis(es) to animate.
+Can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
+to specify which axis(es) to animate. (Ditto for C<bx> and
+C<by> for C<bgdirection>.
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
