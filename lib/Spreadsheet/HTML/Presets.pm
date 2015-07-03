@@ -64,7 +64,7 @@ sub animate {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    $args->{fgdirection} ||= $args->{bgdirection} ? '' : 'right';
+    $args->{fgdirection} ||= ($args->{bgdirection} || $args->{bx} || $args->{by}) ? '' : 'right';
     $args->{bgdirection} ||= '';
     $args->{interval}    ||= 200;
 
