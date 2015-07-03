@@ -352,6 +352,15 @@ sub calendar {
         
         push @cal_args, ( data => \@flat );
 
+        my %day_args = map {($_ => $args->{$_})} grep /^(_\d+)$/, keys %$args;
+        for (keys %day_args) {
+            (my $day = $_) =~ s/^_//;
+            my $index = $day + $first + 5;
+            my $row = int($index / 7);
+            my $col = $index % 7;
+            push @cal_args, ( sprintf( '-row%scol%s', $row, $col ) => $day_args{$_} );
+        }
+
         my $caption = join( ' ', $time->fullmonth, $time->year );
         if ($args->{animate}) {
             $caption = qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>};
@@ -729,6 +738,14 @@ via L<Javascript::Minifier> if it is installed.
 Generates a static calendar. Defaults to current month and year.
 
   calendar( month => 7, year, 2015 )
+
+Mark a day of the month like so:
+
+  calendar( month => 12, _25 => { bgcolor => 'red' } )
+
+Default rules still apply to styling columns by any heading:
+
+  calendar( -Tue => { class => 'ruby' } )
 
 =item * C<maze( on, off, fill, %params )>
 
