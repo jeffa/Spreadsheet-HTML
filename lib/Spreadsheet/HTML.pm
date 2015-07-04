@@ -116,7 +116,7 @@ sub _process {
     # headings is an alias for -r0
     $args->{-r0} = delete $args->{headings} if exists $args->{headings};
 
-    # headings to index mapping for -cX
+    # headings to index mapping (alias for some -cX)
     my %index = ();
     if ($#{ $data->[0] }) {
         %index = map { '-' . ($data->[0][$_] || '') => $_ } 0 .. $#{ $data->[0] };
@@ -124,8 +124,6 @@ sub _process {
             $args->{"-c$index{$_}" } = delete $args->{$_} if exists $index{$_};
         }
     }
-
-    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
 
     for my $row (0 .. $args->{_max_rows} - 1) {
 
@@ -152,7 +150,7 @@ sub _process {
                 $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
             }
 
-            # handle empty
+            my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
             do{ no warnings; $cdata =~ s/^\s*$/$empty/g };
 
             $data->[$row][$col] = { 
