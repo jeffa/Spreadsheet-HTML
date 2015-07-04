@@ -5,6 +5,7 @@ Revision history for Spreadsheet-HTML
         -rowX is now -rX
         -colX is now -cX
         -rowXcolX is now -rXcX
+    - refactored _process() (slight speed increase)
     - can style calendar by day
     - animate background and/or foreground
     - added wrap literal param
