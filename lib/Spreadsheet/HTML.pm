@@ -136,22 +136,20 @@ sub _process {
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my ( $cdata, $attr ) = _expand_code_or_hash( $data->[$row][$col], undef, $args->{$tag}, );
-            $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
 
-            # -cX
-            if (exists $args->{"-c$col"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-c$col"} );
-            }
-
-            # -rX (overides -cX)
-            if (exists $args->{"-r$row"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r$row"} );
-            }
-
-            # -rXcX (overides -rX)
-            if (exists $args->{"-r${row}c${col}"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r${row}c${col}"} );
+            my ( $cdata, $attr ) = ( $data->[$row][$col], undef );
+            for ($tag, "-c$col", "-r$row", "-r${row}c${col}") {
+                next unless exists $args->{$_};
+                my $new_attr;
+                $args->{$_} = [ $args->{$_} ] unless ref( $args->{$_} ) eq 'ARRAY';
+                for (@{ $args->{$_} }) {
+                    if (ref($_) eq 'CODE') {
+                        $cdata = $_->($cdata);
+                    } elsif (ref($_) eq 'HASH') {
+                        $new_attr = $_;
+                    }
+                }
+                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
             }
 
             # handle empty
@@ -160,7 +158,7 @@ sub _process {
             $data->[$row][$col] = { 
                 tag => $tag, 
                 (defined( $cdata ) ? (cdata => $cdata) : ()), 
-                (keys( %$attr )  ? (attr => $attr)   : ()),
+                (keys( %$attr )    ? (attr => $attr)   : ()),
             };
         }
     }
@@ -301,21 +299,6 @@ sub _args {
     }
 
     return ( $self, Clone::clone($data), $args );
-}
-
-sub _expand_code_or_hash {
-    my ( $cdata, $attr, $thingy ) = @_;
-    my $new_attr;
-    $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
-    for (@{ $thingy }) {
-        if (ref($_) eq 'CODE') {
-            $cdata = $_->($cdata);
-        } elsif (ref($_) eq 'HASH') {
-            $new_attr = $_;
-        }
-    }
-    $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
-    return ( $cdata, $attr );
 }
 
 sub _range {grep!(($_-$_[0])%($_[2]||1)),$_[0]..$_[1]}
