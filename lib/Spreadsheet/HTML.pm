@@ -113,15 +113,15 @@ sub _process {
         return wantarray ? ( data => $self->{data}, %{ $args || {} } ) : $data;
     }
 
-    # headings is an alias for -row0
-    $args->{-row0} = delete $args->{headings} if exists $args->{headings};
+    # headings is an alias for -r0
+    $args->{-r0} = delete $args->{headings} if exists $args->{headings};
 
-    # headings to index mapping for -colX
+    # headings to index mapping for -cX
     my %index = ();
     if ($#{ $data->[0] }) {
         %index = map { '-' . ($data->[0][$_] || '') => $_ } 0 .. $#{ $data->[0] };
         for (grep /^-/, keys %$args) {
-            $args->{"-col$index{$_}" } = delete $args->{$_} if exists $index{$_};
+            $args->{"-c$index{$_}" } = delete $args->{$_} if exists $index{$_};
         }
     }
 
@@ -136,28 +136,22 @@ sub _process {
 
         for my $col (0 .. $#{ $data->[$row] }) {
             my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my ( $cdata, $attr ) = _expand_code_or_hash( $args->{$tag}, $data->[$row][$col] );
+            my ( $cdata, $attr ) = _expand_code_or_hash( $data->[$row][$col], undef, $args->{$tag}, );
             $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
 
-            # -colX
-            if (exists $args->{"-col$col"}) {
-                my $new_attr;
-                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-col$col"}, $cdata );
-                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
+            # -cX
+            if (exists $args->{"-c$col"}) {
+                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-c$col"} );
             }
 
-            # -rowX (overides -colX)
-            if (exists $args->{"-row$row"}) {
-                my $new_attr;
-                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-row$row"}, $cdata );
-                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
+            # -rX (overides -cX)
+            if (exists $args->{"-r$row"}) {
+                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r$row"} );
             }
 
-            # -rowXcolX (overides -rowX)
-            if (exists $args->{"-row${row}col${col}"}) {
-                my $new_attr;
-                ( $cdata, $new_attr ) = _expand_code_or_hash( $args->{"-row${row}col${col}"}, $cdata );
-                $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
+            # -rXcX (overides -rX)
+            if (exists $args->{"-r${row}c${col}"}) {
+                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r${row}c${col}"} );
             }
 
             # handle empty
@@ -166,7 +160,7 @@ sub _process {
             $data->[$row][$col] = { 
                 tag => $tag, 
                 (defined( $cdata ) ? (cdata => $cdata) : ()), 
-                (defined( $attr )  ? (attr => $attr)   : ()),
+                (keys( %$attr )  ? (attr => $attr)   : ()),
             };
         }
     }
@@ -310,16 +304,17 @@ sub _args {
 }
 
 sub _expand_code_or_hash {
-    my ( $thingy, $cdata ) = @_;
-    my $attr;
+    my ( $cdata, $attr, $thingy ) = @_;
+    my $new_attr;
     $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
     for (@{ $thingy }) {
         if (ref($_) eq 'CODE') {
             $cdata = $_->($cdata);
         } elsif (ref($_) eq 'HASH') {
-            $attr = $_;
+            $new_attr = $_;
         }
     }
+    $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
     return ( $cdata, $attr );
 }
 
@@ -589,7 +584,7 @@ only td tags, no th tags.
 =item * C<headless: 0 or 1>
 
 Render the table with without the headings row at all. 
-The first row after the headings is still C<-row1>, thus
+The first row after the headings is still C<-r1>, thus
 any reference to C<headings> will be discarded too.
 
 =item * C<headings>
@@ -607,7 +602,7 @@ Or both:
   headings => [ sub { uc shift }, { class => "foo" } ]
 
 Since C<headings> is a natural alias for the dynamic parameter
-C<-row0>, it could be considered as a dynamic parameter. Be
+C<-r0>, it could be considered as a dynamic parameter. Be
 careful not to prepend a dash to C<headings> ... only dynamic
 parameters use leading dashes.
 
@@ -622,35 +617,35 @@ leading dashes to seperate them from literal and tag parameters.
 
 =over 4
 
-=item * C<-rowX>
+=item * C<-rX>
 
 Apply this callback subroutine to the entire row X.
 (0 index based)
 
-  -row3 => sub { uc shift }
+  -r3 => sub { uc shift }
 
 Or apply hash ref as attributes:
 
-  -row3 => { class => 'some-class' }
+  -r3 => { class => 'some-class' }
 
 Or both:
 
-  -row3 => [ sub { uc shift }, { class => "foo" } ]
+  -r3 => [ sub { uc shift }, { class => "foo" } ]
 
-=item * C<-colX>
+=item * C<-cX>
 
 Apply this callback to the entire column X.
 (0 index based)
 
-  -col4 => sub { sprintf "%02d", shift || 0 }
+  -c4 => sub { sprintf "%02d", shift || 0 }
 
 Or apply hash ref as attributes:
 
-  -col4 => { class => 'some-class' }
+  -c4 => { class => 'some-class' }
 
 Or both:
 
-  -col4 => [ sub { uc shift }, { class => "foo" } ]
+  -c4 => [ sub { uc shift }, { class => "foo" } ]
 
 You can alias any column number by the value of the heading
 name in that column:
@@ -661,10 +656,12 @@ name in that column:
 
   -employee_no => [ sub { sprintf "%08d", shift }, { class => "foo" } ]
 
-=item * C<-rowXcolX>
+=item * C<-rXcX>
 
 Apply this callback or hash ref of attributres
 to the cell at row X and column X. (0 index based)
+
+  -r3c4 => { class => 'special-cell' }
 
 =back
 

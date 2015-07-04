@@ -71,7 +71,7 @@ sub animate {
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            my $cell = sprintf '-row%scol%s', $r, $c;
+            my $cell = sprintf '-r%sc%s', $r, $c;
             push @cells, $cell => {
                 id     => join( '-', $r, $c ),
                 class  => 'animate',
@@ -117,7 +117,7 @@ sub banner {
             for my $row (0 .. $#banner) {
                 my @line = split //, $banner[$row];
                 for my $col (0 .. $#line) {
-                    my $key = sprintf '-row%scol%s', $row, $col;
+                    my $key = sprintf '-r%sc%s', $row, $col;
                     if ($args->{emboss}) {
                         if ($line[$col] eq ' ') {
                             push @cells, ( $key => { style => { 'background-color' => $off } } );
@@ -205,7 +205,7 @@ sub maze {
 
         for my $row (0 .. $#grid) {
             for my $col (0 .. @{ $grid[$row] }) {
-                my $key = sprintf '-row%scol%s', $row, $col;
+                my $key = sprintf '-r%sc%s', $row, $col;
                 my %style = ( 'background-color' => $off );
                 for (0 .. $#{ $grid[$row][$col]{walls} } ) {
                     $style{$style_map{$_}} = "2px solid $on" if $grid[$row][$col]{walls}[$_]; 
@@ -271,8 +271,8 @@ sub calculator {
         },
         caption     => qq(<input id="display" style="background-color: #F1FACA; height: 8%; width: 80%; text-align: right; $attrs" />),
         td          => [ { %attrs }, sub { qq(<button style="width: 100%; height: 100%; $attrs">$_[0]</button>) } ],
-        -row3col3   => { rowspan => 2, %attrs },
-        -row4col0   => { colspan => 2, %attrs },
+        -r3c3       => { rowspan => 2, %attrs },
+        -r4c0       => { colspan => 2, %attrs },
         _layout     => 1,
         data        => $data,
         theta       => 0,
@@ -305,7 +305,7 @@ sub conway {
     my @cells;
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            my $cell = sprintf '-row%scol%s', $r, $c;
+            my $cell = sprintf '-r%sc%s', $r, $c;
             push @cells,
                 $cell => {
                     id     => join( '-', $r, $c ),
@@ -360,7 +360,7 @@ sub calendar {
             my $index = $day + $first + 5;
             my $row = int($index / 7);
             my $col = $index % 7;
-            push @cal_args, ( sprintf( '-row%scol%s', $row, $col ) => $day_args{$_} );
+            push @cal_args, ( sprintf( '-r%sc%s', $row, $col ) => $day_args{$_} );
         }
 
         my $caption = join( ' ', $time->fullmonth, $time->year );
@@ -531,7 +531,7 @@ my $tmpl = '
         for my $col (0 .. $#chars) {
             next unless my $color = $map{ $chars[$col] };
             push @cells, ( 
-                "-row${row}col${col}" => {
+                "-r${row}c${col}" => {
                     width  => 16,
                     height => 8,
                     style  => { 'background-color' => $color },
@@ -593,7 +593,7 @@ my $tmpl = '
         for my $col (0 .. $#chars) {
             next unless my $color = $map{ $chars[$col] };
             push @cells, ( 
-                "-row${row}col${col}" => {
+                "-r${row}c${col}" => {
                     width  => 16,
                     height => 8,
                     style  => { 'background-color' => $color },
