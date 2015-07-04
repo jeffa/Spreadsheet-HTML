@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.35
+
 0.34
     - !API change: 
         -rowX is now -rX
