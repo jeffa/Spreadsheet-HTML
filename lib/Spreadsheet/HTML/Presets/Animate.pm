@@ -8,20 +8,20 @@ sub _javascript {
     my %args = @_;
 
     my %fmap = (
-        right => { fx => 1,  fy => 0 },
+        right => { fx =>  1, fy => 0 },
         left  => { fx => -1, fy => 0 },
-        up    => { fy => 1,  fx => 0 },
+        up    => { fy =>  1, fx => 0 },
         down  => { fy => -1, fx => 0 },
     );
 
     my %bmap = (
-        right => { bx => 1,  by => 0 },
+        right => { bx =>  1, by => 0 },
         left  => { bx => -1, by => 0 },
-        up    => { by => 1,  bx => 0 },
+        up    => { by =>  1, bx => 0 },
         down  => { by => -1, bx => 0 },
     );
 
-    $args{fx} ||= $fmap{ $args{fgdirection} }{fx};
+    $args{fx} = (defined $args{fx} or defined $args{fy}) ? $args{fx} : $fmap{ $args{fgdirection} }{fx};
     $args{fy} ||= $fmap{ $args{fgdirection} }{fy};
     $args{bx} ||= $bmap{ $args{bgdirection} }{bx};
     $args{by} ||= $bmap{ $args{bgdirection} }{by};
