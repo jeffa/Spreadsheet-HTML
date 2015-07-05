@@ -649,7 +649,7 @@ to the cell at row X and column X. (0 index based)
 =head2 TAG PARAMETERS
 
 Tag parameters provide a means to control the attributes
-of the table's tags, and in the case of <td> and <tr> the
+of the table's tags, and in the case of <td> and <th> the
 contents via callback subroutines. Although similar in form,
 they are differentiated from litertal parameters because they
 share the names of the actual HTML table tags.
