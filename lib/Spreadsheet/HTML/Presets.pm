@@ -53,7 +53,7 @@ sub checkerboard {
         headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
         wrap => 0,
-        td => { %{ $args->{td} || {} }, style  => { 'background-color' => $colors } },
+        td => { %{ $args->{td} || {} }, style  => { %{ $args->{td}{style} || {} }, 'background-color' => $colors } },
     );
 
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
