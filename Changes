@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 0.35
+    - chess and checkers have moving pieces
+    - animate() no longer forces fx = 1
 
 0.34
     - !API change: 

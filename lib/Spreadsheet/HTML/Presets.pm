@@ -4,8 +4,9 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
 use Spreadsheet::HTML::Presets::Animate;
-use Spreadsheet::HTML::Presets::Conway;
 use Spreadsheet::HTML::Presets::Calculator;
+use Spreadsheet::HTML::Presets::Conway;
+use Spreadsheet::HTML::Presets::Chess;
 
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
@@ -389,36 +390,44 @@ sub calendar {
 }
 
 sub checkers {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     my @data = (
-        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
-        [ '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '' ],
-        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
-        [], [],
-        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
-        [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ],
-        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
+        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
+        [ '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '' ],
+        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
+        [ ('') x 8 ], [ ('') x 8 ],
+        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
+        [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ],
+        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
     );
+
+    my $sub = sub { sprintf '<div class="game-piece">%s</div>', shift };
 
     my @args = (
         table => {
             width => '65%',
             style => {
                 border => 'thick outset',
+                %{ $args->{table}{style} || {} },
             },
-        },
-        td => {
-            height => 65,
-            width  => 65,
-            align  => 'center',
-            style  => { 
-                'font-size' => 'xx-large',
-                border => 'thin inset',
-                'background-color' => [ ('white', 'red')x4, ('red', 'white')x4 ]
-            }
+            %{ $args->{table} || {} },
         },
         @_,
+        td => [
+            {
+                height => 65,
+                width  => 65,
+                align  => 'center',
+                style  => { 
+                    'font-size' => 'xx-large',
+                    border => 'thin inset',
+                    'background-color' => [ ('white', 'red')x4, ('red', 'white')x4 ]
+                }
+            }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
+        ],
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
@@ -428,16 +437,22 @@ sub checkers {
         data     => \@data,
     );
 
-    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    my $js = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
+    delete $args->{$_} for qw( jquery jqueryui );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
 }
 
 sub chess {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     my @data = (
         [ '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' ],
         [ '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;' ],
-        [], [], [], [],
+        [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ],
         [ '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;' ],
         [ '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' ],
     );
@@ -447,19 +462,23 @@ sub chess {
             width => '65%',
             style => {
                 border => 'thick outset',
+                %{ $args->{table}{style} || {} },
             },
-        },
-        td => {
-            height => 65,
-            width  => 65,
-            align  => 'center',
-            style  => { 
-                'font-size' => 'xx-large',
-                border => 'thin inset',
-                'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
-            }
+            %{ $args->{table} || {} },
         },
         @_,
+        td => [
+            {
+                height => 65,
+                width  => 65,
+                align  => 'center',
+                style  => { 
+                    'font-size' => 'xx-large',
+                    border => 'thin inset',
+                    'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
+                }
+            }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
+        ],
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
@@ -469,7 +488,11 @@ sub chess {
         data     => \@data,
     );
 
-    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    my $js = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
+    delete $args->{$_} for qw( jquery jqueryui );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
 }
 
 sub dk {
@@ -618,8 +641,6 @@ my $tmpl = '
 
 sub _js_wrapper {
     my %args = @_;
-
-    #'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
 
     unless ($NO_MINIFY) {
         $args{code} = JavaScript::Minifier::minify(
