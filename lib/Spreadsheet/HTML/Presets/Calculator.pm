@@ -5,7 +5,7 @@ use warnings FATAL => 'all';
 use Spreadsheet::HTML::Presets;
 
 sub _javascript {
-    return Spreadsheet::HTML::Presets::_html_tmpl( code => _js_tmpl(), @_ );
+    return Spreadsheet::HTML::Presets::_js_wrapper( code => _js_tmpl(), @_ );
 }
 
 sub _js_tmpl {

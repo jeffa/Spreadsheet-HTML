@@ -36,7 +36,7 @@ sub _javascript {
         $args{interval},
     ;
 
-    return Spreadsheet::HTML::Presets::_html_tmpl( code => $js, %args );
+    return Spreadsheet::HTML::Presets::_js_wrapper( code => $js, %args );
 }
 
 sub _js_tmpl {

@@ -616,10 +616,10 @@ my $tmpl = '
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
-sub _html_tmpl {
+sub _js_wrapper {
     my %args = @_;
 
-    $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+    #'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
 
     unless ($NO_MINIFY) {
         $args{code} = JavaScript::Minifier::minify(
@@ -629,12 +629,13 @@ sub _html_tmpl {
         );
     }
 
-    my $tmpl = <<'END_HTML';
-<script src="%s"></script>
-<script type="text/javascript">%s</script>
-END_HTML
+    $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
 
-    return sprintf $tmpl, $args{jquery}, $args{code};
+    my $html = sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jquery};
+    $html   .= sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jqueryui} if $args{jqueryui};
+    $html   .= sprintf qq{<script type="text/javascript">%s</script>\n}, $args{code};
+
+    return $html;
 }
 
 =head1 NAME
