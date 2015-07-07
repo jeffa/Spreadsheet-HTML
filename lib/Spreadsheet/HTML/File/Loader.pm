@@ -49,16 +49,16 @@ sub parse {
 }
 
 sub _attr_map {(
-    font        => [ 0, 'font-family: %s' ],
-    size        => [ 0, 'font-size: %s' ],
-    valign      => [ 0, 'vertical-align: %s' ],
-    halign      => [ 0, 'text-align: %s' ],
-    fgcolor     => [ 0, 'color: %s' ],
-    bgcolor     => [ 0, 'background-color: %s' ],
-    bold        => [ 1, 'font-weight: bold' ],
-    uline       => [ 1, 'text-decoration: underline' ],
-    italic      => [ 1, 'font-style: italic' ],
-    hidden      => [ 1, 'display: none' ],
+    font        => [ 0, 'font-family' ],
+    size        => [ 0, 'font-size' ],
+    valign      => [ 0, 'vertical-align' ],
+    halign      => [ 0, 'text-align' ],
+    fgcolor     => [ 0, 'color' ],
+    bgcolor     => [ 0, 'background-color' ],
+    bold        => [ 1, 'font-weight', 'bold' ],
+    uline       => [ 1, 'text-decoration', 'underline' ],
+    italic      => [ 1, 'font-style', 'italic' ],
+    hidden      => [ 1, 'display', 'none' ],
 )}
 
 =head1 NAME
