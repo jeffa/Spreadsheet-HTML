@@ -20,7 +20,7 @@ WriteMakefile(
     PREREQ_PM => {
         'Clone'             => 0,
         'Math::Matrix'      => 0.8,
-        'HTML::AutoTag'     => 0.03,
+        'HTML::AutoTag'     => 0.06,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Spreadsheet-HTML-*' },
