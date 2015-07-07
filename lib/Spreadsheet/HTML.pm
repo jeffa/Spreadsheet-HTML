@@ -321,15 +321,18 @@ Spreadsheet::HTML - Just another HTML table generator.
 
     # load from files (first table found)
     $generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+    print $generator->generate( encodes => '<>' );
 
-    # non OO
+Procedural interface:
+
     use Spreadsheet::HTML qw( portrait landscape );
+
     print portrait( $data, td => sub { sprintf "%02d", shift } );
     print landscape( $data, tr => { class => [qw(odd even)] } );
 
 =head1 DESCRIPTION
 
-Generate HTML4, XHTML and HTML5 tables with ease. Provides a handful
+Generate HTML tables with ease (HTML4, XHTML and HTML5). Provides a handful
 of distinctly named methods to control overall table orientation.
 These methods in turn accept a number of distinctly named attributes
 for directing what tags and attributes to use.
@@ -357,91 +360,35 @@ generating methods below:
 
 =item * C<north( %params )>
 
+Headers on top.
+
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
-
-  $html = $table->generate( table => {border => 1}, encode => '<>' );
-  print Spreadsheet::HTML::generate( data => $data, indent => "\t" );
-
-Headers on top. C<north()> is an alias for C<portrait()> which in turn
-calls C<generate> like so:
-
-  generate( theta => 0, %params )
 
 =item * C<landscape( %params )>
 
 =item * C<west( %params )>
 
+Headers on left.
+
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
 
-Headers on left. C<west()> is an alias for C<landscape()> which
-in turn calls C<generate> like so:
-
-  generate( theta => -270 )
-
 =item * C<south( %params )>
+
+Headers on bottom.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
 
-Headers on bottom. Same as
-
-  generate( theta => -180, pinhead => 1 )
-
 =item * C<east( %params )>
+
+Headers on right.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
 
-Headers on right. Same as
-
-  generate( theta => 90, pinhead => 1 )
-
 =back
-
-Because these methods are all essentially aliases for C<generate()>
-(with C<theta> being preset for you), you can override their behavior by
-calling C<generate()> with any configuration of parameters that you like.
-
-For most cases, C<portrait()> and C<landscape()> are all you need.
-Everything else is C<bells_and_whistles>.
-
-=head2 PRESETS
-
-The following presets are availble for creating tables that can be used
-with little to no additional coding.
-
-=over 4
-
-=item * C<layout( %params )>
-
-=item * C<conway( on, off, fade, jquery, %params )>
-
-=item * C<calculator( jquery, %params )>
-
-=item * C<calendar( month, year, %params )>
-
-=item * C<checkerboard( colors, %params )>
-
-=item * C<animate( fgdirection, bgdirection, jquery, %params )>
-
-=item * C<banner( on, off, text, font, %params )>
-
-=item * C<maze( %params )>
-
-=item * C<chess( %params )>
-
-=item * C<checkers( %params )>
-
-=item * C<dk( %params )>
-
-=item * C<shroom( %params )>
-
-=back
-
-See L<Spreadsheet::HTML::Presets> for more documentation (and the source
-for more usage examples).
 
 =head1 PARAMETERS
 
@@ -600,7 +547,7 @@ leading dashes to seperate them from literal and tag parameters.
 
 =item * C<-rX>
 
-Apply this callback subroutine to the entire row X.
+Apply this callback subroutine to all cells in row X.
 (0 index based)
 
   -r3 => sub { uc shift }
@@ -615,7 +562,7 @@ Or both:
 
 =item * C<-cX>
 
-Apply this callback to the entire column X.
+Apply this callback to all cells in column X.
 (0 index based)
 
   -c4 => sub { sprintf "%02d", shift || 0 }
@@ -649,7 +596,7 @@ to the cell at row X and column X. (0 index based)
 =head2 TAG PARAMETERS
 
 Tag parameters provide a means to control the attributes
-of the table's tags, and in the case of <td> and <th> the
+of the table's tags, and in the case of <th> and <td> the
 contents via callback subroutines. Although similar in form,
 they are differentiated from litertal parameters because they
 share the names of the actual HTML table tags.
@@ -707,6 +654,42 @@ Add col tag(s) to the table. Use an AoH for multiple. Wraps
 tags within a colgroup tag. Same usage as C<colgroup>.
 
 =back
+
+=head2 PRESETS
+
+The following presets are availble for creating tables that can be used
+with little to no additional coding.
+
+=over 4
+
+=item * C<layout( %params )>
+
+=item * C<conway( on, off, fade, jquery, %params )>
+
+=item * C<calculator( jquery, %params )>
+
+=item * C<calendar( month, year, %params )>
+
+=item * C<checkerboard( colors, %params )>
+
+=item * C<animate( fgdirection, bgdirection, jquery, %params )>
+
+=item * C<banner( on, off, text, font, %params )>
+
+=item * C<maze( %params )>
+
+=item * C<chess( %params )>
+
+=item * C<checkers( %params )>
+
+=item * C<dk( %params )>
+
+=item * C<shroom( %params )>
+
+=back
+
+See L<Spreadsheet::HTML::Presets> for more documentation (and the source
+for more usage examples).
 
 =head1 REQUIRES
 
