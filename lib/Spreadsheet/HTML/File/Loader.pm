@@ -7,7 +7,9 @@ eval "use Spreadsheet::Read";
 our $NOT_AVAILABLE = $@;
 
 sub parse {
-    my $file = shift;
+    my $args = shift;
+    my $file     = delete $args->{file};
+    my $preserve = delete $args->{preserve};
 
     if ($file =~ /\.html?$/) {
         return Spreadsheet::HTML::File::HTML::parse( $file );
@@ -20,8 +22,44 @@ sub parse {
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
 
-    return [ Spreadsheet::Read::rows( ReadData( $file )->[1] ) ];
+    my $parsed = ReadData( $file, attr => $preserve )->[1];
+
+    if ($preserve and ref $parsed->{attr} eq 'ARRAY' and scalar@{$parsed->{attr}}) {
+
+        my %attr_map = _attr_map();
+        for my $row (1 .. $#{ $parsed->{attr} }) {
+            for my $col (1 .. $#{ $parsed->{attr}[$row] }) {
+                my $attr = $parsed->{attr}[$row][$col];
+                my %styles;
+                for my $key (keys %$attr) {
+                    my $map = $attr_map{$key};
+                    next unless $map and $attr->{$key};
+                    if ($map->[0]) {
+                        $styles{$map->[1]} = $map->[2];
+                    } else {
+                        $styles{$map->[1]} = $attr->{$key};
+                    }
+                }
+                $args->{ sprintf '-r%sc%s', $col - 1, $row - 1 } = { style => { %styles } };
+            }
+        }
+    }
+
+    return [ Spreadsheet::Read::rows( $parsed ) ];
 }
+
+sub _attr_map {(
+    font        => [ 0, 'font-family: %s' ],
+    size        => [ 0, 'font-size: %s' ],
+    valign      => [ 0, 'vertical-align: %s' ],
+    halign      => [ 0, 'text-align: %s' ],
+    fgcolor     => [ 0, 'color: %s' ],
+    bgcolor     => [ 0, 'background-color: %s' ],
+    bold        => [ 1, 'font-weight: bold' ],
+    uline       => [ 1, 'text-decoration: underline' ],
+    italic      => [ 1, 'font-style: italic' ],
+    hidden      => [ 1, 'display: none' ],
+)}
 
 =head1 NAME
 

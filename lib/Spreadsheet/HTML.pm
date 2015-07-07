@@ -274,7 +274,7 @@ sub _args {
         $data = $self->{data} unless $data or $args->{file};
     }
 
-    $data = Spreadsheet::HTML::File::Loader::parse( $args->{file} ) if $args->{file};
+    $data = Spreadsheet::HTML::File::Loader::parse( $args ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
 
@@ -430,6 +430,14 @@ The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML and HTML (first table found).
 
   file => 'foo.json'
+
+=item * C<preserve>
+
+Can be supplied in addition to C<file>. Attempts to copy
+over all formatting styles from original document to table.
+Styles are not currently deduped, so use with care.
+
+  file => 'foo.xls', preserve => 1
 
 =item * C<fill>
 
