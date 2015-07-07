@@ -317,11 +317,11 @@ Spreadsheet::HTML - Just another HTML table generator.
 
     $generator = Spreadsheet::HTML->new( data => $data, indent => "\t" );
     print $generator->portrait;
-    print $generator->landscape;
+    print $generator->landscape( encodes => '<>' );
 
     # load from files (first table found)
     $generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
-    print $generator->generate( encodes => '<>' );
+    print $generator->generate( preserve => 1 );
 
 Procedural interface:
 
@@ -435,7 +435,9 @@ are XLS, CSV, JSON, YAML and HTML (first table found).
 
 Can be supplied in addition to C<file>. Attempts to copy
 over all formatting styles from original document to table.
-Styles are not currently deduped, so use with care.
+Styles are not currently deduped, so use with care as the
+final output will contain a lot of redundant cell styles.
+Work is being done to alleviate this.
 
   file => 'foo.xls', preserve => 1
 
