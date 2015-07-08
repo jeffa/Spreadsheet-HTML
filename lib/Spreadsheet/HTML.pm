@@ -229,16 +229,24 @@ sub _colgroup {
 
     if (ref($args{col}) eq 'ARRAY') {
 
-        @colgroup = ({
-            tag   => 'colgroup',
-            attr  => $args{colgroup},
-            cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
-        }); 
+        if (ref $args{colgroup} eq 'ARRAY') {
+            @colgroup = map {
+                tag   => 'colgroup',
+                attr  => $_,
+                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
+            }, @{ $args{colgroup} }; 
+        } else {
+            @colgroup = {
+                tag   => 'colgroup',
+                attr  => $args{colgroup},
+                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
+            }; 
+        }
 
     } else {
 
         $args{colgroup} = [ $args{colgroup} ] if ref($args{colgroup}) eq 'HASH';
-        if (ref($args{colgroup}) eq 'ARRAY') {
+        if (ref $args{colgroup} eq 'ARRAY') {
             @colgroup = map { tag => 'colgroup', attr => $_ }, @{ $args{colgroup} };
         }
     }
