@@ -154,15 +154,15 @@ sub sudoku {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-    $args->{attempts}   = int($args->{attempts} || 0) || 4;
-    $args->{size}       = int($args->{size} || 0)     || 9;
-    $args->{blanks}     = int($args->{blanks} || 0)   || 50;
+    $args->{attempts}   = defined $args->{attempts} ? int($args->{attempts} || 0) : 4;
+    $args->{blanks}     = int($args->{blanks}   || 0) || 50;
+    $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
 
     my @cells;
     unless ($NO_SUDOKU) {
         my ($solved,$unsolved) = ('','');
         my $board = Games::Sudoku::Component->new( size => $args->{size} );
-        while (!$board->is_solved and --$args->{attempts} > 0) {
+        while (!$board->is_solved and $args->{attempts}-- > 0) {
             $board->generate( blanks => $args->{blanks} );
             $unsolved = $board->as_string;
             $board->solve;
@@ -186,8 +186,8 @@ sub sudoku {
         @cells,
         table    => { style => { 'border-collapse' => 'collapse' } },
         td       => { style => { border => 'solid thin' } },
-        colgroup => [ ({ style => { border => 'solid medium' } }) x 3 ],
-        col      => [ ({}) x 3 ],
+        colgroup => [ ({ style => { border => 'solid medium' } }) x int(sqrt( $args->{size} )) ],
+        col      => [ ({}) x int(sqrt( $args->{size} )) ],
         data     => [],
         fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
         wrap     => 0,
@@ -830,13 +830,19 @@ Generates a static maze.
 
   maze( fill => '10x10', on => 'red', off => 'black' ) 
 
-=item * C<sudoku( size, blanks, %params )>
+=item * C<sudoku( blanks, attempts, %params )>
 
-Generates a static unsolved sudoku board. You must have
+Generates a static unsolved 9x9 sudoku board. You must have
 L<Games::Sudoku::Component> installed, which currently
-has no dependencies and is very fast and reliable.
+has no dependencies and is very fast and reliable. You can
+specify how many cells to leave unsolved with C<blanks>.
 
-  sudoku( size => 9, blanks => 50 ) 
+  sudoku( blanks => 50 ) 
+
+Four attempts are made to find a solveable board, you can
+override with C<attempts>.
+
+  sudoku( attempts => 1 ) 
 
 =item * C<checkers( %params )>
 

@@ -714,7 +714,7 @@ with little to no additional coding.
 
 =item * C<maze( on, off, fill, %params )>
 
-=item * C<sudoku( size, blanks, %params )>
+=item * C<sudoku( blanks, attempts, %params )>
 
 =item * C<chess( %params )>
 

@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 26;
+use Test::More tests => 28;
 
 use Spreadsheet::HTML;
 
@@ -16,14 +16,17 @@ ok Spreadsheet::HTML::checkerboard,         "checkerboard by procedure";
 ok $table->animate,                         "animate by method";
 ok Spreadsheet::HTML::animate,              "animate by procedure";
 
-ok $table->generate( animate => 1 ),            "animate by method";
-ok Spreadsheet::HTML::generate( animate => 1 ), "animate by procedure";
+ok $table->generate( animate => 1 ),            "animate by method param";
+ok Spreadsheet::HTML::generate( animate => 1 ), "animate by procedure param";
 
 ok $table->banner,                          "banner by method";
 ok Spreadsheet::HTML::banner,               "banner by procedure";
 
 ok $table->calendar,                        "calendar by method";
 ok Spreadsheet::HTML::calendar,             "calendar by procedure";
+
+ok $table->sudoku( attempts => 0 ),             "sudoku by method";
+ok Spreadsheet::HTML::sudoku( attempts => 0 ),  "sudoku by procedure";
 
 ok $table->maze,                            "maze by method";
 ok Spreadsheet::HTML::maze,                 "maze by procedure";
