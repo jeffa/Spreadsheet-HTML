@@ -183,15 +183,16 @@ sub _make_table {
 
     if ($args{tgroups}) {
 
-        my ($head, @body) = @{ $args{data} };
-        my $foot = pop @body if $args{tgroups} > 1 and scalar @{ $args{data} } > 2;
+        my @body = @{ $args{data} };
+        my $head = shift @body unless $args{matrix}  and scalar @{ $args{data} } > 2;
+        my $foot = pop   @body if $args{tgroups} > 1 and scalar @{ $args{data} } > 2 and !$args{matrix};
 
         my $head_row  =     { tag => 'tr', attr => $args{tr}, cdata => $head };
         my $foot_row  =     { tag => 'tr', attr => $args{tr}, cdata => $foot };
         my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
 
         push @cdata, (
-            { tag => 'thead', attr => $args{thead}, cdata => $head_row },
+            ( $head ? { tag => 'thead', attr => $args{thead}, cdata => $head_row } : () ),
             ( $foot ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row } : () ),
             { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] }
         );

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.35
+    - no thead or tfoot for matrix (only tbody)
     - added sudoku() preset (static unsolved board)
     - can now emit multiple colgroup tags
     - added preserve attr for preserving attrs from loaded files
