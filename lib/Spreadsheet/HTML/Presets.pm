@@ -154,9 +154,9 @@ sub sudoku {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-    $args->{attempts}   = int($args->{attempts}) || 4;
-    $args->{size}       = int($args->{size})     || 9;
-    $args->{blanks}     = int($args->{blanks})   || 50;
+    $args->{attempts}   = int($args->{attempts} || 0) || 4;
+    $args->{size}       = int($args->{size} || 0)     || 9;
+    $args->{blanks}     = int($args->{blanks} || 0)   || 50;
 
     my @cells;
     unless ($NO_SUDOKU) {
@@ -167,11 +167,31 @@ sub sudoku {
             $unsolved = $board->as_string;
             $board->solve;
         }
-        $solved = $board->as_string if $board->is_solved; 
-        print STDERR "$unsolved\n\n$solved\n\n";
+
+        if ($board->is_solved) {
+            my @lines = split /\n/, $unsolved;
+            my $attr = { width  => 26, height => 26 };
+            for my $row (0 .. $#lines) {
+                my @chars = split /\s/, $lines[$row];
+                for my $col (0 .. $#chars) {
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input type="text" size="1" />' };
+                    push @cells, ( "-r${row}c${col}" => [ $attr, $sub ] );
+                }
+            }
+        }
     }
 
-    my @args;
+    my @args = (
+        table => { border => 1 },
+        @_,
+        @cells,
+        data     => [],
+        fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
+        wrap     => 0,
+        theta    => 0,
+        headless => 0,
+        matrix   => 1,
+    );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
