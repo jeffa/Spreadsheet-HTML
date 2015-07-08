@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 9;
+use Test::More tests => 12;
 
 use Spreadsheet::HTML;
 
@@ -50,3 +50,17 @@ is $table->generate( matrix => 1, tgroups => 1 ),
 is $table->generate( matrix => 1, tgroups => 2 ),
     '<table><tbody><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
     "thead and tfoot ommited for matrix when tgroups is 2";
+
+is $table->generate( group => 2 ),
+    '<table><thead><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tfoot><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tfoot><tbody><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr></tbody><tbody><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr></tbody></table>',
+    "group chunks and wraps chunks in tbody tags (strict)";
+
+
+is $table->generate( tgroups => 1, group => 2 ),
+    '<table><thead><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tbody><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr></tbody><tbody><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
+    "group chunks and wraps chunks in tbody tags (loose)";
+
+
+is $table->generate( matrix => 1, tgroups => 1, group => 2 ),
+    '<table><tbody><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr></tbody><tbody><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr></tbody><tbody><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
+    "group chunks and wraps chunks in tbody tags (matrix)";

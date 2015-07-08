@@ -184,18 +184,29 @@ sub _make_table {
     if ($args{tgroups}) {
 
         my @body = @{ $args{data} };
-        my $head = shift @body unless $args{matrix}  and scalar @{ $args{data} } > 2;
-        my $foot = pop   @body if $args{tgroups} > 1 and scalar @{ $args{data} } > 2 and !$args{matrix};
+        my $head = shift @body unless $args{matrix} and scalar @{ $args{data} } > 2;
+        my $foot = pop @body if !$args{matrix} and $args{tgroups} > 1 and scalar @{ $args{data} } > 2;
 
-        my $head_row  =     { tag => 'tr', attr => $args{tr}, cdata => $head };
-        my $foot_row  =     { tag => 'tr', attr => $args{tr}, cdata => $foot };
-        my @body_rows = map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body;
+        my $head_row  = { tag => 'tr', attr => $args{tr}, cdata => $head };
+        my $foot_row  = { tag => 'tr', attr => $args{tr}, cdata => $foot };
+        my $body_rows = [ map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body ];
+
+        if (int($args{group} || 0) > 1) {
+            $body_rows = [
+                map [ @$body_rows[$_ .. $_ + $args{group} - 1] ],
+                _range( 0, $#$body_rows, $args{group} )
+            ];
+            pop @{ $body_rows->[-1] } while !defined $body_rows->[-1][-1];
+        } else {
+            $body_rows = [ $body_rows ];
+        }
 
         push @cdata, (
             ( $head ? { tag => 'thead', attr => $args{thead}, cdata => $head_row } : () ),
             ( $foot ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row } : () ),
-            { tag => 'tbody', attr => $args{tbody}, cdata => [@body_rows] }
+            ( map { tag => 'tbody', attr => $args{tbody}, cdata => [ @$_ ] }, @$body_rows ),
         );
+
 
     } else {
         push @cdata, map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @{ $args{data} };
@@ -531,6 +542,15 @@ of the <tbody> section instead. (loose)
 
 When C<tgroups> is set to 2, the <tfoot> section is found
 in between the <thead> and <tbody> sections. (strict)
+
+=item * C<group>
+
+Will chunk body rows into tbody groups of size C<group>.
+
+  group => 4
+
+Currently only accepts integers although it should be possilbe
+to group by changes in a column in the future.
 
 =item * C<cache: 0 or 1>
 
