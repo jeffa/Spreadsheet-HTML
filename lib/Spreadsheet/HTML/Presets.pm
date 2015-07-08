@@ -151,7 +151,6 @@ sub banner {
 }
 
 sub sudoku {
-    no warnings;
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
@@ -179,7 +178,6 @@ sub sudoku {
 }
 
 sub maze {
-    no warnings;
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
@@ -212,7 +210,7 @@ sub maze {
                 [ 2, $grid[ $curr->{y} ][ $curr->{x} + 1 ] ], # east
                 [ 1, $grid[ $curr->{y} + 1 ][ $curr->{x} ] ], # south
                 [ 0, $grid[ $curr->{y} ][ $curr->{x} - 1 ] ], # west
-            ) { push @neighbors, $_ if List::Util::sum( @{ $_->[1]->{walls} } ) == 4 }
+            ) { no warnings; push @neighbors, $_ if List::Util::sum( @{ $_->[1]->{walls} } ) == 4 }
 
             if (@neighbors) {
                 my ($pos,$cell) = @{ $neighbors[rand @neighbors] };
