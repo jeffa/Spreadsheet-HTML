@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.35
+    - added sudoku() preset (static unsolved board)
     - added preserve attr for preserving attrs from loaded files
     - require HTML::AutoTag v0.06
     - chess and checkers have moving pieces

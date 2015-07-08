@@ -18,6 +18,8 @@ eval "use Time::Piece";
 our $NO_TIMEPIECE = $@;
 eval "use List::Util";
 our $NO_LISTUTIL = $@;
+eval "use Games::Sudoku::Component";
+our $NO_SUDOKU = $@;
 
 sub layout {
     my ($self,$data,$args);
@@ -143,6 +145,34 @@ sub banner {
         @cells,
         wrap => 0,
     );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $table;
+}
+
+sub sudoku {
+    no warnings;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+    $args->{attempts}   = int($args->{attempts}) || 4;
+    $args->{size}       = int($args->{size})     || 9;
+    $args->{blanks}     = int($args->{blanks})   || 50;
+
+    my @cells;
+    unless ($NO_SUDOKU) {
+        my ($solved,$unsolved) = ('','');
+        my $board = Games::Sudoku::Component->new( size => $args->{size} );
+        while (!$board->is_solved and --$args->{attempts} > 0) {
+            $board->generate( blanks => $args->{blanks} );
+            $unsolved = $board->as_string;
+            $board->solve;
+        }
+        $solved = $board->as_string if $board->is_solved; 
+        print STDERR "$unsolved\n\n$solved\n\n";
+    }
+
+    my @args;
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
@@ -778,6 +808,14 @@ Default rules still apply to styling columns by any heading:
 Generates a static maze.
 
   maze( fill => '10x10', on => 'red', off => 'black' ) 
+
+=item * C<sudoku( size, blanks, %params )>
+
+Generates a static unsolved sudoku board. You must have
+L<Games::Sudoku::Component> installed, which currently
+has no dependencies and is very fast and reliable.
+
+  sudoku( size => 9, blanks => 50 ) 
 
 =item * C<checkers( %params )>
 

@@ -8,7 +8,7 @@ our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west
     layout checkerboard animate
-    chess checkers conway
+    chess checkers conway sudoku
     calculator dk shroom
     calendar banner maze
 );
@@ -32,6 +32,7 @@ sub conway          { Spreadsheet::HTML::Presets::conway(           @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::calculator(       @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
+sub sudoku          { Spreadsheet::HTML::Presets::sudoku(           @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
@@ -703,7 +704,9 @@ with little to no additional coding.
 
 =item * C<banner( on, off, text, font, %params )>
 
-=item * C<maze( %params )>
+=item * C<maze( on, off, fill, %params )>
+
+=item * C<sudoku( size, blanks, %params )>
 
 =item * C<chess( %params )>
 
