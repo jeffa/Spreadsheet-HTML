@@ -182,9 +182,12 @@ sub sudoku {
     }
 
     my @args = (
-        table => { border => 1 },
         @_,
         @cells,
+        table    => { style => { 'border-collapse' => 'collapse' } },
+        td       => { style => { border => 'solid thin' } },
+        colgroup => [ ({ style => { border => 'solid medium' } }) x 3 ],
+        col      => [ ({}) x 3 ],
         data     => [],
         fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
         wrap     => 0,
