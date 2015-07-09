@@ -825,15 +825,6 @@ value contol, rotating attributes and totals/subtotals.
 
 =head1 BUGS AND LIMITATIONS
 
-Support for <col> and <colgroup> has not been adequately tested
-as i honestly do not fully understand why two tags exist when
-one should do the trick. If you cannot achieve the behavior you
-desire from this module's generation of <col> and <colgroup>
-tags please feel free to submit a detailed bug report. The same
-goes for colspan and rowspan attributes -- very little testing
-has been done because this module can limit its problem domain
-to grid like tables of equal sized cells. But if there's a way ...
-
 Please report any bugs or feature requests to either
 
 =over 4
