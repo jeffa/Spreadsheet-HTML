@@ -8,7 +8,6 @@ sub _javascript {
     my %args = @_;
 
     my $js = sprintf _js_tmpl(),
-        $args{solved},
     ;
 
     $args{jqueryui} = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
@@ -22,14 +21,11 @@ sub _js_tmpl {
 /* Copyright (C) 2015 Jeff Anderson */
 /* install JavaScript::Minifier to minify this code */
 
-var solution = '%s';
-
 $(document).ready(function(){
 
-    $('input').keyup(function () { 
+    $('input.sudoku').keyup(function () { 
         this.value = this.value.replace(/[^0-9\.]/g,'');
     });
-
 
 });
 

@@ -173,7 +173,7 @@ sub sudoku {
             for my $row (0 .. $#lines) {
                 my @chars = split /\s/, $lines[$row];
                 for my $col (0 .. $#chars) {
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" style="text-align: center; border: 0px; font-size: medium; color: red"/>' };
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" maxlength="1" style="text-align: center; border: 0px; font-size: medium; color: red"/>' };
                     push @cells, ( "-r${row}c${col}" => $sub );
                 }
             }
