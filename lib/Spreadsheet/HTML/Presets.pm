@@ -170,12 +170,11 @@ sub sudoku {
 
         if ($board->is_solved) {
             my @lines = split /\n/, $unsolved;
-            my $attr = { width  => 26, height => 26 };
             for my $row (0 .. $#lines) {
                 my @chars = split /\s/, $lines[$row];
                 for my $col (0 .. $#chars) {
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input type="text" size="1" />' };
-                    push @cells, ( "-r${row}c${col}" => [ $attr, $sub ] );
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="3" style="text-align: center; font-family: arial;"/>' };
+                    push @cells, ( "-r${row}c${col}" => $sub );
                 }
             }
         }
@@ -186,7 +185,7 @@ sub sudoku {
         @cells,
         table    => { style => { 'border-collapse' => 'collapse' } },
         tbody    => { style => { border => 'solid medium' } },
-        td       => { style => { border => 'solid thin' } },
+        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => 0, 'font-family' => 'arial' } },
         colgroup => [ ({ style => { border => 'solid medium' } }) x int(sqrt( $args->{size} )) ],
         col      => [ ({}) x int(sqrt( $args->{size} )) ],
         data     => [],
