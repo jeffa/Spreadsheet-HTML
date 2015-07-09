@@ -34,10 +34,10 @@ $(document).ready( function() {
         var rows = new Array(); 
         for (var col = 0; col < ROW; col++) {
             var id = row + '-' + col;
-            if ($('input-' + id).id) {
-                alert( 'this is an input cell: ' + $('input-' + id).id );
+            if ($('#input-' + id).attr( 'id' )) {
+                rows.push( $('#input-' + id).val() );
             } else {
-                alert( 'this is a regular cell: ' + $('td-' + id).id );
+                rows.push( $('#td-' + id).html() );
             }
         }
         MATRIX.push( rows );
@@ -47,54 +47,24 @@ $(document).ready( function() {
         this.value = this.value.replace( /[^0-9]/g, '' );
 
         var matches = this.id.match( /(\d+)-(\d+)/ );
-        MATRIX[matches[1]][matches[2]] = this.value;
+        var id_r = matches[1];
+        var id_c = matches[2];
+
+        var seen_r = {};
+        var seen_c = {};
+        for (var i = 0; i < ROW; i++) {
+            seen_r[ MATRIX[id_r][i] ] = true;
+            seen_c[ MATRIX[i][id_c] ] = true;
+        }
+
+        if (seen_r[this.value] || seen_c[this.value]) {
+            this.value = '';
+        } else {
+            MATRIX[matches[1]][matches[2]] = this.value;
+        }
     });
 
 });
-
-
-/*
-$("tr.item").each(function() {
-    $this = $(this)
-    var value = $this.find("span.value").html();
-    var quantity = $this.find("input.quantity").val();
-});
-*/
-
-$(document).keydown( function(e) {
-
-    switch(e.which) {
-        case 37: // left
-        next_x = -1;
-        break;
-
-        case 38: // up
-        next_y = -1;
-        break;
-
-        case 39: // right
-        next_x = 1;
-        break;
-
-        case 40: // down
-        next_y = 1;
-        break;
-
-        default: return;
-    } 
-    e.preventDefault();
-
-    if (next_x) {
-
-        next_x = 0;
-    }
-    if (next_y) {
-
-        next_y = 0;
-    }
-
-});
-
 
 END_JAVASCRIPT
 }
