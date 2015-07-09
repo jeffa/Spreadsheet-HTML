@@ -59,9 +59,9 @@ $(document).ready( function() {
 
         if (seen_r[this.value] || seen_c[this.value]) {
             this.value = '';
-        } else {
-            MATRIX[matches[1]][matches[2]] = this.value;
         }
+
+        MATRIX[matches[1]][matches[2]] = this.value;
     });
 
 });
