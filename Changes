@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.36
+
 0.35
     - added sudoku() preset
     - no thead or tfoot for matrix (only tbody)
