@@ -8,9 +8,9 @@ sub _javascript {
     my %args = @_;
 
     my $js = sprintf _js_tmpl(),
+        $args{size},
+        $args{size},
     ;
-
-    $args{jqueryui} = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
 
     return Spreadsheet::HTML::Presets::_js_wrapper( code => $js, %args );
 }
@@ -21,13 +21,80 @@ sub _js_tmpl {
 /* Copyright (C) 2015 Jeff Anderson */
 /* install JavaScript::Minifier to minify this code */
 
-$(document).ready(function(){
+var ROW = %s;
+var COL = %s;
+var MATRIX;
+var next_x = 0;
+var next_y = 0;
+
+$(document).ready( function() {
+
+    MATRIX = new Array();
+    for (var row = 0; row < ROW; row++) {
+        var rows = new Array(); 
+        for (var col = 0; col < ROW; col++) {
+            var id = row + '-' + col;
+            if ($('input-' + id).id) {
+                alert( 'this is an input cell: ' + $('input-' + id).id );
+            } else {
+                alert( 'this is a regular cell: ' + $('td-' + id).id );
+            }
+        }
+        MATRIX.push( rows );
+    }
 
     $('input.sudoku').keyup(function () { 
-        this.value = this.value.replace(/[^0-9\.]/g,'');
+        this.value = this.value.replace( /[^0-9]/g, '' );
+
+        var matches = this.id.match( /(\d+)-(\d+)/ );
+        MATRIX[matches[1]][matches[2]] = this.value;
     });
 
 });
+
+
+/*
+$("tr.item").each(function() {
+    $this = $(this)
+    var value = $this.find("span.value").html();
+    var quantity = $this.find("input.quantity").val();
+});
+*/
+
+$(document).keydown( function(e) {
+
+    switch(e.which) {
+        case 37: // left
+        next_x = -1;
+        break;
+
+        case 38: // up
+        next_y = -1;
+        break;
+
+        case 39: // right
+        next_x = 1;
+        break;
+
+        case 40: // down
+        next_y = 1;
+        break;
+
+        default: return;
+    } 
+    e.preventDefault();
+
+    if (next_x) {
+
+        next_x = 0;
+    }
+    if (next_y) {
+
+        next_y = 0;
+    }
+
+});
+
 
 END_JAVASCRIPT
 }

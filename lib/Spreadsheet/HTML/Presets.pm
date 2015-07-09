@@ -154,7 +154,7 @@ sub sudoku {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
     $args->{attempts}   = defined $args->{attempts} ? int($args->{attempts} || 0) : 4;
-    $args->{blanks}     = int($args->{blanks}   || 0) || 50;
+    $args->{blanks}     = int($args->{blanks} || 0) || 50;
     $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
 
     my @cells;
@@ -167,14 +167,19 @@ sub sudoku {
             $board->solve;
         }
 
+        my %td_attr = ( style => { border => 'solid thin', 'text-align' => 'center', padding => '.5em', 'font-family' => 'Lucida Grande' } );
+        my $auto = HTML::AutoTag->new;
+        my %input_attr = ( class => 'sudoku', size=> 1, style => { 'text-align' => 'center', border => '0px', 'font-size' => 'medium',  color => 'red' } );
+
         if ($board->is_solved) {
             $solved = $board->as_string;
             my @lines = split /\n/, $unsolved;
             for my $row (0 .. $#lines) {
                 my @chars = split /\s/, $lines[$row];
                 for my $col (0 .. $#chars) {
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" maxlength="1" style="text-align: center; border: 0px; font-size: medium; color: red"/>' };
-                    push @cells, ( "-r${row}c${col}" => $sub );
+                    my $id  = "${row}-${col}";
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { $auto->tag( tag => 'input', attr => { %input_attr, id => "input-$id" } ) };
+                    push @cells, ( "-r${row}c${col}" => [ { %td_attr, id => "td-$id" }, $sub ] );
                 }
             }
         }
@@ -184,9 +189,9 @@ sub sudoku {
     my @args = (
         @_,
         @cells,
-        table    => { style => { 'border-collapse' => 'collapse' } },
+        table    => { id => 'sudoku', style => { 'border-collapse' => 'collapse' } },
         tbody    => { style => { border => 'solid medium' } },
-        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => '.5em', 'font-family' => 'Lucida Grande' } },
+        tr       => { id => [ map "sudoku-$_", 0 .. $sqrt - 1] },
         colgroup => [ ({ style => { border => 'solid medium' } }) x $sqrt ],
         col      => [ ({}) x $sqrt ],
         data     => [],
@@ -200,7 +205,7 @@ sub sudoku {
         animate  => 0,
     );
 
-    my $js    = Spreadsheet::HTML::Presets::Sudoku::_javascript( %$args, solved => $solved );
+    my $js    = Spreadsheet::HTML::Presets::Sudoku::_javascript( %$args );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
