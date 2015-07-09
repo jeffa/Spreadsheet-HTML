@@ -7,6 +7,7 @@ use Spreadsheet::HTML::Presets::Animate;
 use Spreadsheet::HTML::Presets::Calculator;
 use Spreadsheet::HTML::Presets::Conway;
 use Spreadsheet::HTML::Presets::Chess;
+use Spreadsheet::HTML::Presets::Sudoku;
 
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
@@ -89,8 +90,6 @@ sub animate {
     );
 
     my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
-    delete $args->{$_} for qw( fgdirection bgdirection fx fy bx by interval jquery );
-
     return( $js, @args ) if $args->{animate};
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
@@ -159,8 +158,8 @@ sub sudoku {
     $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
 
     my @cells;
+    my ($solved,$unsolved) = ('','');
     unless ($NO_SUDOKU) {
-        my ($solved,$unsolved) = ('','');
         my $board = Games::Sudoku::Component->new( size => $args->{size} );
         while (!$board->is_solved and $args->{attempts}-- > 0) {
             $board->generate( blanks => $args->{blanks} );
@@ -169,37 +168,41 @@ sub sudoku {
         }
 
         if ($board->is_solved) {
+            $solved = $board->as_string;
             my @lines = split /\n/, $unsolved;
             for my $row (0 .. $#lines) {
                 my @chars = split /\s/, $lines[$row];
                 for my $col (0 .. $#chars) {
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" style="text-align: center; border: 0px; font-size: medium"/>' };
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" style="text-align: center; border: 0px; font-size: medium; color: red"/>' };
                     push @cells, ( "-r${row}c${col}" => $sub );
                 }
             }
         }
     }
 
+    my $sqrt = int(sqrt( $args->{size} ));
     my @args = (
         @_,
         @cells,
         table    => { style => { 'border-collapse' => 'collapse' } },
         tbody    => { style => { border => 'solid medium' } },
-        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => '.7em', 'font-family' => 'Lucida Grande' } },
-        colgroup => [ ({ style => { border => 'solid medium' } }) x int(sqrt( $args->{size} )) ],
-        col      => [ ({}) x int(sqrt( $args->{size} )) ],
+        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => '.5em', 'font-family' => 'Lucida Grande' } },
+        colgroup => [ ({ style => { border => 'solid medium' } }) x $sqrt ],
+        col      => [ ({}) x $sqrt ],
         data     => [],
         fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
         wrap     => 0,
         tgroups  => 1,
-        group    => 3,
-        theta    => 0,
-        headless => 0,
+        group    => $sqrt,
         matrix   => 1,
+        headless => 0,
+        theta    => 0,
+        animate  => 0,
     );
 
+    my $js    = Spreadsheet::HTML::Presets::Sudoku::_javascript( %$args, solved => $solved );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $table;
+    return $js . $table;
 }
 
 sub maze {
@@ -377,9 +380,7 @@ sub conway {
         @_,
     );
 
-    my $js = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
-    delete $args->{$_} for qw( jquery off on colors fade interval );
-
+    my $js    = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
@@ -490,9 +491,7 @@ sub checkers {
         data     => \@data,
     );
 
-    my $js = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
-    delete $args->{$_} for qw( jquery jqueryui );
-
+    my $js    = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
@@ -541,9 +540,7 @@ sub chess {
         data     => \@data,
     );
 
-    my $js = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
-    delete $args->{$_} for qw( jquery jqueryui );
-
+    my $js    = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
@@ -859,57 +856,6 @@ Generates a static chess game board.
 =item * C<shroom( %params )>
 
 =back
-
-=head1 CUSTOMIZATION
-
-You can use the methods in this package as an example for
-constructing your own custom Spreadsheet::HTML generators.
-
-  use Spreadsheet::HTML;
-
-  sub my_generator {
-      my ($self,$data,$params);
-      $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-      ($self,$data,$params) = $self 
-          ? $self->_args( @_ ) 
-          : Spreadsheet::HTML::_args( @_ );
-
-      # pull out custom named parameters from $params
-      my $color = $params->{color};
-
-      my @params = (
-          # add custom params that client CAN overide here
-          @_,
-          # add custom params that client can NOT overide here
-      );
-
-      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
-  }
-
-It is not pretty, but it keeps the named parameters in line even
-if stray, bare array references are used by the client:
-
-  $table->my_generator( [ 'data here' ], color => 'red' );
-
-A simpler, less flexible form is available if you do not need to
-pull out client params:
-
-  use Spreadsheet::HTML;
-
-  sub my_generator {
-      my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-
-      my @params = (
-          # add custom params that client CAN overide here
-          @_,
-          # add custom params that client can NOT overide here
-      );
-
-      $self ? $self->generate( @params ) : Spreadsheet::HTML::generate( @params );
-  }
-
-Plans are in the works to simplify this "API," possibly even
-to provide a real plugin interface.
 
 =head1 AUTHOR
 
