@@ -452,6 +452,14 @@ are XLS, CSV, JSON, YAML and HTML (first table found).
 
   file => 'foo.json'
 
+If you want to filter your database queries then install
+L<DBIx::HTML> which uses this module as its generator.
+
+  use DBIx::HTML;
+  my $generator = DBIx::HTML->connect( @db_credentials );
+  $generator->do( $query, @bind_args );
+  print $table->portrait( %params );
+
 =item * C<preserve>
 
 Can be supplied in addition to C<file>. Attempts to copy
