@@ -173,7 +173,7 @@ sub sudoku {
             for my $row (0 .. $#lines) {
                 my @chars = split /\s/, $lines[$row];
                 for my $col (0 .. $#chars) {
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="3" style="text-align: center; font-family: arial;"/>' };
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { '<input class="sudoku" size="1" style="text-align: center; border: 0px; font-size: medium"/>' };
                     push @cells, ( "-r${row}c${col}" => $sub );
                 }
             }
@@ -185,7 +185,7 @@ sub sudoku {
         @cells,
         table    => { style => { 'border-collapse' => 'collapse' } },
         tbody    => { style => { border => 'solid medium' } },
-        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => 0, 'font-family' => 'arial' } },
+        td       => { style => { border => 'solid thin', 'text-align' => 'center', padding => '.7em', 'font-family' => 'Lucida Grande' } },
         colgroup => [ ({ style => { border => 'solid medium' } }) x int(sqrt( $args->{size} )) ],
         col      => [ ({}) x int(sqrt( $args->{size} )) ],
         data     => [],
