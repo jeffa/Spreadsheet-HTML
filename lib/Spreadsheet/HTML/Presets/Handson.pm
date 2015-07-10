@@ -72,7 +72,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Handson - Handson tables for Perl!
+Spreadsheet::HTML::Presets::Handson - Handsontable tables for Perl!
 
 =head1 DESCRIPTION
 

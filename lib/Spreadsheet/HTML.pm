@@ -363,10 +363,11 @@ Procedural interface:
 
 =head1 DESCRIPTION
 
-Generate HTML tables with ease (HTML4, XHTML and HTML5). Provides a handful
-of distinctly named methods to control overall table orientation.
-These methods in turn accept a number of distinctly named attributes
-for directing what tags and attributes to use.
+Generate HTML tables with ease (HTML4, XHTML and HTML5). Can generate
+landscape and other rotated views, Handsontable tables, HTML calendars,
+checkboard patterns, games such as sudoku, banners and mazes, and can
+create animations of cell values and backgrounds via jQuery. Can rewrap
+existing tables from Excel, HTML, JSON, CSV and YAML files.
 
 THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
@@ -741,21 +742,21 @@ with little to no additional coding.
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 
+=item * C<banner( on, off, text, font, %params )>
+
+=item * C<calendar( month, year, %params )>
+
+=item * C<animate( fgdirection, bgdirection, jquery, %params )>
+
 =item * C<conway( on, off, fade, jquery, %params )>
 
 =item * C<calculator( jquery, %params )>
 
-=item * C<calendar( month, year, %params )>
-
 =item * C<checkerboard( colors, %params )>
 
-=item * C<animate( fgdirection, bgdirection, jquery, %params )>
-
-=item * C<banner( on, off, text, font, %params )>
+=item * C<sudoku( blanks, attempts, %params )>
 
 =item * C<maze( on, off, fill, %params )>
-
-=item * C<sudoku( blanks, attempts, %params )>
 
 =item * C<chess( %params )>
 

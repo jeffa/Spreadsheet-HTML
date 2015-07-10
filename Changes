@@ -4,6 +4,7 @@ Revision history for Spreadsheet-HTML
     - fixed animate bug introduced at commit cba507b (v0.34)
     - added handson() preset
     - restructure of preset modules that use JS
+    - added _auto internal param
 
 0.35
     - added sudoku() preset
