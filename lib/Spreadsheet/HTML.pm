@@ -6,7 +6,7 @@ our $VERSION = '0.36';
 use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
-    north east south west
+    north east south west handson
     layout checkerboard animate
     chess checkers conway sudoku
     calculator dk shroom
@@ -29,6 +29,7 @@ sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
+sub handson         { Spreadsheet::HTML::Presets::Handson::handson( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
@@ -729,6 +730,8 @@ with little to no additional coding.
 =over 4
 
 =item * C<layout( %params )>
+
+=item * C<handson( handsonjs, jquery, css, %params )>
 
 =item * C<conway( on, off, fade, jquery, %params )>
 

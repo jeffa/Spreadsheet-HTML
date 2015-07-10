@@ -7,6 +7,7 @@ use Spreadsheet::HTML::Presets::Animate;
 use Spreadsheet::HTML::Presets::Calculator;
 use Spreadsheet::HTML::Presets::Conway;
 use Spreadsheet::HTML::Presets::Chess;
+use Spreadsheet::HTML::Presets::Handson;
 use Spreadsheet::HTML::Presets::Sudoku;
 
 eval "use JavaScript::Minifier";
@@ -503,7 +504,7 @@ sub _js_wrapper {
     unless ($NO_MINIFY) {
         $args{code} = JavaScript::Minifier::minify(
             input      => $args{code},
-            copyright  => 'Copyright (C) 2015 Jeff Anderson',
+            copyright  => $args{copyright} || 'Copyright (C) 2015 Jeff Anderson',
             stripDebug => 1,
         );
     }
@@ -512,6 +513,8 @@ sub _js_wrapper {
 
     my $html = sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jquery};
     $html   .= sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jqueryui} if $args{jqueryui};
+    $html   .= sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{handsonjs} if $args{handsonjs};
+    $html   .= sprintf qq{<link rel="stylesheet" media="screen" href="%s" />\n}, $args{css} if $args{css};
     $html   .= sprintf qq{<script type="text/javascript">%s</script>\n}, $args{code};
 
     return $html;
