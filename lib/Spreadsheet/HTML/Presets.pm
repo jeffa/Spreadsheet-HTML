@@ -72,7 +72,7 @@ sub banner {
         eval {
             @banner = Text::FIGlet
                 ->new( -d => $args->{dir}, -f => $args->{emboss} ? 'block' : 'banner' )
-                ->figify( -A => uc( $args->{text} ), -w => 9999 );
+                ->figify( -A => uc( $args->{text} || '' ), -w => 9999 );
         };
 
         if (@banner) {
