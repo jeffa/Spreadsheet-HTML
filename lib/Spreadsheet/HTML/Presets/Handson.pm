@@ -9,26 +9,28 @@ sub handson {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
+    my @rand = ( 0 .. 9, 'a' .. 'z', 'A' .. 'Z' );
+    $args->{id} ||= 'handsontable-' . join( '', map @rand[rand@rand], 0 .. 7 );
+
     my @args = (
         @_,
         empty => undef,
-        table => { %{ $args->{table} || {} }, class => 'handsontable' },
+        table => { %{ $args->{table} || {} }, class => $args->{id} },
     );
 
-    my $js = _javascript( %$args );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . qq(<div id="handsontable">$table</div>\n);
+    my $auto = HTML::AutoTag->new( indent => $args->{indent} );
+    return _javascript( %$args ) . $auto->tag( tag => 'div', cdata => $table, attr => { id => $args->{id} } );
 }
 
 sub _javascript {
     my %args = @_;
 
-    my $js = sprintf _js_tmpl(),
-    ;
+    my $js = sprintf _js_tmpl(), $args{id};
 
     $args{css} ||= 'http://handsontable.com/dist/handsontable.full.css';
     $args{handsonjs} ||= 'http://handsontable.com/dist/handsontable.full.js';
-    $args{copyright} = 'Copyright (c) 2012-2014 Marcin Warpechowski - Copyright (c) 2015 Handsoncode sp. z o.o.';
+    $args{copyright} = 'Copyright (c) 2012-2014 Marcin Warpechowski | Copyright (c) 2015 Handsoncode sp. z o.o.';
 
     return Spreadsheet::HTML::Presets::_js_wrapper( code => $js, %args );
 }
@@ -40,19 +42,21 @@ sub _js_tmpl {
 /* Copyright (c) 2015 Handsoncode sp. z o.o. */
 /* install JavaScript::Minifier to minify this code */
 
+var id = '%s';
+
 $(document).ready( function () {
 
     var data = new Array;
-    $('.handsontable tr').each( function () {
+    $('.' + id + ' tr').each( function () {
         var row = new Array;
         $.each( this.cells, function () {
             row.push( $(this).html() );
         });
         data.push( row );
     });
-    $('#handsontable').html( '' );
+    $('#' + id).html( '' );
 
-    var hot = new Handsontable( document.getElementById('handsontable'), {
+    var hot = new Handsontable( document.getElementById( id ), {
         data:           data,
         rowHeaders:     true,
         colHeaders:     true,
