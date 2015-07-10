@@ -206,7 +206,7 @@ sub _make_table {
         push @cdata, map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @{ $args{data} };
     }
 
-    return $args{auto}->tag( tag => 'table', attr => $args{table}, cdata => [ @cdata ] );
+    return $args{_auto}->tag( tag => 'table', attr => $args{table}, cdata => [ @cdata ] );
 }
 
 sub _caption {
@@ -281,7 +281,7 @@ sub _args {
     $data = delete $args->{data} if exists $args->{data};
 
     my $encodes = exists $args->{encodes} ? $args->{encodes} : '';
-    $args->{auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level} );
+    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level} );
 
     if ($self) {
         return ( $self, $self->{data}, $args ) if $self->{is_cached};

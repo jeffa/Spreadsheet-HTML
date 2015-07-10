@@ -509,15 +509,15 @@ sub _js_wrapper {
         );
     }
 
-    my $js = $args{auto}->tag( tag => 'script', cdata => $args{code}, attr => { type => 'text/javascript' } );
+    my $js = $args{_auto}->tag( tag => 'script', cdata => $args{code}, attr => { type => 'text/javascript' } );
     return $js if $args{bare};
 
     $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
 
-    my $html = $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jquery} } );
-    $html   .= $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jqueryui} } ) if $args{jqueryui};
-    $html   .= $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{handsonjs} } ) if $args{handsonjs};
-    $html   .= $args{auto}->tag( tag => 'link', attr => { rel => 'stylesheet', media => 'screen', href => $args{css} } ) if $args{css};
+    my $html = $args{_auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jquery} } );
+    $html   .= $args{_auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jqueryui} } ) if $args{jqueryui};
+    $html   .= $args{_auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{handsonjs} } ) if $args{handsonjs};
+    $html   .= $args{_auto}->tag( tag => 'link', attr => { rel => 'stylesheet', media => 'screen', href => $args{css} } ) if $args{css};
 
     return $html . $js;
 }
