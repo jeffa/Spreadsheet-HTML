@@ -137,27 +137,15 @@ sub _process {
             pop  @{ $data->[$row] } for $args->{_max_cols} .. $#{ $data->[$row] };                 # truncate
         }
 
+        my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
         for my $col (0 .. $#{ $data->[$row] }) {
-            my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
-            my ( $cdata, $attr ) = _expand_code_or_hash( $data->[$row][$col], undef, $args->{$tag}, );
-            $args->{$tag} = [ $args->{$tag} ] unless ref( $args->{$tag} ) eq 'ARRAY';
 
-            # -cX
-            if (exists $args->{"-c$col"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-c$col"} );
+            my ( $cdata, $attr ) = ( $data->[$row][$col], undef );
+            for ($tag, "-c$col", "-r$row", "-r${row}c${col}") {
+                next unless exists $args->{$_};
+                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{$_} );
             }
 
-            # -rX (overides -cX)
-            if (exists $args->{"-r$row"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r$row"} );
-            }
-
-            # -rXcX (overides -rX)
-            if (exists $args->{"-r${row}c${col}"}) {
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{"-r${row}c${col}"} );
-            }
-
-            # handle empty
             do{ no warnings; $cdata =~ s/^\s*$/$empty/g };
 
             $data->[$row][$col] = { 
