@@ -19,8 +19,7 @@ sub handson {
     );
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    my $auto = HTML::AutoTag->new( indent => $args->{indent} );
-    return _javascript( %$args ) . $auto->tag( tag => 'div', cdata => $table, attr => { id => $args->{id} } );
+    return _javascript( %$args ) . $args->{auto}->tag( tag => 'div', cdata => $table, attr => { id => $args->{id} } );
 }
 
 sub _javascript {

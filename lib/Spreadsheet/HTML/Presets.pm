@@ -509,15 +509,17 @@ sub _js_wrapper {
         );
     }
 
+    my $js = $args{auto}->tag( tag => 'script', cdata => $args{code}, attr => { type => 'text/javascript' } );
+    return $js if $args{bare};
+
     $args{jquery} ||= 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
 
-    my $html = sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jquery};
-    $html   .= sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{jqueryui} if $args{jqueryui};
-    $html   .= sprintf qq{<script type="text/javascript" src="%s"></script>\n}, $args{handsonjs} if $args{handsonjs};
-    $html   .= sprintf qq{<link rel="stylesheet" media="screen" href="%s" />\n}, $args{css} if $args{css};
-    $html   .= sprintf qq{<script type="text/javascript">%s</script>\n}, $args{code};
+    my $html = $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jquery} } );
+    $html   .= $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{jqueryui} } ) if $args{jqueryui};
+    $html   .= $args{auto}->tag( tag => 'script', cdata => '',    attr => { src => $args{handsonjs} } ) if $args{handsonjs};
+    $html   .= $args{auto}->tag( tag => 'link', attr => { rel => 'stylesheet', media => 'screen', href => $args{css} } ) if $args{css};
 
-    return $html;
+    return $html . $js;
 }
 
 =head1 NAME
