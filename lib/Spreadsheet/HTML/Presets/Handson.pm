@@ -11,6 +11,7 @@ sub handson {
 
     my @args = (
         @_,
+        empty => undef,
         table => { %{ $args->{table} || {} }, class => 'handsontable' },
     );
 
@@ -93,9 +94,15 @@ Instead, use the Spreadsheet::HTML interface:
 Styles table with Handsontable, a "data grid component with
 and Excel-like appearance."
 
+Generate an empty 100x20 data grid:
+
+  handson( fill => '100x20' )
+
 Uses Handsontable's JS API unless you specify another URI via
 the C<handsonjs> param. Also uses their CSS unless you
 override with the C<css> param.
+
+  handson( handsonjs => '/dist/handsontable.full.js' )
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
