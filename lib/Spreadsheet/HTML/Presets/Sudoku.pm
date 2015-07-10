@@ -4,6 +4,70 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+eval "use Games::Sudoku::Component";
+our $NO_SUDOKU = $@;
+
+sub sudoku {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+    $args->{attempts}   = defined $args->{attempts} ? int($args->{attempts} || 0) : 4;
+    $args->{blanks}     = int($args->{blanks} || 0) || 50;
+    $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
+
+    my @cells;
+    my ($solved,$unsolved) = ('','');
+    unless ($NO_SUDOKU) {
+        my $board = Games::Sudoku::Component->new( size => $args->{size} );
+        while (!$board->is_solved and $args->{attempts}-- > 0) {
+            $board->generate( blanks => $args->{blanks} );
+            $unsolved = $board->as_string;
+            $board->solve;
+        }
+
+        my %td_attr = ( style => { border => 'solid thin', 'text-align' => 'center', padding => '.5em', 'font-family' => 'Lucida Grande' } );
+        my $auto = HTML::AutoTag->new;
+        my %input_attr = ( class => 'sudoku', size=> 1, style => { 'text-align' => 'center', border => '0px', 'font-size' => 'medium',  color => 'red' } );
+
+        if ($board->is_solved) {
+            $solved = $board->as_string;
+            my @lines = split /\n/, $unsolved;
+            for my $row (0 .. $#lines) {
+                my @chars = split /\s/, $lines[$row];
+                for my $col (0 .. $#chars) {
+                    my $id  = "${row}-${col}";
+                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { $auto->tag( tag => 'input', attr => { %input_attr, id => "input-$id" } ) };
+                    push @cells, ( "-r${row}c${col}" => [ { %td_attr, id => "td-$id" }, $sub ] );
+                }
+            }
+        }
+    }
+
+    my $sqrt = int(sqrt( $args->{size} ));
+    my @args = (
+        @_,
+        @cells,
+        table    => { id => 'sudoku', style => { 'border-collapse' => 'collapse' } },
+        tbody    => { style => { border => 'solid medium' } },
+        tr       => { id => [ map "sudoku-$_", 0 .. $sqrt - 1] },
+        colgroup => [ ({ style => { border => 'solid medium' } }) x $sqrt ],
+        col      => [ ({}) x $sqrt ],
+        data     => [],
+        fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
+        wrap     => 0,
+        tgroups  => 1,
+        group    => $sqrt,
+        matrix   => 1,
+        headless => 0,
+        theta    => 0,
+        animate  => 0,
+    );
+
+    my $js    = _javascript( %$args );
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
+}
+
 sub _javascript {
     my %args = @_;
 
@@ -73,7 +137,49 @@ END_JAVASCRIPT
 
 Spreadsheet::HTML::Presets::Sudoku - Javascript for sudoku board.
 
-See L<Spreadsheet::HTML::Presets>
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new;
+  print $generator->sudoku();
+
+  # or
+  use Spreadsheet::HTML qw( sudoku );
+  print sudoku();
+
+=head1 METHODS
+
+=over 4
+
+=item * C<sudoku( blanks, attempts, %params )>
+
+Generates a static unsolved 9x9 sudoku board. You must have
+L<Games::Sudoku::Component> installed, which currently
+has no dependencies and is very fast and reliable. You can
+specify how many cells to leave unsolved with C<blanks>.
+
+  sudoku( blanks => 50 ) 
+
+Four attempts are made to find a solveable board, you can
+override with C<attempts>.
+
+  sudoku( attempts => 1 ) 
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+=item L<Spreadsheet::HTML::Presets>
+
+=back
 
 =head1 AUTHOR
 

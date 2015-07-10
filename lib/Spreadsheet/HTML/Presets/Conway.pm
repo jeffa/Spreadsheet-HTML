@@ -4,6 +4,48 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+eval "use Color::Spectrum";
+our $NO_SPECTRUM = $@;
+
+sub conway {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    $args->{on}    ||= '#00BFA5';
+    $args->{off}   ||= '#EEEEEE';
+    $args->{colors} = ($NO_SPECTRUM or !$args->{fade})
+        ? [ ($args->{on}) x 10 ]
+        : [ Color::Spectrum::generate( 10, $args->{on}, $args->{off} ) ];
+
+    $args->{interval} ||= 200;
+
+    my @cells;
+    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
+        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
+            my $cell = sprintf '-r%sc%s', $r, $c;
+            push @cells,
+                $cell => {
+                    id     => join( '-', $r, $c ),
+                    class  => 'conway',
+                    width  => '30px',
+                    height => '30px',
+                    style  => { 'background-color' => $args->{off} },
+                };
+        }
+    }
+
+    my @args = (
+        @cells,
+        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
+        @_,
+    );
+
+    my $js    = _javascript( %$args );
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
+}
+
 sub _javascript {
     my %args = @_;
 
@@ -127,9 +169,61 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Conway - Javascript implementation of Conway's Game of Life.
+Spreadsheet::HTML::Presets::Conway - Conway's Game of Life.
 
-See L<Spreadsheet::HTML::Presets>
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
+  print $generator->conway();
+
+  # or
+  use Spreadsheet::HTML qw( conway );
+  print conway( data => [[1],[2]] );
+
+=head1 METHODS
+
+=over 4
+
+=item * C<conway( on, off, fill, fade, interval, jquery, %params )>
+
+Game of life. From an implementation i wrote back in college.
+
+  conway( on => 'red', off => 'gray' )
+
+Set the timer with C<interval> (defaults to 200 miliseconds).
+
+  conway( interval => 75 )
+
+If you have L<Color::Spectrum> installed (and optionally
+L<Color::Library>) then you can turn fade on for more
+effects:
+
+  # without Color::Library
+  conway( on => '#FF0000', off => '#999999', fade => 1 )
+
+  # with Color::Library
+  conway( on => 'red', off => 'gray', fade => 1 )
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+=item L<Spreadsheet::HTML::Presets>
+
+=back
 
 =head1 AUTHOR
 

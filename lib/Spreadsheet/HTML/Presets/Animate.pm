@@ -4,6 +4,39 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+sub animate {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    $args->{fgdirection} ||= ($args->{bgdirection} || $args->{bx} || $args->{by}) ? '' : 'right';
+    $args->{bgdirection} ||= '';
+    $args->{interval}    ||= 200;
+
+    my @cells;
+    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
+        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
+            my $cell = sprintf '-r%sc%s', $r, $c;
+            push @cells, $cell => {
+                id     => join( '-', $r, $c ),
+                class  => 'animate',
+            };
+        }
+    }
+
+    my @args = (
+        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
+        @_,
+        @cells,
+    );
+
+    my $js = _javascript( %$args );
+    return( $js, @args ) if $args->{animate};
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
+}
+
 sub _javascript {
     my %args = @_;
 
@@ -146,9 +179,60 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Animate - Javascript for animating table cells.
+Spreadsheet::HTML::Presets::Animate - Animated table cells and backgrounds.
 
-See L<Spreadsheet::HTML::Presets>
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
+  print $generator->animate();
+
+  # or
+  use Spreadsheet::HTML qw( animate );
+  print animate( data => [[1],[2]] );
+
+=head1 METHODS
+
+=over 4
+
+=item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
+
+Moves the contents (C<fg*> for CDATA, C<bg*> for
+attributes) of each cell in the direction specified.
+Valid values are C<up>, C<down>, C<left> and C<right>.
+
+Set the timer with C<interval> (defaults to 200 miliseconds).
+
+  animate( fgdirection => 'right', interval => 300 )
+
+Can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
+to specify which axis(es) to animate. (Ditto for C<bx> and
+C<by> for C<bgdirection>.
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
+
+Virtually all other Spreadsheet::HTML generating methods/procedures
+also can additionally specify C<animate> et. al. as a literal parameters:
+
+  print $generator->landscape( animate => 1, by => -1, bx => 1 )
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+=item L<Spreadsheet::HTML::Presets>
+
+=back
 
 =head1 AUTHOR
 

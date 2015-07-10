@@ -9,8 +9,6 @@ use Spreadsheet::HTML::Presets::Conway;
 use Spreadsheet::HTML::Presets::Chess;
 use Spreadsheet::HTML::Presets::Sudoku;
 
-eval "use Color::Spectrum";
-our $NO_SPECTRUM = $@;
 eval "use JavaScript::Minifier";
 our $NO_MINIFY = $@;
 eval "use Text::FIGlet";
@@ -19,8 +17,6 @@ eval "use Time::Piece";
 our $NO_TIMEPIECE = $@;
 eval "use List::Util";
 our $NO_LISTUTIL = $@;
-eval "use Games::Sudoku::Component";
-our $NO_SUDOKU = $@;
 
 sub layout {
     my ($self,$data,$args);
@@ -61,39 +57,6 @@ sub checkerboard {
     );
 
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-}
-
-sub animate {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
-    $args->{fgdirection} ||= ($args->{bgdirection} || $args->{bx} || $args->{by}) ? '' : 'right';
-    $args->{bgdirection} ||= '';
-    $args->{interval}    ||= 200;
-
-    my @cells;
-    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
-        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            my $cell = sprintf '-r%sc%s', $r, $c;
-            push @cells, $cell => {
-                id     => join( '-', $r, $c ),
-                class  => 'animate',
-            };
-        }
-    }
-
-    my @args = (
-        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
-        @_,
-        @cells,
-    );
-
-    my $js = Spreadsheet::HTML::Presets::Animate::_javascript( %$args );
-    return( $js, @args ) if $args->{animate};
-
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
 }
 
 sub banner {
@@ -147,67 +110,6 @@ sub banner {
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
-}
-
-sub sudoku {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-    $args->{attempts}   = defined $args->{attempts} ? int($args->{attempts} || 0) : 4;
-    $args->{blanks}     = int($args->{blanks} || 0) || 50;
-    $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
-
-    my @cells;
-    my ($solved,$unsolved) = ('','');
-    unless ($NO_SUDOKU) {
-        my $board = Games::Sudoku::Component->new( size => $args->{size} );
-        while (!$board->is_solved and $args->{attempts}-- > 0) {
-            $board->generate( blanks => $args->{blanks} );
-            $unsolved = $board->as_string;
-            $board->solve;
-        }
-
-        my %td_attr = ( style => { border => 'solid thin', 'text-align' => 'center', padding => '.5em', 'font-family' => 'Lucida Grande' } );
-        my $auto = HTML::AutoTag->new;
-        my %input_attr = ( class => 'sudoku', size=> 1, style => { 'text-align' => 'center', border => '0px', 'font-size' => 'medium',  color => 'red' } );
-
-        if ($board->is_solved) {
-            $solved = $board->as_string;
-            my @lines = split /\n/, $unsolved;
-            for my $row (0 .. $#lines) {
-                my @chars = split /\s/, $lines[$row];
-                for my $col (0 .. $#chars) {
-                    my $id  = "${row}-${col}";
-                    my $sub = $chars[$col] ? sub { $chars[$col] } : sub { $auto->tag( tag => 'input', attr => { %input_attr, id => "input-$id" } ) };
-                    push @cells, ( "-r${row}c${col}" => [ { %td_attr, id => "td-$id" }, $sub ] );
-                }
-            }
-        }
-    }
-
-    my $sqrt = int(sqrt( $args->{size} ));
-    my @args = (
-        @_,
-        @cells,
-        table    => { id => 'sudoku', style => { 'border-collapse' => 'collapse' } },
-        tbody    => { style => { border => 'solid medium' } },
-        tr       => { id => [ map "sudoku-$_", 0 .. $sqrt - 1] },
-        colgroup => [ ({ style => { border => 'solid medium' } }) x $sqrt ],
-        col      => [ ({}) x $sqrt ],
-        data     => [],
-        fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
-        wrap     => 0,
-        tgroups  => 1,
-        group    => $sqrt,
-        matrix   => 1,
-        headless => 0,
-        theta    => 0,
-        animate  => 0,
-    );
-
-    my $js    = Spreadsheet::HTML::Presets::Sudoku::_javascript( %$args );
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
 }
 
 sub maze {
@@ -289,105 +191,6 @@ sub maze {
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $table;
-}
-
-sub calculator {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
-    $data = [
-        [ 'C', '&plusmn;', '&divide;', '&times;' ],
-        [ 7, 8, 9, '&minus;' ],
-        [ 4, 5, 6, '+' ],
-        [ 1, 2, 3, '=' ],
-        [ 0, '.' ],
-    ];
-
-    my %attrs = (
-        height => 65,
-        width  => 65,
-        align  => 'center',
-        %{ $args->{td} || {} },
-        style  => { 
-            'font-size' => 'xx-large',
-            padding => 0,
-            margins => 0,
-            %{ $args->{td}{style} || {} },
-        },
-    );
-
-    my $attrs = 'font-size: xx-large; font-weight: bold; font-family: monospace;';
-
-    my @args = (
-        @_,
-        table => {
-            width => '20%',
-            %{ $args->{table} || {} },
-            style => {
-                border  => 'thick outset',
-                padding => 0,
-                margins => 0,
-                %{ $args->{table}{style} || {} },
-            },
-        },
-        caption     => qq(<input id="display" style="background-color: #F1FACA; height: 8%; width: 80%; text-align: right; $attrs" />),
-        td          => [ { %attrs }, sub { qq(<button style="width: 100%; height: 100%; $attrs">$_[0]</button>) } ],
-        -r3c3       => { rowspan => 2, %attrs },
-        -r4c0       => { colspan => 2, %attrs },
-        _layout     => 1,
-        data        => $data,
-        theta       => 0,
-        flip        => 0,
-        tgroups     => 0,
-        headless    => 0,
-        pinhead     => 0,
-        wrap        => 0,
-        matrix      => 1,
-    );
-
-    my $js = Spreadsheet::HTML::Presets::Calculator::_javascript( %$args );
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
-}
-
-sub conway {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
-    $args->{on}    ||= '#00BFA5';
-    $args->{off}   ||= '#EEEEEE';
-    $args->{colors} = ($NO_SPECTRUM or !$args->{fade})
-        ? [ ($args->{on}) x 10 ]
-        : [ Color::Spectrum::generate( 10, $args->{on}, $args->{off} ) ];
-
-    $args->{interval} ||= 200;
-
-    my @cells;
-    for my $r ( 0 .. $args->{_max_rows} - 1 ) {
-        for my $c ( 0 .. $args->{_max_cols} - 1 ) {
-            my $cell = sprintf '-r%sc%s', $r, $c;
-            push @cells,
-                $cell => {
-                    id     => join( '-', $r, $c ),
-                    class  => 'conway',
-                    width  => '30px',
-                    height => '30px',
-                    style  => { 'background-color' => $args->{off} },
-                };
-        }
-    }
-
-    my @args = (
-        @cells,
-        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
-        @_,
-    );
-
-    my $js    = Spreadsheet::HTML::Presets::Conway::_javascript( %$args );
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
 }
 
 sub calendar {
@@ -754,24 +557,6 @@ Attempts to form diagonal patterns by adding an extra color
 if need be. C<colors> default to red and green and C<extra>
 defaults to white.
 
-=item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
-
-Moves the contents (C<fg*> for CDATA, C<bg*> for
-attributes) of each cell in the direction specified.
-Valid values are C<up>, C<down>, C<left> and C<right>.
-
-Set the timer with C<interval> (defaults to 200 miliseconds).
-
-  animate( fgdirection => 'right', interval => 300 )
-
-Can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
-to specify which axis(es) to animate. (Ditto for C<bx> and
-C<by> for C<bgdirection>.
-
-Uses Google's jQuery API unless you specify another URI via
-the C<jquery> param. Javascript will be minified
-via L<Javascript::Minifier> if it is installed.
-
 =item * C<banner( dir, text, emboss, on, off, fill, %params )>
 
 Will generate and display a banner using the given C<text> in the
@@ -781,38 +566,6 @@ Set the foreground color with C<on> and the background with C<off>.
 You Must have L<Text::FIGlet> installed in order to use this preset.
 
   banner( dir => '/path/to/figlet/fonts', text => 'HI', on => 'red' )
-
-=item * C<conway( on, off, fill, fade, interval, jquery, %params )>
-
-Game of life. From an implementation i wrote back in college.
-
-  conway( on => 'red', off => 'gray' )
-
-Set the timer with C<interval> (defaults to 200 miliseconds).
-
-  conway( interval => 75 )
-
-If you have L<Color::Spectrum> installed (and optionally
-L<Color::Library>) then you can turn fade on for more
-effects:
-
-  # without Color::Library
-  conway( on => '#FF0000', off => '#999999', fade => 1 )
-
-  # with Color::Library
-  conway( on => 'red', off => 'gray', fade => 1 )
-
-Uses Google's jQuery API unless you specify another URI via
-the C<jquery> param. Javascript will be minified
-via L<Javascript::Minifier> if it is installed.
-
-=item * C<calculator( jquery )>
-
-Generates a simple calculator.
-
-Uses Google's jQuery API unless you specify another URI via
-the C<jquery> param. Javascript will be minified
-via L<Javascript::Minifier> if it is installed.
 
 =item * C<calendar( month, year, %params )>
 
@@ -833,20 +586,6 @@ Default rules still apply to styling columns by any heading:
 Generates a static maze.
 
   maze( fill => '10x10', on => 'red', off => 'black' ) 
-
-=item * C<sudoku( blanks, attempts, %params )>
-
-Generates a static unsolved 9x9 sudoku board. You must have
-L<Games::Sudoku::Component> installed, which currently
-has no dependencies and is very fast and reliable. You can
-specify how many cells to leave unsolved with C<blanks>.
-
-  sudoku( blanks => 50 ) 
-
-Four attempts are made to find a solveable board, you can
-override with C<attempts>.
-
-  sudoku( attempts => 1 ) 
 
 =item * C<checkers( %params )>
 

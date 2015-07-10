@@ -4,6 +4,66 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+sub calculator {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    $data = [
+        [ 'C', '&plusmn;', '&divide;', '&times;' ],
+        [ 7, 8, 9, '&minus;' ],
+        [ 4, 5, 6, '+' ],
+        [ 1, 2, 3, '=' ],
+        [ 0, '.' ],
+    ];
+
+    my %attrs = (
+        height => 65,
+        width  => 65,
+        align  => 'center',
+        %{ $args->{td} || {} },
+        style  => { 
+            'font-size' => 'xx-large',
+            padding => 0,
+            margins => 0,
+            %{ $args->{td}{style} || {} },
+        },
+    );
+
+    my $attrs = 'font-size: xx-large; font-weight: bold; font-family: monospace;';
+
+    my @args = (
+        @_,
+        table => {
+            width => '20%',
+            %{ $args->{table} || {} },
+            style => {
+                border  => 'thick outset',
+                padding => 0,
+                margins => 0,
+                %{ $args->{table}{style} || {} },
+            },
+        },
+        caption     => qq(<input id="display" style="background-color: #F1FACA; height: 8%; width: 80%; text-align: right; $attrs" />),
+        td          => [ { %attrs }, sub { qq(<button style="width: 100%; height: 100%; $attrs">$_[0]</button>) } ],
+        -r3c3       => { rowspan => 2, %attrs },
+        -r4c0       => { colspan => 2, %attrs },
+        _layout     => 1,
+        data        => $data,
+        theta       => 0,
+        flip        => 0,
+        tgroups     => 0,
+        headless    => 0,
+        pinhead     => 0,
+        wrap        => 0,
+        matrix      => 1,
+    );
+
+    my $js = _javascript( %$args );
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
+}
+
 sub _javascript {
     return Spreadsheet::HTML::Presets::_js_wrapper( code => _js_tmpl(), @_ );
 }
@@ -119,9 +179,45 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Calculator - Javascript implementation of a calculator.
+Spreadsheet::HTML::Presets::Calculator - Basic calculator made with an HTML table.
 
-See L<Spreadsheet::HTML::Presets>
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new;
+  print $generator->calculator();
+
+  # or
+  use Spreadsheet::HTML qw( calculator );
+  print calculator();
+
+=head1 METHODS
+
+=over 4
+
+=item * C<calculator( jquery, %params )>
+
+Generates a simple calculator.
+
+Uses Google's jQuery API unless you specify another URI via
+the C<jquery> param. Javascript will be minified
+via L<Javascript::Minifier> if it is installed.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+=item L<Spreadsheet::HTML::Presets>
+
+=back
 
 =head1 AUTHOR
 

@@ -16,6 +16,7 @@ our @EXPORT_OK = qw(
 use Clone;
 use HTML::AutoTag;
 use Math::Matrix;
+
 use Spreadsheet::HTML::Presets;
 use Spreadsheet::HTML::File::Loader;
 
@@ -28,14 +29,14 @@ sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
-sub conway          { Spreadsheet::HTML::Presets::conway(           @_ ) }
-sub calculator      { Spreadsheet::HTML::Presets::calculator(       @_ ) }
+sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
+sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
-sub sudoku          { Spreadsheet::HTML::Presets::sudoku(           @_ ) }
+sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
-sub animate         { Spreadsheet::HTML::Presets::animate(          @_ ) }
+sub animate         { Spreadsheet::HTML::Presets::Animate::animate( @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
@@ -86,7 +87,7 @@ sub generate {
     }
 
     if ($args{animate}) {
-        my ($js, %new_args) = Spreadsheet::HTML::Presets::animate(
+        my ($js, %new_args) = Spreadsheet::HTML::Presets::Animate::animate(
             %args,
             data => [ map [ map $_->{cdata}, @$_ ], @{ $args{data} } ],
         );
