@@ -536,7 +536,7 @@ to insert into to.
 
 =item * C<encodes>
 
-HTML Encode contents of <tr> and/or <td> tags. Defaults to
+HTML Encode contents of <th> and/or <td> tags. Defaults to
 empty string which performs no encoding of entities. Pass
 a string like '<>&=' to perform encoding on any characters
 found.  If the value is C<undef> then all unsafe characters
