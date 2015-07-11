@@ -587,6 +587,10 @@ Render the table with without the headings row at all.
 The first row after the headings is still C<-r1>, thus
 any reference to C<headings> will be discarded too.
 
+=item * C<animate: 0 or 1>
+
+Animate the table cells. See *L<Spreadsheet::HTML::Presets::Animate>.
+
 =item * C<headings>
 
 Apply callback subroutine to each cell in headings row.

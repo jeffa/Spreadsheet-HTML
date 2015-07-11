@@ -606,6 +606,26 @@ Generates a static chess game board.
 
 =back
 
+=head1 MORE PRESETS
+
+The following presets live in their own packages:
+
+=over 4
+
+=item *L<Spreadsheet::HTML::Presets::Animate>
+
+=item *L<Spreadsheet::HTML::Presets::Calculator>
+
+=item *L<Spreadsheet::HTML::Presets::Conway>
+
+=item *L<Spreadsheet::HTML::Presets::Chess>
+
+=item *L<Spreadsheet::HTML::Presets::Handson>
+
+=item *L<Spreadsheet::HTML::Presets::Sudoku>
+
+=back
+
 =head1 AUTHOR
 
 Jeff Anderson, C<< <jeffa at cpan.org> >>
