@@ -201,8 +201,8 @@ Instead, use the Spreadsheet::HTML interface:
 
 =item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
 
-Moves the contents (C<fg*> for CDATA, C<bg*> for
-attributes) of each cell in the direction specified.
+Moves the contents (C<fgdirection> for CDATA, C<bgdirection>
+for attributes) of each cell in the direction specified.
 Valid values are C<up>, C<down>, C<left> and C<right>.
 
 Set the timer with C<interval> (defaults to 200 miliseconds).
@@ -211,11 +211,11 @@ Set the timer with C<interval> (defaults to 200 miliseconds).
 
 Can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
 to specify which axis(es) to animate. (Ditto for C<bx> and
-C<by> for C<bgdirection>.
+C<by> for C<bgdirection>.)
 
 Uses Google's jQuery API unless you specify another URI via
-the C<jquery> param. Javascript will be minified
-via L<Javascript::Minifier> if it is installed.
+the C<jquery> param. Javascript will be minified via
+L<Javascript::Minifier> if it is installed.
 
 Virtually all other Spreadsheet::HTML generating methods/procedures
 also can additionally specify C<animate> et. al. as a literal parameters:
