@@ -105,7 +105,10 @@ Uses Handsontable's JS API unless you specify another URI via
 the C<handsonjs> param. Also uses their CSS unless you
 override with the C<css> param.
 
-  handson( handsonjs => '/dist/handsontable.full.js' )
+  handson(
+      handsonjs => '/dist/handsontable.full.js',
+      css       => '/dist/handsontable.full.css',
+  )
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
