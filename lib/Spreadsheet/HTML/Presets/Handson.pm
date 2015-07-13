@@ -4,14 +4,26 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+eval "use JSON";
+our $NO_JSON = $@;
+
 sub handson {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my @rand = ( 0 .. 9, 'a' .. 'z', 'A' .. 'Z' );
-    $args->{id} ||= 'handsontable-' . join( '', map @rand[rand@rand], 0 .. 7 );
+    $args->{args}{rowHeaders} ||= 'true';
+    $args->{args}{colHeaders} ||= 'true';
+    $args->{json} = '';
+    if ($NO_JSON) {
+        $args->{json} = '{' . join( ', ', map "$_: $args->{args}{$_}", keys %{ $args->{args} } ) . '}';
+    } else {
+        my $json = JSON->new->allow_nonref;
+        $args->{json} = $json->encode( $args->{args} );
+        $args->{json} =~ s/"//g;
+    }
 
+    $args->{id} ||= 'handsontable';
     my @args = (
         @_,
         empty => undef,
@@ -25,7 +37,7 @@ sub handson {
 sub _javascript {
     my %args = @_;
 
-    my $js = sprintf _js_tmpl(), $args{id};
+    my $js = sprintf _js_tmpl(), $args{id}, $args{json};
 
     $args{css} ||= 'http://handsontable.com/dist/handsontable.full.css';
     $args{handsonjs} ||= 'http://handsontable.com/dist/handsontable.full.js';
@@ -42,6 +54,7 @@ sub _js_tmpl {
 /* install JavaScript::Minifier to minify this code */
 
 var id = '%s';
+var handson_args = %s;
 
 $(document).ready( function () {
 
@@ -53,16 +66,11 @@ $(document).ready( function () {
         });
         data.push( row );
     });
+
     $('#' + id).html( '' );
+    handson_args['data'] = data;
 
-    var hot = new Handsontable( document.getElementById( id ), {
-        data:           data,
-        rowHeaders:     true,
-        colHeaders:     true,
-        contextMenu:    true
-        //minSpareRows:   1
-    });
-
+    var hot = new Handsontable( document.getElementById( id ), handson_args );
 });
 
 END_JAVASCRIPT
