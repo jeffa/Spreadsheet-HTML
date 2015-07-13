@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.37
+    - presets check for wantarray (client can get table w/out js)
 
 0.36
     - fixed animate bug introduced at commit cba507b (v0.34)

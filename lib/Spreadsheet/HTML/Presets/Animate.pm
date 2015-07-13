@@ -34,7 +34,7 @@ sub animate {
     return( $js, @args ) if $args->{animate};
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
+    return wantarray ? ( $table, $js ) : $js . $table;
 }
 
 sub _javascript {
