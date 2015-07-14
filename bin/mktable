@@ -1,0 +1,76 @@
+#!/usr/bin/env perl 
+
+use strict;
+use warnings;
+use Spreadsheet::HTML;
+
+use Safe;
+use Pod::Usage;
+use Getopt::Long;
+
+my $table = Spreadsheet::HTML->new;
+my $method = shift if $table->can( $ARGV[0] || '' );
+$method ||= 'generate';
+
+GetOptions (
+    'param=s'   => \my %params,
+    'help'      => \my $help,
+    'man'       => \my $man,
+);
+pod2usage( -verbose => 0 ) if $help;
+pod2usage( -verbose => 2 ) if $man;
+
+my $safe = Safe->new;
+#$params{$_} = $safe->reval( join '=', $params{$_}, $params{$_} ) for keys %params;
+
+print $table->$method( %params ), $/;
+
+
+__END__
+=head1 NAME
+
+mktable - generate an HTML table.
+
+=head1 SYNOPSIS
+
+mktable method [options]
+
+ Options:
+   --param          parameters, multiple allowed
+   --help           list usage
+   --man            print man page
+
+Example:
+
+  mktable generate --param file=t/data/simple.html --param indent='    '
+
+  # generate is the default generator
+  mktable --param file=t/data/simple.html --param indent='    '
+
+  mktable banner --param text='hello world'
+  
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--param>
+
+The params. See: perldoc Spreadsheet::HTML
+
+=item B<--help>
+
+Print a brief help message and exits.
+
+=item B<--man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+B<This program> 
+
+=cut
+
