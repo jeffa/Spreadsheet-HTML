@@ -20,10 +20,14 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
+my @args;
 my $safe = Safe->new;
-#$params{$_} = $safe->reval( join '=', $params{$_}, $params{$_} ) for keys %params;
+for (keys %params) {
+    my $tmp;
+    push @args, ( $_ => $safe->reval( $params{$_} ) );
+}
 
-print $table->$method( %params ), $/;
+print $table->$method( @args ), $/;
 
 
 __END__
