@@ -20,14 +20,16 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
-my @args;
+my %args;
 my $safe = Safe->new;
 for (keys %params) {
     my $tmp;
-    push @args, ( $_ => $safe->reval( $params{$_} ) );
+    $args{$_} = $safe->reval( $params{$_} );
 }
+$args{indent}  = $params{indent};
+$args{encodes} = undef if $params{encodes} eq 'undef';
 
-print $table->$method( @args ), $/;
+print $table->$method( %args ), $/;
 
 
 __END__
@@ -52,7 +54,6 @@ Example:
   mktable --param file=t/data/simple.html --param indent='    '
 
   mktable banner --param text='hello world'
-  
 
 =head1 OPTIONS
 
@@ -60,7 +61,11 @@ Example:
 
 =item B<--param>
 
-The params. See: perldoc Spreadsheet::HTML
+The params. Run
+
+  perldoc Spreadsheet::HTML
+
+for more information
 
 =item B<--help>
 
