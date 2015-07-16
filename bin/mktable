@@ -27,7 +27,7 @@ for (keys %params) {
     $args{$_} = $safe->reval( $params{$_} );
 }
 $args{indent}  = $params{indent};
-$args{encodes} = undef if $params{encodes} eq 'undef';
+$args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
 print $table->$method( %args ), $/;
 
