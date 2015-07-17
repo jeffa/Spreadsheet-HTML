@@ -608,8 +608,6 @@ Generates a static chess game board.
 
 =head1 MORE PRESETS
 
-The following presets live in their own packages:
-
 =over 4
 
 =item *L<Spreadsheet::HTML::Presets::Animate>
