@@ -9,8 +9,8 @@ our @EXPORT_OK = qw(
     north east south west handson
     layout checkerboard animate
     chess checkers conway sudoku
-    calculator dk shroom beadwork
-    calendar banner maze
+    calculator calendar banner maze
+    beadwork dk shroom
 );
 
 use Clone;
@@ -40,9 +40,9 @@ sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::Animate::animate( @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
-sub beadwork        { Spreadsheet::HTML::Presets::beadwork(         @_ ) }
-sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
-sub shroom          { Spreadsheet::HTML::Presets::shroom(           @_ ) }
+sub beadwork        { Spreadsheet::HTML::Presets::Beadwork::beadwork( @_ ) }
+sub dk              { Spreadsheet::HTML::Presets::Beadwork::dk(     @_ ) }
+sub shroom          { Spreadsheet::HTML::Presets::Beadwork::shroom( @_ ) }
 
 sub generate {
     my %args = _process( @_ );
