@@ -30,11 +30,12 @@ sub beadwork {
 
     my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $args->{art};
     my $total_rows = scalar @lines;
-    my $total_cols = scalar split //, $lines[0];
+    my $total_cols;
 
     my @cells;
     for my $row (0 .. $#lines) {
         my @chars = split //, $lines[$row];
+        $total_cols ||= scalar @chars;
         for my $col (0 .. $#chars) {
             next unless my $color = $args->{map}{ $chars[$col] };
             push @cells, ( 
