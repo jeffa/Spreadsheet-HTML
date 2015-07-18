@@ -33,11 +33,10 @@ for (keys %params) {
 $args{indent}  = $params{indent};
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
-my $table = $generator->$method( %args );
 if ($display and not $NO_DISPLAY) {
-    HTML::Display::display $table;
+    HTML::Display::display( $generator->$method( %args ) );
 } else {
-    print $table, $/;
+    print $generator->$method( %args ), $/;
 }
 
 
