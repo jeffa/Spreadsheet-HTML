@@ -9,7 +9,7 @@ our @EXPORT_OK = qw(
     north east south west handson
     layout checkerboard animate
     chess checkers conway sudoku
-    calculator dk shroom
+    calculator dk shroom beadwork
     calendar banner maze
 );
 
@@ -40,6 +40,7 @@ sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub animate         { Spreadsheet::HTML::Presets::Animate::animate( @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
+sub beadwork        { Spreadsheet::HTML::Presets::beadwork(         @_ ) }
 sub dk              { Spreadsheet::HTML::Presets::dk(               @_ ) }
 sub shroom          { Spreadsheet::HTML::Presets::shroom(           @_ ) }
 
@@ -773,6 +774,8 @@ with little to no additional coding.
 =item * C<chess( %params )>
 
 =item * C<checkers( %params )>
+
+=item * C<beadwork( %params )>
 
 =item * C<dk( %params )>
 

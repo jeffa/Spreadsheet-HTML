@@ -355,9 +355,11 @@ sub chess {
 }
 
 sub dk {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-my $tmpl = '
+    $args->{tmpl} = '
 ..........................................
 ..................1111111.................
 .................414141414................
@@ -394,52 +396,24 @@ my $tmpl = '
 ..........................................
 ';
 
-    my %map = (
+    $args->{map} = {
         '.' => '#FFFFFF',
         1 => '#AA0000',
         2 => '#FFAA55',
         3 => '#FFFFFF',
         4 => '#D50000',
         5 => '#FF5500',
-    );
+    };
 
-    my (@cells);
-    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $tmpl;
-    my $total_rows = scalar @lines;
-    my $total_cols;
-    for my $row (0 .. $#lines) {
-        my @chars = split //, $lines[$row];
-        $total_cols ||= scalar @chars;
-        for my $col (0 .. $#chars) {
-            next unless my $color = $map{ $chars[$col] };
-            push @cells, ( 
-                "-r${row}c${col}" => {
-                    width  => 16,
-                    height => 8,
-                    style  => { 'background-color' => $color },
-                }
-            );
-        }
-    }
-
-    my @args = (
-        pinhead  => 0,
-        tgroups  => 0,
-        headless => 0,
-        matrix   => 1,
-        wrap     => 0,
-        fill     => join( 'x', $total_rows, $total_cols ),
-        @cells,
-        @_,
-    );
-
-    $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    $self ? $self->beadwork( %$args ) : beadwork( %$args );
 }
 
 sub shroom {
-    my $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-my $tmpl = '
+    $args->{tmpl} = '
 .....111111.....
 ...1122223311...
 ..133222233331..
@@ -458,22 +432,30 @@ my $tmpl = '
 ....11111111....
 ';
 
-    my %map = (
+    $args->{map} = {
         '.' => 'white',
         1 => 'black',
         2 => 'green',
         3 => 'white',
-    );
+    };
+
+    $self ? $self->beadwork( %$args ) : beadwork( %$args );
+}
+
+sub beadwork {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     my (@cells);
-    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $tmpl;
+    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $args->{tmpl};
     my $total_rows = scalar @lines;
     my $total_cols;
     for my $row (0 .. $#lines) {
         my @chars = split //, $lines[$row];
         $total_cols ||= scalar @chars;
         for my $col (0 .. $#chars) {
-            next unless my $color = $map{ $chars[$col] };
+            next unless my $color = $args->{map}{ $chars[$col] };
             push @cells, ( 
                 "-r${row}c${col}" => {
                     width  => 16,
@@ -599,6 +581,10 @@ Generates a static checkers game board (US).
 =item * C<chess( %params )>
 
 Generates a static chess game board.
+
+=item * C<beadwork( %params )>
+
+Generates beadwork patters in the name of art.
 
 =item * C<dk( %params )>
 

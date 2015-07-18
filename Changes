@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.37
+    - added beadwork (no useful API - simple refactor for now)
     - added mktable CLI tool
     - able to pass some custom args along to Handsontable JS
     - presets check for wantarray (client can get table w/out js)
