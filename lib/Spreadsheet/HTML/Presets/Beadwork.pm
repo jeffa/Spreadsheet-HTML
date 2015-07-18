@@ -165,12 +165,21 @@ Instead, use the Spreadsheet::HTML interface:
 
 =item * C<beadwork( tmpl, map, %params )>
 
-Generates beadwork patters in the name of art.
+Generates beadwork patters in the name of ASCII art.
 
 =item * C<dk()>
 
 =item * C<shroom()>
 
+=back
+
+=head1 REQUIRES
+
+=over 4
+
+=item * L<IO::File>
+
+=item * L<IO::Scalar>
 
 =back
 
