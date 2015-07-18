@@ -57,12 +57,13 @@ mktable method [options]
 
 Example:
 
-  mktable generate --param file=t/data/simple.html --param indent='    '
+  $ mktable generate --param file=t/data/simple.html --param indent='    '
 
   # generate is the default generator
-  mktable --param file=t/data/simple.html --param indent='    '
+  $ mktable --param file=t/data/simple.html --param indent='    '
 
-  mktable banner --param text='hello world'
+  # don't forget to install and configure Text::FIGlet!
+  $ mktable banner --param text="'hello world'" --param animate=1
 
 =head1 OPTIONS
 
@@ -80,7 +81,9 @@ for more information.
 
 Display results to your browser via L<HTML::Display>.
 
-  mktable sudoku --display
+  $ mktable sudoku --display
+
+  $ mktable conway --display --param data=[1..300] --param wrap=20
 
 =item B<--help>
 
