@@ -1,24 +1,40 @@
 package Spreadsheet::HTML::Presets::Beadwork;
 use strict;
 use warnings FATAL => 'all';
-
-use IO::File;
-use IO::Scalar;
+use Carp;
 
 use Spreadsheet::HTML::Presets;
+use Spreadsheet::HTML::File::Loader;
 
 sub beadwork {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my (@cells);
-    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $args->{tmpl};
+    unless (defined $args->{art} and defined $args->{map}) {
+        $args->{data} = [[ 'Error' ],[ 'art is required' ]] unless defined $args->{art};
+        $args->{data} ||= [[ 'Error' ],[ 'map is required' ]] unless defined $args->{map};
+        return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
+    }
+
+    if ($args->{art} !~ /\n/ and -r $args->{art}) {
+        open FH, '<', $args->{art} or die "Cannot read $args->{art}\n";
+        $args->{art} = do{ local $/; <FH> };
+    }
+
+    if ($args->{map} !~ /\n/ and -r $args->{map}) {
+        $args->{map} = Spreadsheet::HTML::File::Loader::parse({ file => $args->{map} });
+    }
+
+    $args->{map}{'.'} = $args->{bgcolor} if defined $args->{bgcolor};
+
+    my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $args->{art};
     my $total_rows = scalar @lines;
-    my $total_cols;
+    my $total_cols = scalar split //, $lines[0];
+
+    my @cells;
     for my $row (0 .. $#lines) {
         my @chars = split //, $lines[$row];
-        $total_cols ||= scalar @chars;
         for my $col (0 .. $#chars) {
             next unless my $color = $args->{map}{ $chars[$col] };
             push @cells, ( 
@@ -32,14 +48,14 @@ sub beadwork {
     }
 
     my @args = (
+        @_,
+        @cells,
         pinhead  => 0,
         tgroups  => 0,
         headless => 0,
         matrix   => 1,
         wrap     => 0,
         fill     => join( 'x', $total_rows, $total_cols ),
-        @cells,
-        @_,
     );
 
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
@@ -50,7 +66,7 @@ sub dk {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    $args->{tmpl} = '
+    $args->{art} = '
 ..........................................
 ..................1111111.................
 .................414141414................
@@ -104,7 +120,7 @@ sub shroom {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    $args->{tmpl} = '
+    $args->{art} = '
 .....111111.....
 ...1122223311...
 ..133222233331..
@@ -148,38 +164,34 @@ Instead, use the Spreadsheet::HTML interface:
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new;
   print $generator->beadwork(
-      tmpl => '/path/to/ascii-art.txt',
-      map  => '/path/to/mappings.json',
+      art => '/path/to/ascii-art.txt',
+      map => '/path/to/mappings.json',
   );
 
   # or
   use Spreadsheet::HTML qw( beadwork );
   print beadwork(
-      tmpl => '/path/to/ascii-art.txt',
-      map  => '/path/to/mappings.json',
+      art => '/path/to/ascii-art.txt',
+      map => '/path/to/mappings.json',
   );
 
 =head1 METHODS
 
 =over 4
 
-=item * C<beadwork( tmpl, map, %params )>
+=item * C<beadwork( art, map, bgcolor, %params )>
 
 Generates beadwork patters in the name of ASCII art.
+
+  beadwork(
+      art => '/path/to/ascii-art.txt',
+      map => '/path/to/mappings.json',
+      bgcolor => 'gray',
+  )
 
 =item * C<dk()>
 
 =item * C<shroom()>
-
-=back
-
-=head1 REQUIRES
-
-=over 4
-
-=item * L<IO::File>
-
-=item * L<IO::Scalar>
 
 =back
 
