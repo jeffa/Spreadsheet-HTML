@@ -372,6 +372,13 @@ existing tables from Excel, HTML, JSON, CSV and YAML files.
 
 THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
+=head1 CLI TOOL
+
+A command line interface tool is available for you to use to quickly
+generate tables: C<mktable>
+
+  mktable landscape --param file=data.xls --param indent='    '
+
 =head1 METHODS
 
 All methods (except C<new>) are exportable as functions. They all
