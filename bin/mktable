@@ -8,12 +8,16 @@ use Safe;
 use Pod::Usage;
 use Getopt::Long;
 
-my $table = Spreadsheet::HTML->new;
-my $method = shift if $table->can( $ARGV[0] || '' );
+eval "use HTML::Display";
+our $NO_DISPLAY = $@;
+
+my $generator = Spreadsheet::HTML->new;
+my $method    = shift if $generator->can( $ARGV[0] || '' );
 $method ||= 'generate';
 
 GetOptions (
     'param=s'   => \my %params,
+    'display'   => \my $display,
     'help'      => \my $help,
     'man'       => \my $man,
 );
@@ -29,7 +33,12 @@ for (keys %params) {
 $args{indent}  = $params{indent};
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
-print $table->$method( %args ), $/;
+my $table = $generator->$method( %args );
+if ($display and not $NO_DISPLAY) {
+    HTML::Display::display $table;
+} else {
+    print $table, $/;
+}
 
 
 __END__
@@ -43,6 +52,7 @@ mktable method [options]
 
  Options:
    --param          parameters, multiple allowed
+   --display        display results with HTML::Display
    --help           list usage
    --man            print man page
 
@@ -65,7 +75,13 @@ The params. Run
 
   perldoc Spreadsheet::HTML
 
-for more information
+for more information.
+
+=item B<--display>
+
+Display results to your browser via L<HTML::Display>.
+
+  mktable sudoku --display
 
 =item B<--help>
 
