@@ -30,8 +30,7 @@ for (keys %params) {
     my $tmp;
     $args{$_} = $safe->reval( $params{$_} );
 }
-$args{file}    = $params{file};
-$args{indent}  = $params{indent};
+$args{$_} = $params{$_} for qw( file indent art map );
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
 if ($display and not $NO_DISPLAY) {
