@@ -6,6 +6,7 @@ Revision history for Spreadsheet-HTML
     - added mktable CLI tool
     - able to pass some custom args along to Handsontable JS
     - presets check for wantarray (client can get table w/out js)
+    - added github hints to Makefile
 
 0.36
     - fixed animate bug introduced at commit cba507b (v0.34)
