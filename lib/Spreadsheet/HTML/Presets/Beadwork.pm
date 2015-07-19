@@ -22,8 +22,13 @@ sub beadwork {
         $args->{art} = do{ local $/; <FH> };
     }
 
-    if ($args->{map} !~ /\n/ and -r $args->{map}) {
+    if (!ref $args->{map} and -r $args->{map}) {
         $args->{map} = Spreadsheet::HTML::File::Loader::parse({ file => $args->{map} });
+    }
+
+    unless (ref $args->{map}) {
+        $args->{data} = [[ 'Error' ],[ 'map is not valid JSON' ]];
+        return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
     }
 
     $args->{map}{'.'} = $args->{bgcolor} if defined $args->{bgcolor};
