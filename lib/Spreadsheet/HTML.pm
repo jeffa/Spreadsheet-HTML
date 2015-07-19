@@ -375,10 +375,19 @@ THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
 =head1 CLI TOOL
 
-A command line interface tool is available for you to use to quickly
-generate tables: C<mktable>
+A command line interface tool is available for you to quickly
+generate tables without writing a script: C<mktable>
 
-  mktable landscape --param file=data.xls --param indent='    '
+  $ mktable landscape --param file=data.xls --param preserve=1 > out.html
+
+If you have L<HTML::Display> install, you can direct the output to
+your default browser:
+
+  $ mktable sudoku --display
+
+  $ mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
+
+  $ mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
 
 =head1 METHODS
 
