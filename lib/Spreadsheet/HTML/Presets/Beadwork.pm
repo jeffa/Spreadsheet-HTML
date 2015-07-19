@@ -11,6 +11,16 @@ sub beadwork {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
+    my %presets = (
+        dk    => \&_dk,
+        '1up' => \&_1up,
+    );
+
+    if ($args->{preset}) {
+        my $sub = $presets{ $args->{preset} };
+        $sub->( $args ) if ref $sub eq 'CODE';
+    }
+
     unless (defined $args->{art} and defined $args->{map}) {
         $args->{data} = [[ 'Error' ],[ 'art is required' ]] unless defined $args->{art};
         $args->{data} ||= [[ 'Error' ],[ 'map is required' ]] unless defined $args->{map};
@@ -67,11 +77,8 @@ sub beadwork {
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
-sub dk {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
+sub _dk {
+    my $args = shift;
     $args->{art} = '
 ..........................................
 ..................1111111.................
@@ -118,13 +125,11 @@ sub dk {
         5 => '#FF5500',
     };
 
-    $self ? $self->beadwork( %$args ) : beadwork( %$args );
+    return $args;
 }
 
-sub shroom {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+sub _1up {
+    my $args = shift;
 
     $args->{art} = '
 .....111111.....
@@ -152,7 +157,7 @@ sub shroom {
         3 => 'white',
     };
 
-    $self ? $self->beadwork( %$args ) : beadwork( %$args );
+    return $args;
 }
 
 1;
@@ -185,7 +190,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<beadwork( art, map, bgcolor, %params )>
+=item * C<beadwork( art, map, bgcolor, preset, %params )>
 
 Generates beadwork patters in the name of ASCII art.
 
@@ -195,9 +200,17 @@ Generates beadwork patters in the name of ASCII art.
       bgcolor => 'gray',
   )
 
-=item * C<dk()>
+Some prefabricated examples are available via the C<preset> param:
 
-=item * C<shroom()>
+=over 4
+
+=item * C<dk>
+
+=item * C<1up>
+
+=back
+
+  beadwork( preset => 'dk' )
 
 =back
 

@@ -1,7 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.37
-    - promoted beadwork to package (moved dk and shroom into it)
+    - removed dk and shroom methods (now args to beadwork)
     - added beadwork (no useful API - simple refactor for now)
     - added mktable CLI tool
     - able to pass some custom args along to Handsontable JS

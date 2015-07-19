@@ -27,10 +27,10 @@ pod2usage( -verbose => 2 ) if $man;
 my %args;
 my $safe = Safe->new;
 for (keys %params) {
-    my $tmp;
+    next if $_ eq 'preset';
     $args{$_} = $safe->reval( $params{$_} );
 }
-$args{$_} = $params{$_} for qw( file indent art map );
+$args{$_} = $params{$_} for qw( file indent art map preset );
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
 if ($display and not $NO_DISPLAY) {
@@ -38,7 +38,6 @@ if ($display and not $NO_DISPLAY) {
 } else {
     print $generator->$method( %args ), $/;
 }
-
 
 __END__
 =head1 NAME
@@ -51,19 +50,26 @@ mktable method [options]
 
  Options:
    --param          parameters, multiple allowed
-   --display        display results with HTML::Display
+   --display        display results via HTML::Display
    --help           list usage
    --man            print man page
 
 Example:
 
-  $ mktable generate --param file=t/data/simple.html --param indent='    '
+  mktable portrait --param file=data.xls > out.html
 
-  # generate is the default generator
-  $ mktable --param file=t/data/simple.html --param indent='    '
+  # portrait is default generation method
+  mktable --param file=data.xls --param preserve=1 > out.html
 
-  # don't forget to install and configure Text::FIGlet!
-  $ mktable banner --param text="'hello world'" --param animate=1
+  # display output to browser with HTML::Display
+  mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
+
+  mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
+
+  mktable sudoku --display
+
+  # banner requires you to install and configure Text::FIGlet
+  mktable banner --param text="'hello world'" --param animate=1 --display
 
 =head1 OPTIONS
 
@@ -71,19 +77,11 @@ Example:
 
 =item B<--param>
 
-The params. Run
-
-  perldoc Spreadsheet::HTML
-
-for more information.
+The params. See perldoc L<Spreadsheet::HTML> for more documentation.
 
 =item B<--display>
 
 Display results to your browser via L<HTML::Display>.
-
-  $ mktable sudoku --display
-
-  $ mktable conway --display --param data=[1..300] --param wrap=20
 
 =item B<--help>
 
@@ -95,9 +93,4 @@ Prints the manual page and exits.
 
 =back
 
-=head1 DESCRIPTION
-
-B<This program> 
-
 =cut
-

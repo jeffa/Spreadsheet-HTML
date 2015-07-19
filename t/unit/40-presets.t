@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 32;
+use Test::More tests => 28;
 
 use Spreadsheet::HTML;
 
@@ -43,12 +43,6 @@ ok Spreadsheet::HTML::chess,                "chess by procedure";
 
 ok $table->beadwork,                        "beadwork by method";
 ok Spreadsheet::HTML::beadwork,             "beadwork by procedure";
-
-ok $table->dk,                              "dk by method";
-ok Spreadsheet::HTML::dk,                   "dk by procedure";
-
-ok $table->shroom,                          "shroom by method";
-ok Spreadsheet::HTML::shroom,               "shroom by procedure";
 
 ok $table->conway,                          "conway by method";
 ok Spreadsheet::HTML::conway,               "conway by procedure";

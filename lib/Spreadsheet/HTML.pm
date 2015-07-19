@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard animate
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork dk shroom
+    beadwork
 );
 
 use Clone;
@@ -41,8 +41,6 @@ sub animate         { Spreadsheet::HTML::Presets::Animate::animate( @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub beadwork        { Spreadsheet::HTML::Presets::Beadwork::beadwork( @_ ) }
-sub dk              { Spreadsheet::HTML::Presets::Beadwork::dk(     @_ ) }
-sub shroom          { Spreadsheet::HTML::Presets::Beadwork::shroom( @_ ) }
 
 sub generate {
     my %args = _process( @_ );
@@ -785,10 +783,6 @@ with little to no additional coding.
 =item * C<checkers( %params )>
 
 =item * C<beadwork( %params )>
-
-=item * C<dk( %params )>
-
-=item * C<shroom( %params )>
 
 =back
 
