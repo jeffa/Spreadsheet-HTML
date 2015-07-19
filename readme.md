@@ -2,8 +2,29 @@ Spreadsheet-HTML
 ================
 Just another HTML table generator.
 
+Description
+-----------
+Generate HTML tables with ease (HTML4, XHTML and HTML5). Can generate
+landscape and other rotated views, Handsontable tables, HTML calendars,
+checkboard patterns, games such as sudoku, banners and mazes, and can
+create animations of cell values and backgrounds via jQuery. Can rewrap
+existing tables from Excel, HTML, JSON, CSV and YAML files.
+
 Synopsis
 --------
+```
+mktable --param file=data.xls --param preserve=1 > out.html
+
+# display output to browser with HTML::Display
+mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
+
+mktable conway --param data=1..300 --param wrap=20 --display
+
+mktable sudoku --display
+```
+
+Backend API
+-----------
 ```perl
 use Spreadsheet::HTML;
 
@@ -24,20 +45,6 @@ print Spreadsheet::HTML::landscape( $data );
 # load from files
 my $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
 ```
-
-Interface
----------
-* north (aka portrait)
-<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr></table>
-
-* west (aka landscape)
-<table><tr><th>header1</th><td>a1</td><td>b1</td><td>c1</td><td>d1</td></tr><tr><th>header2</th><td>a2</td><td>b2</td><td>c2</td><td>d2</td></tr><tr><th>header3</th><td>a3</td><td>b3</td><td>c3</td><td>d3</td></tr></table>
-
-* south
-<table><tr><td>a1</td><td>a2</td><td>a3</td></tr><tr><td>b1</td><td>b2</td><td>b3</td></tr><tr><td>c1</td><td>c2</td><td>c3</td></tr><tr><td>d1</td><td>d2</td><td>d3</td></tr><tr><th>header1</th><th>header2</th><th>header3</th></tr></table>
-
-* east
-<table><tr><td>a1</td><td>b1</td><td>c1</td><td>d1</td><th>header1</th></tr><tr><td>a2</td><td>b2</td><td>c2</td><td>d2</td><th>header2</th></tr><tr><td>a3</td><td>b3</td><td>c3</td><td>d3</td><th>header3</th></tr></table>
 
 Installation
 ------------
