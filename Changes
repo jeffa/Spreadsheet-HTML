@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.38
+
 0.37
     - removed dk and shroom methods (now args to beadwork)
     - added beadwork (no useful API - simple refactor for now)
