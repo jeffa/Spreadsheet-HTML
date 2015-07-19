@@ -26,9 +26,9 @@ WriteMakefile(
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {
             resources => {
-                homepage   => 'https://github.com/xsawyerx/module-starter',
-                repository => 'https://github.com/xsawyerx/module-starter.git',
-                bugtracker => 'https://github.com/xsawyerx/module-starter/issues',
+                homepage   => 'https://github.com/jeffa/Spreadsheet-HTML',
+                repository => 'https://github.com/jeffa/Spreadsheet-HTML.git',
+                bugtracker => 'https://github.com/jeffa/Spreadsheet-HTML/issues',
             },
         })
     ),
