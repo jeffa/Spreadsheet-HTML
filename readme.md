@@ -13,12 +13,13 @@ existing tables from Excel, HTML, JSON, CSV and YAML files.
 Synopsis
 --------
 ```
+# portrait is default generation method
 mktable --param file=data.xls --param preserve=1 > out.html
 
 # display output to browser with HTML::Display
 mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
 
-mktable conway --param data=1..300 --param wrap=20 --display
+mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
 
 mktable sudoku --display
 ```
