@@ -29,22 +29,15 @@ Backend API
 ```perl
 use Spreadsheet::HTML;
 
-my $data = [
-    [qw(header1 header2 header3)],
-    [qw(a1 a2 a3)], [qw(b1 b2 b3)],
-    [qw(c1 c2 c3)], [qw(d1 d2 d3)],
-];
+$data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
 
-my $table = Spreadsheet::HTML->new( data => $data );
-print $table->portrait;
-print $table->landscape;
+$generator = Spreadsheet::HTML->new( data => $data, indent => "\t" );
+print $generator->portrait;
+print $generator->landscape( encodes => '<>' );
 
-# non OO
-print Spreadsheet::HTML::portrait( $data );
-print Spreadsheet::HTML::landscape( $data );
-
-# load from files
-my $table = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+# load from files (first table found)
+$generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+print $generator->generate( preserve => 1 );
 ```
 
 Installation
