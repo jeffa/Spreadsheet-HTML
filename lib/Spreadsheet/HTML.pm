@@ -378,7 +378,7 @@ generate tables without writing a script: C<mktable>
 
   $ mktable landscape --param file=data.xls --param preserve=1 > out.html
 
-If you have L<HTML::Display> install, you can direct the output to
+If you have L<HTML::Display> installed, you can direct the output to
 your default browser:
 
   $ mktable sudoku --display
