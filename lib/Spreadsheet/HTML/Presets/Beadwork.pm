@@ -13,6 +13,7 @@ sub beadwork {
 
     my %presets = (
         dk    => \&_dk,
+        mario => \&_mario,
         '1up' => \&_1up,
     );
 
@@ -160,6 +161,39 @@ sub _1up {
     return $args;
 }
 
+sub _mario {
+    my $args = shift;
+
+    $args->{art} = '
+...111111....
+..1111111111.
+..22244434...
+.24244443444.
+.242244442444
+.22444442222.
+...44444444..
+..3313331....
+.33313331333.
+3333111113333
+4431111111344
+4441111111444
+4411111111144
+..111...111..
+.333.....333.
+2222.....2222
+';
+
+    $args->{map} = {
+        '.' => 'white',
+        1 => '#D91F26', # red
+        2 => '#481E1D', # black
+        3 => '#3D59A8', # blue
+        4 => '#F5Af9D', # flesh
+    };
+
+    return $args;
+}
+
 1;
 
 =head1 NAME
@@ -203,6 +237,8 @@ Generates beadwork patters in the name of ASCII art.
 Some prefabricated examples are available via the C<preset> param:
 
 =over 4
+
+=item * C<mario>
 
 =item * C<dk>
 

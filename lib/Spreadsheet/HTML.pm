@@ -281,7 +281,7 @@ sub _args {
     $data = delete $args->{data} if exists $args->{data};
 
     my $encodes = exists $args->{encodes} ? $args->{encodes} : '';
-    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level} );
+    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level}, sorted => 1 );
 
     if ($self) {
         return ( $self, $self->{data}, $args ) if $self->{is_cached};
