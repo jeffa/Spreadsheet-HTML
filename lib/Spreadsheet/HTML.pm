@@ -97,7 +97,7 @@ sub generate {
             }
         }
         my $table = _make_table( _process( %new_args ) );
-        return wantarray ? ( $table, $js ) : $js . $table;
+        return $js . $table;
     }
 
     return _make_table( %args );

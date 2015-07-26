@@ -18,10 +18,10 @@ ok $table->checkerboard,                    "checkerboard by method";
 ok Spreadsheet::HTML::checkerboard,         "checkerboard by procedure";
 
 my $animate = '<table><caption align="bottom"><button id="toggle" onClick="toggle()">Start</button></caption><tr><th class="animate" id="0-0">&nbsp;</th></tr></table>';
-is @{ [ $table->animate ] }[0], $animate,                   "animate by method";
-is @{ [ Spreadsheet::HTML::animate ] }[0], $animate,        "animate by procedure";
-is @{ [ $table->generate( animate => 1 ) ] }[0], $animate,  "animate by method";
-is @{ [ Spreadsheet::HTML::generate( animate => 1 ) ] }[0], $animate, "animate by procedure";
+is scrub_js( @{ [ $table->animate ] }[0] ), $animate,                               "animate by method";
+is scrub_js( @{ [ Spreadsheet::HTML::animate ] }[0] ), $animate,                    "animate by procedure";
+is scrub_js( @{ [ $table->generate( animate => 1 ) ] }[0] ), $animate,              "animate by method";
+is scrub_js( @{ [ Spreadsheet::HTML::generate( animate => 1 ) ] }[0] ), $animate,   "animate by procedure";
 
 ok $table->banner,                          "banner by method";
 ok Spreadsheet::HTML::banner,               "banner by procedure";
@@ -49,3 +49,9 @@ ok Spreadsheet::HTML::conway,               "conway by procedure";
 
 ok $table->calculator,                      "calculator by method";
 ok Spreadsheet::HTML::calculator,           "calculator by procedure";
+
+sub scrub_js {
+    my $str = shift;
+    $str =~ s/.*<\/script>//s;
+    return $str;
+}

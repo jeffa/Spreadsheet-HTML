@@ -3,6 +3,7 @@ Revision history for Spreadsheet-HTML
 0.38
     - require HTML::AutoTag v0.07
     - added mario preset for beadwork()
+    - no wantarray check for animate()
 
 0.37
     - removed dk and shroom methods (now args to beadwork)
