@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.39
+
 0.38
     - require HTML::AutoTag v0.07 (unsorted attributes)
     - added mario preset for beadwork()
