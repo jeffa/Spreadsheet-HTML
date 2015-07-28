@@ -453,9 +453,10 @@ For most cases, C<portrait> and C<landscape> are all you need.
 
 =head1 PARAMETERS
 
-All methods/procedures accept the same named parameters.
-You do not have to specify C<data>, any bare array references
-will be collected and assigned to C<data>.
+All methods/procedures accept the same named parameters. All
+parameters are initally undefined.  You do not have to specify
+C<data>, any bare array references will be collected and assigned
+to C<data>.
 
 =head2 LITERAL PARAMETERS
 
