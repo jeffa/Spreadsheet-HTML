@@ -816,17 +816,27 @@ different file formats:
 
 =over 4
 
-=item * L<JSON>
+=item * L<Spreadsheet::Read>
 
-=item * L<YAML>
+Uses the following:
+
+=over 4
 
 =item * L<Text::CSV>
 
 =item * L<Text::CSV_XS>
 
-=item * L<HTML::TableExtract>
+=item * L<Text::CSV_PP>
 
 =item * L<Spreadsheet::ParseExcel>
+
+=back
+
+=item * L<JSON>
+
+=item * L<YAML>
+
+=item * L<HTML::TableExtract>
 
 =back
 
