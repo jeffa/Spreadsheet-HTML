@@ -288,9 +288,7 @@ sub _args {
         sorted  => $args->{sorted_attrs}
     );
 
-    if ($self and $self->{is_cached}) {
-        return ( $self, $self->{data}, $args );
-    }
+    return ( $self, $self->{data}, $args ) if $self and $self->{is_cached};
 
     $data = Spreadsheet::HTML::File::Loader::parse( $args ) if $args->{file};
     $data = [ $data ] unless ref($data);
