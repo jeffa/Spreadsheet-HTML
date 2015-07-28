@@ -278,13 +278,18 @@ sub _args {
 
     $data ||= (@data == 1) ? $data[0] : (@data) ? [ @data ] : undef;
     $args = scalar @args ? { @args } : {};
+    $args = { %{ $self || {} }, %{ $args || {} } };
     $data = delete $args->{data} if exists $args->{data};
 
-    if ($self) {
-        return ( $self, $self->{data}, $args ) if $self->{is_cached};
-        $args = { %{ $self || {} }, %{ $args || {} } };
-        delete $args->{data};
-        $data = $self->{data} unless $data or $args->{file};
+    $args->{_auto} = HTML::AutoTag->new(
+        encodes => exists $args->{encodes} ? $args->{encodes} : '',
+        indent  => $args->{indent},
+        level   => $args->{level},
+        sorted  => $args->{sorted_attrs}
+    );
+
+    if ($self and $self->{is_cached}) {
+        return ( $self, $self->{data}, $args );
     }
 
     $data = Spreadsheet::HTML::File::Loader::parse( $args ) if $args->{file};
@@ -308,9 +313,6 @@ sub _args {
         $args->{_max_rows} = $fill{row} if (int($fill{row} || 0)) > ($args->{_max_rows});
         $args->{_max_cols} = $fill{col} if (int($fill{col} || 0)) > ($args->{_max_cols});
     }
-
-    my $encodes = exists $args->{encodes} ? $args->{encodes} : '';
-    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level}, sorted => $args->{sorted_attrs} );
 
     return ( $self, Clone::clone($data), $args );
 }
