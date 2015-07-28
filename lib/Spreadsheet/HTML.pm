@@ -280,9 +280,6 @@ sub _args {
     $args = scalar @args ? { @args } : {};
     $data = delete $args->{data} if exists $args->{data};
 
-    my $encodes = exists $args->{encodes} ? $args->{encodes} : '';
-    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level}, sorted => 1 );
-
     if ($self) {
         return ( $self, $self->{data}, $args ) if $self->{is_cached};
         $args = { %{ $self || {} }, %{ $args || {} } };
@@ -311,6 +308,9 @@ sub _args {
         $args->{_max_rows} = $fill{row} if (int($fill{row} || 0)) > ($args->{_max_rows});
         $args->{_max_cols} = $fill{col} if (int($fill{col} || 0)) > ($args->{_max_cols});
     }
+
+    my $encodes = exists $args->{encodes} ? $args->{encodes} : '';
+    $args->{_auto} = HTML::AutoTag->new( encodes => $encodes, indent => $args->{indent}, level => $args->{level}, sorted => $args->{sorted_attrs} );
 
     return ( $self, Clone::clone($data), $args );
 }
@@ -625,6 +625,12 @@ Since C<headings> is a natural alias for the dynamic parameter
 C<-r0>, it could be considered as a dynamic parameter. Be
 careful not to prepend a dash to C<headings> ... only dynamic
 parameters use leading dashes.
+
+=item * C<sorted_attrs: 0 or 1>
+
+This is useful for ensuring that attributes within tags are
+rendered in alphabetical ordering, for consistancy. You will
+most likely never need this feature.
 
 =back
 

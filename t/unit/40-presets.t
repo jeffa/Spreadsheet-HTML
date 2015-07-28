@@ -5,11 +5,12 @@ use Test::More tests => 28;
 
 use Spreadsheet::HTML;
 
-my $table = Spreadsheet::HTML->new( );
+my %attr  = ( sorted_attrs => 1 );
+my $table = Spreadsheet::HTML->new( %attr );
 
 my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>&nbsp;</td></tr></table>';
 is $table->layout, $layout,                          "layout by method";
-is Spreadsheet::HTML::layout, $layout,               "layout by procedure";
+is Spreadsheet::HTML::layout( %attr ), $layout,      "layout by procedure";
 
 ok $table->handson,                         "handson by method";
 ok Spreadsheet::HTML::handson,              "handson by procedure";
@@ -18,10 +19,10 @@ ok $table->checkerboard,                    "checkerboard by method";
 ok Spreadsheet::HTML::checkerboard,         "checkerboard by procedure";
 
 my $animate = '<table><caption align="bottom"><button id="toggle" onClick="toggle()">Start</button></caption><tr><th class="animate" id="0-0">&nbsp;</th></tr></table>';
-is scrub_js( @{ [ $table->animate ] }[0] ), $animate,                               "animate by method";
-is scrub_js( @{ [ Spreadsheet::HTML::animate ] }[0] ), $animate,                    "animate by procedure";
-is scrub_js( @{ [ $table->generate( animate => 1 ) ] }[0] ), $animate,              "animate by method";
-is scrub_js( @{ [ Spreadsheet::HTML::generate( animate => 1 ) ] }[0] ), $animate,   "animate by procedure";
+is scrub_js( @{ [ $table->animate ] }[0] ), $animate,                                       "animate by method";
+is scrub_js( @{ [ Spreadsheet::HTML::animate( %attr ) ] }[0] ), $animate,                   "animate by procedure";
+is scrub_js( @{ [ $table->generate( animate => 1 ) ] }[0] ), $animate,                      "animate by method";
+is scrub_js( @{ [ Spreadsheet::HTML::generate( animate => 1, %attr ) ] }[0] ), $animate,    "animate by procedure";
 
 ok $table->banner,                          "banner by method";
 ok Spreadsheet::HTML::banner,               "banner by procedure";
