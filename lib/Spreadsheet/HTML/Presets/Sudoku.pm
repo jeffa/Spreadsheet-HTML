@@ -42,6 +42,9 @@ sub sudoku {
                 }
             }
         }
+        else {
+            $data = [ ['Error'], ['could not find solution'], ['please try again'] ];
+        }
     }
     else {
         $data = [ ['Error'], ['Games::Sudoku::Component not installed'] ];

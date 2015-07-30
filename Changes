@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.40
+    - sudoku() alerts user when no solutions found
     - sudoku() alerts user to install dependency
 
 0.39
