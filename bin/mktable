@@ -24,7 +24,7 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
-my @ok = qw( fill file indent art map preset );
+my @ok = qw( fill file fade on off indent art map preset );
 my %args;
 my $safe = Safe->new;
 for (keys %params) {
