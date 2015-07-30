@@ -24,13 +24,14 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
+my @ok = qw( fill file indent art map preset );
 my %args;
 my $safe = Safe->new;
 for (keys %params) {
-    next if $_ eq 'preset';
+    next if grep $_, @ok;
     $args{$_} = $safe->reval( $params{$_} );
 }
-$args{$_} = $params{$_} for qw( file indent art map preset );
+$args{$_} = $params{$_} for @ok;
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
 
 if ($display and not $NO_DISPLAY) {
