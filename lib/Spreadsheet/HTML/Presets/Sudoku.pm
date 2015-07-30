@@ -15,6 +15,7 @@ sub sudoku {
     $args->{blanks}     = int($args->{blanks} || 0) || 50;
     $args->{size}       = 9; # Games::Sudoku::Component only accepts perfect squares and only 9 is fast
 
+    $data = [];
     my @cells;
     my ($solved,$unsolved) = ('','');
     unless ($NO_SUDOKU) {
@@ -42,6 +43,9 @@ sub sudoku {
             }
         }
     }
+    else {
+        $data = [ ['Error'], ['Games::Sudoku::Component not installed'] ];
+    }
 
     my $sqrt = int(sqrt( $args->{size} ));
     my @args = (
@@ -52,7 +56,7 @@ sub sudoku {
         tr       => { id => [ map "sudoku-$_", 0 .. $sqrt - 1] },
         colgroup => [ ({ style => { border => 'solid medium' } }) x $sqrt ],
         col      => [ ({}) x $sqrt ],
-        data     => [],
+        data     => $data,
         fill     => sprintf( '%sx%s', ($args->{size}) x 2 ),
         wrap     => 0,
         tgroups  => 1,

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.40
+    - sudoku() alerts user to install dependency
 
 0.39
     - added sorted_attrs literal param
