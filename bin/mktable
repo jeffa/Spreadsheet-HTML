@@ -80,6 +80,9 @@ Example:
   # banner requires you to install and configure Text::FIGlet
   mktable banner --param text="'hello world'" --param animate=1 --display
 
+  # wrap references with quotes:
+  mktable --param -r1='{class=>"foo"}'
+
 =head1 OPTIONS
 
 =over 8

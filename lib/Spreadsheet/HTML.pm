@@ -387,6 +387,8 @@ your default browser:
 
   $ mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
 
+Run C<mktable --man> for more documentation.
+
 =head1 METHODS
 
 All methods (except C<new>) are exportable as functions. They all
