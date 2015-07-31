@@ -24,15 +24,21 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
-my @ok = qw( fill file fade on off indent art map preset );
+my @files = qw( file art map );
+my @ok    = ( qw( fill on off indent art map preset ), @files );
+my @undef = qw( encodes empty );
+
 my %args;
 my $safe = Safe->new;
 for (keys %params) {
-    next if grep $_, @ok;
+    next if grep $_, @ok, @undef;
     $args{$_} = $safe->reval( $params{$_} );
 }
+
 $args{$_} = $params{$_} for @ok;
+$args{$_} = (exists $params{$_} and $params{$_} eq 'undef') ? undef : $params{$_} for @undef;
 $args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
+$args{empty}   = undef if exists $params{empty}   and $params{empty}   eq 'undef';
 
 if ($display and not $NO_DISPLAY) {
     HTML::Display::display( $generator->$method( %args ) );
