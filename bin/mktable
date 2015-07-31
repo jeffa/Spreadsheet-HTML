@@ -24,24 +24,29 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
-my @files = qw( file art map );
+my @skip  = qw( fill file art map );
 my @undef = qw( encodes empty );
 
 my %args;
 my $safe = Safe->new;
 for my $key (keys %params) {
-    next if grep { $key eq $_ } @files;
+    next if grep { $key eq $_ } @skip;
     $args{$key} = $safe->reval( $params{$key} );
 }
 
-for (@files) { $args{$_} = $params{$_} if exists $params{$_}  }
+for (@skip)  { $args{$_} = $params{$_} if exists $params{$_}  }
 for (@undef) { $args{$_} = undef if exists $params{$_} and $params{$_} eq 'undef' }
 
 if ($display and not $NO_DISPLAY) {
-    HTML::Display::display( $generator->$method( %args ) );
-} else {
-    print $generator->$method( %args ), $/;
+    if ($NO_DISPLAY) {
+        warn "please install HTML::Display\n";
+    } else {
+        HTML::Display::display( $generator->$method( %args ) );
+        exit;
+    }
 }
+
+print $generator->$method( %args ), $/;
 
 __END__
 =head1 NAME
