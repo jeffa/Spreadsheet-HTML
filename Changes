@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.41
+
 0.40
     - corrected mktable params
     - sudoku() alerts user when no solutions found
