@@ -37,8 +37,6 @@ for (keys %params) {
 
 $args{$_} = $params{$_} for @ok;
 $args{$_} = (exists $params{$_} and $params{$_} eq 'undef') ? undef : $params{$_} for @undef;
-$args{encodes} = undef if exists $params{encodes} and $params{encodes} eq 'undef';
-$args{empty}   = undef if exists $params{empty}   and $params{empty}   eq 'undef';
 
 if ($display and not $NO_DISPLAY) {
     HTML::Display::display( $generator->$method( %args ) );
