@@ -37,7 +37,7 @@ for my $key (keys %params) {
 for (@skip)  { $args{$_} = $params{$_} if exists $params{$_}  }
 for (@undef) { $args{$_} = undef if exists $params{$_} and $params{$_} eq 'undef' }
 
-if ($display and not $NO_DISPLAY) {
+if ($display) {
     if ($NO_DISPLAY) {
         warn "please install HTML::Display\n";
     } else {
