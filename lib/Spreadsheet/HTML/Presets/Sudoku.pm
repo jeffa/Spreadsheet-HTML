@@ -167,12 +167,12 @@ Instead, use the Spreadsheet::HTML interface:
 Generates a static unsolved 9x9 sudoku board. You must have
 L<Games::Sudoku::Component> installed, which currently
 has no dependencies and is very fast and reliable. You can
-specify how many cells to leave unsolved with C<blanks>.
+specify how many cells to leave unsolved with the C<blanks> param.
 
   sudoku( blanks => 50 ) 
 
 Four attempts are made to find a solveable board, you can
-override with C<attempts>.
+override that default with the C<attempts> param.
 
   sudoku( attempts => 1 ) 
 
