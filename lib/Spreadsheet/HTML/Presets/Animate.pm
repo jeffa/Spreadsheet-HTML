@@ -203,15 +203,22 @@ Instead, use the Spreadsheet::HTML interface:
 
 Moves the contents (C<fgdirection> for CDATA, C<bgdirection>
 for attributes) of each cell in the direction specified.
-Valid values are C<up>, C<down>, C<left> and C<right>.
+Valid values are C<up>, C<down>, C<left> and C<right>, or
+you can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
+to specify which axis(es) to animate. (Ditto for C<bx> and
+C<by> for C<bgdirection>.)
+
+  animate( fgdirection => 'left' )
+
+  # same as
+  animate( fx => -1 )
+
+  # produce diagonal (left and up)
+  animate( fx => -1, fy => -1 )
 
 Set the timer with C<interval> (defaults to 200 miliseconds).
 
   animate( fgdirection => 'right', interval => 300 )
-
-Can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
-to specify which axis(es) to animate. (Ditto for C<bx> and
-C<by> for C<bgdirection>.)
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified via
