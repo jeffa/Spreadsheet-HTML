@@ -251,6 +251,7 @@ sub calendar {
     my @args = (
         @cal_args,
         @_,
+        td => { %{ $args->{td} || {} }, style  => { %{ $args->{td}{style} || {} }, 'text-align' => 'right' } },
         wrap    => 7,
         theta   => 0,
         flip    => 0,
