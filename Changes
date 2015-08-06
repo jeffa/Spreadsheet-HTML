@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.41
+    - banner() alerts user to errors
 
 0.40
     - corrected mktable params
