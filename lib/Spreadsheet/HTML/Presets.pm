@@ -75,6 +75,9 @@ sub banner {
                 ->new( -d => $args->{dir}, -f => $args->{emboss} ? 'block' : 'banner' )
                 ->figify( -A => uc( $args->{text} || '' ), -w => 9999 );
         };
+        if ($@) {
+            $data = [ ['Error'], ["could not create banner: $@"] ];
+        }
 
         if (@banner) {
             push @cells, ( fill => join 'x', scalar( @banner ), length( $banner[0] ) );
@@ -103,8 +106,12 @@ sub banner {
             }
         }
     }
+    else {
+        $data = [ ['could not create banner'], [ 'Text::FIGlet not installed' ] ];
+    }
 
     my @args = (
+        data => $data,
         @_,
         @cells,
         wrap => 0,
