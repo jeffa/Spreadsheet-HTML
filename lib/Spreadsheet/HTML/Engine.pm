@@ -8,8 +8,9 @@ our $NO_ENGINE = $@;
 sub execute {
     return $_[0] if $NO_ENGINE;
     my ($data,$formula) = @_;
+    $formula = [ $formula ] unless ref $formula;
     my $sheet = _import( $data );
-    $sheet->execute( $formula );
+    $sheet->execute( $_ ) for @$formula;
     $sheet->recalc;
     return _export( $sheet );
 }
