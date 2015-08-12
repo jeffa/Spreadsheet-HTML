@@ -17,6 +17,7 @@ use Clone;
 use HTML::AutoTag;
 use Math::Matrix;
 
+use Spreadsheet::HTML::Engine;
 use Spreadsheet::HTML::Presets;
 use Spreadsheet::HTML::File::Loader;
 
@@ -302,6 +303,11 @@ sub _args {
         ];
     }
 
+    # apply any engine formulas requested
+    if ($args->{execute}) {
+        $data = Spreadsheet::HTML::Engine::execute( $data, $args->{execute} );
+    }
+
     $args->{_max_rows} = scalar @{ $data }      || 1;
     $args->{_max_cols} = scalar @{ $data->[0] } || 1;
 
@@ -516,6 +522,14 @@ automatically wrap into a 2D array matrix. Can also
 of likely mangling the headings.
 
   wrap => 10 
+
+=item * C<execute>
+
+Applies formulas parsable by Spreadsheet::Engine to data.
+
+  execute => 'set B6 formula SUM(B2:B5)'
+
+See L<Spreadsheet::Engine> for more.
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 
@@ -819,6 +833,14 @@ Useful for preventing data from being clobbered.
 =back
 
 =head1 OPTIONAL
+
+The following is used to apply formulas to data:
+
+=over 4
+
+=item * L<Spreadsheet::Engine>
+
+=back
 
 The following are used to load data from various
 different file formats:

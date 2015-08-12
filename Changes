@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.41
+    - added Spreadsheet::Engine support 
     - calendar() cells aligned to right
     - banner() alerts user to errors
 
