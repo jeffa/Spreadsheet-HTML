@@ -529,7 +529,12 @@ Applies formulas parsable by Spreadsheet::Engine to data.
 
   execute => 'set B6 formula SUM(B2:B5)'
 
-See L<Spreadsheet::Engine> for more.
+Accepts lists:
+
+  execute => ['set B6 formula SUM(B2:B5)', 'set C6 formula SUM(C2:C5)']
+
+Can be used to create total and sub total rows. See
+L<Spreadsheet::Engine> for more.
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 
