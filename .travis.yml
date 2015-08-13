@@ -1,6 +1,6 @@
 language: perl
 before_install:
-    - cpanm --notest JSON YAML Text::CSV Text::CSV_XS Math::Matrix HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read
+    - cpanm --notest JSON YAML Text::CSV Text::CSV_XS Math::Matrix HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read Spreadsheet::Engine
 perl:
   - "5.20"
   - "5.18"
