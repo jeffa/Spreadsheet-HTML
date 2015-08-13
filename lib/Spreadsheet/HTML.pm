@@ -369,11 +369,11 @@ Procedural interface:
 
 =head1 DESCRIPTION
 
-Generate HTML tables with ease (HTML4, XHTML and HTML5). Can generate
-landscape and other rotated views, Handsontable tables, HTML calendars,
-checkerboard patterns, games such as sudoku, banners and mazes, and can
-create animations of cell values and backgrounds via jQuery. Can rewrap
-existing tables from Excel, HTML, JSON, CSV and YAML files.
+Generate HTML tables with ease (HTML4, XHTML and HTML5). Generate
+portrait, landscape and other rotated views, Handsontable tables, HTML
+calendars, checkerboard patterns, games such as sudoku, banners and mazes,
+and create animations of cell values and backgrounds via supplied jQuery.
+Rewrap existing tables from Excel, HTML, JSON, CSV and YAML files.
 
 THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
@@ -462,9 +462,9 @@ For most cases, C<portrait> and C<landscape> are all you need.
 =head1 PARAMETERS
 
 All methods/procedures accept the same named parameters. All
-parameters are initally undefined.  You do not have to specify
-C<data>, any bare array references will be collected and assigned
-to C<data>.
+parameters are initally undefined.  You do not necessarily have
+to specify C<data>, any bare array references will be collected
+and assigned to C<data>.
 
 =head2 LITERAL PARAMETERS
 
