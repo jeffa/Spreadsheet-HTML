@@ -97,7 +97,7 @@ You may stop reading now :)
 
 =over 4
 
-=item * parse()
+=item * C<parse()>
 
 =back
 
