@@ -433,7 +433,9 @@ Will generate and display a banner using the given C<text> in the
 'banner' font. Set C<emboss> to a true value and the font 'block'
 will be emulated by highlighting the left and bottom borders of the cell.
 Set the foreground color with C<on> and the background with C<off>.
-You Must have L<Text::FIGlet> installed in order to use this preset.
+You Must have L<Text::FIGlet> installed AND configured in order to use
+this preset. If Text::FIGlet cannot find the fonts directory then it
+will silently fail and produce no banner.
 
   banner( dir => '/path/to/figlet/fonts', text => 'HI', on => 'red' )
 
