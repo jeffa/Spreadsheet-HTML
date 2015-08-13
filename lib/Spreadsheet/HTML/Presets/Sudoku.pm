@@ -142,7 +142,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Sudoku - Javascript for sudoku board.
+Spreadsheet::HTML::Presets::Sudoku - Generates 9x9 sudoku boards.
 
 =head1 DESCRIPTION
 

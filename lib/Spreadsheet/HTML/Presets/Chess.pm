@@ -34,7 +34,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Chess - Javascript for chess board.
+Spreadsheet::HTML::Presets::Chess - Provides draggable functionality.
 
 See L<Spreadsheet::HTML::Presets>
 
