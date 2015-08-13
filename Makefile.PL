@@ -21,7 +21,7 @@ WriteMakefile(
     PREREQ_PM => {
         'Clone'             => 0,
         'Math::Matrix'      => 0.8,
-        'HTML::AutoTag'     => 0.07,
+        'HTML::AutoTag'     => 0.09,
     },
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {
