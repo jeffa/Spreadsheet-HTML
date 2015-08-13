@@ -5,7 +5,7 @@ use warnings FATAL => 'all';
 eval "use Spreadsheet::Engine";
 our $NO_ENGINE = $@;
 
-sub execute {
+sub apply {
     return $_[0] if $NO_ENGINE;
     my ($data,$formula) = @_;
     $formula = [ $formula ] unless ref $formula;
@@ -52,7 +52,7 @@ Spreadsheet::HTML::Engine - interface to Spreadsheet::Engine
 
 =over 4
 
-=item C<execute( formula )>
+=item C<apply( formula )>
 
 =back
 

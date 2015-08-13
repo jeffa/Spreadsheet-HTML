@@ -2,7 +2,7 @@ Revision history for Spreadsheet-HTML
 
 0.41
     - require HTML::AutoTag v0.09 (keeping up-to-date)
-    - added Spreadsheet::Engine support 
+    - added Spreadsheet::Engine support via apply param
     - calendar() cells aligned to right
     - banner() alerts user to errors
 

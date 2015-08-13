@@ -303,9 +303,8 @@ sub _args {
         ];
     }
 
-    # apply any engine formulas requested
-    if ($args->{execute}) {
-        $data = Spreadsheet::HTML::Engine::execute( $data, $args->{execute} );
+    if ($args->{apply}) {
+        $data = Spreadsheet::HTML::Engine::apply( $data, $args->{apply} );
     }
 
     $args->{_max_rows} = scalar @{ $data }      || 1;
@@ -523,15 +522,15 @@ of likely mangling the headings.
 
   wrap => 10 
 
-=item * C<execute>
+=item * C<apply>
 
 Applies formulas parsable by Spreadsheet::Engine to data.
 
-  execute => 'set B6 formula SUM(B2:B5)'
+  apply => 'set B6 formula SUM(B2:B5)'
 
 Accepts lists:
 
-  execute => ['set B6 formula SUM(B2:B5)', 'set C6 formula SUM(C2:C5)']
+  apply => ['set B6 formula SUM(B2:B5)', 'set C6 formula SUM(C2:C5)']
 
 Can be used to create total and sub total rows. See
 L<Spreadsheet::Engine> for more.

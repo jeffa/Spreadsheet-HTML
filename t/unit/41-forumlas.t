@@ -19,7 +19,7 @@ my $table = Spreadsheet::HTML->new(
     ],
 );
 
-is $table->generate( execute => 'set B6 formula SUM(B2:B5)' ),
+is $table->generate( apply => 'set B6 formula SUM(B2:B5)' ),
     '<table><tr><th>Name</th><th>Age</th><th>Id</th></tr><tr><td>Bob</td><td>20</td><td>1</td></tr><tr><td>Mary</td><td>30</td><td>2</td></tr><tr><td>Lary</td><td>27</td><td>3</td></tr><tr><td>Sue</td><td>50</td><td>4</td></tr><tr><td>&nbsp;</td><td>127</td><td>&nbsp;</td></tr></table>',
     "correct output for SUM";
 
