@@ -179,7 +179,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Calculator - Basic calculator made with an HTML table.
+Spreadsheet::HTML::Presets::Calculator - Generate HTML table basic calculator.
 
 =head1 DESCRIPTION
 

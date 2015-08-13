@@ -389,7 +389,7 @@ sub _js_wrapper {
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets - Preset tables for fun and games.
+Spreadsheet::HTML::Presets - Generate preset HTML tables.
 
 =head1 DESCRIPTION
 

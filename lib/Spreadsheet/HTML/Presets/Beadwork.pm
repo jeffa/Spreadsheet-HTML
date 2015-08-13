@@ -198,7 +198,7 @@ sub _mario {
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Beadwork - create artful patterns.
+Spreadsheet::HTML::Presets::Beadwork - Generate patterns in HTML table cell backgrounds.
 
 =head1 DESCRIPTION
 

@@ -80,7 +80,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Handson - Handsontable tables for Perl!
+Spreadsheet::HTML::Presets::Handson - Generate Handsontable HTML tables.
 
 =head1 DESCRIPTION
 

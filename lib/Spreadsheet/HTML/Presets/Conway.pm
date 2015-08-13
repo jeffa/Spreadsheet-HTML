@@ -169,7 +169,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Conway - Conway's Game of Life.
+Spreadsheet::HTML::Presets::Conway - Generate Conway's Game of Life in HTML table cells' background.
 
 =head1 DESCRIPTION
 
