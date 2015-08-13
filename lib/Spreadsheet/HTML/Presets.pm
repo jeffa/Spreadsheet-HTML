@@ -461,11 +461,13 @@ Generates a static maze.
 
 =item * C<checkers( %params )>
 
-Generates a static checkers game board (US).
+Generates a checkers game board (US). Currently you can only
+move the pieces around without regard to any rules.
 
 =item * C<chess( %params )>
 
-Generates a static chess game board.
+Generates a chess game board. Currently you can only
+move the pieces around without regard to any rules.
 
 =back
 
