@@ -47,15 +47,17 @@ sub checkerboard {
 
     my $colors = $args->{colors} ? $args->{colors} : [qw(red green)];
     $colors = [ $colors ] unless ref $colors;
-    $args->{extra} ||= 'white';
-    push @$colors, $args->{extra} unless $args->{_max_cols} % @$colors;
+
+    my @rows;
+    for my $row (0 .. $args->{_max_rows} - 1) {
+        push @rows, ( "-r$row" => { style => { 'background-color' => [@$colors] } } );
+        Tie::Hash::Attribute::_rotate( $colors );
+    }
 
     my @args = (
-        matrix   => 1,
-        headings => sub { join(' ', map { sprintf '<b>%s</b>', ucfirst(lc($_)) } split ('_', shift || '')) },
         @_,
         wrap => 0,
-        td => { %{ $args->{td} || {} }, style  => { %{ $args->{td}{style} || {} }, 'background-color' => $colors } },
+        @rows,
     );
 
     $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
