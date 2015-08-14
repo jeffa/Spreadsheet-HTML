@@ -44,7 +44,13 @@ sub beadwork {
         return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
     }
 
+    # override any mapped colors
     $args->{map}{'.'} = $args->{bgcolor} if defined $args->{bgcolor};
+    my %map_args = map {($_ => $args->{$_})} grep /^-\d+$/, keys %$args;
+    for (keys %map_args) {
+        (my $key) = $_ =~ /(\d+)/;
+        $args->{map}{$key} = $map_args{$_};
+    }
 
     my @lines = grep ! $_ =~ /^\s*$/, split /\n/, $args->{art};
     my $total_rows = scalar @lines;
@@ -342,6 +348,10 @@ Generates beadwork patters in the name of ASCII art.
       bgcolor => 'gray',
   )
 
+C<art> contains the ASCII picture and C<map> contains the color
+for each symbol in the ASCII picture in a hash. See source code
+for preset examples of the art and map data structures.
+
 Some prefabricated examples are available via the C<preset> param:
 
 =over 4
@@ -359,6 +369,18 @@ Some prefabricated examples are available via the C<preset> param:
 =back
 
   beadwork( preset => 'dk' )
+
+Mapped colors can be overriden by their key number:
+
+  beadwork( 
+      art => '/path/to/ascii-art.txt',
+      map => '/path/to/mappings.json',
+      -3  => 'blue',
+  )
+
+Works well with presets. Change Cartman's cap and mitten colors:
+
+  beadwork( preset => 'carman', -2 => 'purple', -3 => 'green' )
 
 =back
 

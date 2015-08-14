@@ -1,8 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 0.41
+    - can override beadwork() colors with -N params
     - corrected checkerboard() alternating colors
-    - added beadwork presets: apple and cartman
+    - added beadwork() presets: apple and cartman
     - require HTML::AutoTag v0.09 (keeping up-to-date)
     - added Spreadsheet::Engine support via new param 'apply'
     - calendar() cells aligned to right
