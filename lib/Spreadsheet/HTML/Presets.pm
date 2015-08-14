@@ -482,32 +482,32 @@ move the pieces around without regard to any rules.
 
 =over 4
 
-=item *L<Spreadsheet::HTML::Presets::Animate>
+=item * L<Spreadsheet::HTML::Presets::Animate>
 
 Provides the animate param.
 
-=item *L<Spreadsheet::HTML::Presets::Beadwork>
+=item * L<Spreadsheet::HTML::Presets::Beadwork>
 
 Turn cell backgrounds into 8-bit pixel art.
 
-=item *L<Spreadsheet::HTML::Presets::Calculator>
+=item * L<Spreadsheet::HTML::Presets::Calculator>
 
 A simple HTML table calculator.
 
-=item *L<Spreadsheet::HTML::Presets::Conway>
+=item * L<Spreadsheet::HTML::Presets::Conway>
 
 Turn cell backgrounds into Conway's game of life.
 
-=item *L<Spreadsheet::HTML::Presets::Chess>
+=item * L<Spreadsheet::HTML::Presets::Chess>
 
 Work in progress. Hope to interface with a pre-existing
 Javascript Chess engine someday.
 
-=item *L<Spreadsheet::HTML::Presets::Handson>
+=item * L<Spreadsheet::HTML::Presets::Handson>
 
 Handsontable HTML tables. See L<http://handsontable.com>.
 
-=item *L<Spreadsheet::HTML::Presets::Sudoku>
+=item * L<Spreadsheet::HTML::Presets::Sudoku>
 
 Generate 9x9 HTML table sudoku boards.
 
