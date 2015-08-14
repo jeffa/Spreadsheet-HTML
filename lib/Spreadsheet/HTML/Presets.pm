@@ -227,6 +227,7 @@ sub calendar {
         
         push @cal_args, ( data => \@flat );
 
+        $args->{ '-' . Time::Piece->new->mday } = $args->{today};
         my %day_args = map {($_ => $args->{$_})} grep /^-\d+$/, keys %$args;
         for (keys %day_args) {
             my $day = abs($_);
@@ -441,7 +442,7 @@ will silently fail and produce no banner.
 
   banner( dir => '/path/to/figlet/fonts', text => 'HI', on => 'red' )
 
-=item * C<calendar( month, year, %params )>
+=item * C<calendar( month, year, today, %params )>
 
 Generates a static calendar. Defaults to current month and year.
 
@@ -450,6 +451,10 @@ Generates a static calendar. Defaults to current month and year.
 Mark a day of the month like so:
 
   calendar( month => 12, -25 => { bgcolor => 'red' } )
+
+Or mark today, whenever it is:
+
+  calendar( today => { bgcolor => 'red' } )
 
 Default rules still apply to styling columns by any heading:
 

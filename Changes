@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.41
+    - added today param to calendar()
     - can override beadwork() colors with -N params
     - corrected checkerboard() alternating colors
     - added beadwork() presets: apple, cartman and homer
