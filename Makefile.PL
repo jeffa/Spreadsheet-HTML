@@ -19,7 +19,6 @@ WriteMakefile(
         'Test::More'        => 0,
     },
     PREREQ_PM => {
-        'Math::Matrix'      => 0.8,
         'HTML::AutoTag'     => 0.09,
     },
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
