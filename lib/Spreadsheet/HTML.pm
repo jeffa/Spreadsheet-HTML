@@ -127,7 +127,7 @@ sub _process {
     }
 
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
-
+    my $tag   = ($args->{headless} or $args->{matrix}) ? 'td' : 'th';
     for my $row (0 .. $args->{_max_rows} - 1) {
 
         unless ($args->{_layout}) {
@@ -135,7 +135,6 @@ sub _process {
             pop  @{ $data->[$row] } for $args->{_max_cols} .. $#{ $data->[$row] };                 # truncate
         }
 
-        my $tag = (!$row and !($args->{headless} or $args->{matrix})) ? 'th' : 'td';
         for my $col (0 .. $#{ $data->[$row] }) {
 
             my ( $cdata, $attr ) = ( $data->[$row][$col], undef );
@@ -152,6 +151,7 @@ sub _process {
                 (keys( %$attr )    ? (attr => $attr)   : ()),
             };
         }
+        $tag = 'td';
     }
 
     if ($args->{cache} and $self and !$self->{is_cached}) {

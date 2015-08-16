@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.42
+    - refactor td/tr decision (slight speed increase)
     - removed Clone and Math::Matrix dependencies
 
 0.41
