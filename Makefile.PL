@@ -19,7 +19,6 @@ WriteMakefile(
         'Test::More'        => 0,
     },
     PREREQ_PM => {
-        'Clone'             => 0,
         'Math::Matrix'      => 0.8,
         'HTML::AutoTag'     => 0.09,
     },

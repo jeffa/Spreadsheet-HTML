@@ -13,10 +13,7 @@ our @EXPORT_OK = qw(
     beadwork
 );
 
-use Clone;
 use HTML::AutoTag;
-use Math::Matrix;
-
 use Spreadsheet::HTML::Engine;
 use Spreadsheet::HTML::Presets;
 use Spreadsheet::HTML::File::Loader;
@@ -54,14 +51,14 @@ sub generate {
 
     } elsif ($args{theta} == -90) {
 
-        $args{data} = [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = [ CORE::reverse @{ _transpose( $args{data} ) }];
         $args{data} = ($args{pinhead} and !$args{headless})
             ? [ map [ @$_[1 .. $#$_], $_->[0] ], @{ $args{data} } ]
             : [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
 
     } elsif ($args{theta} == 90) { # east
 
-        $args{data} = Math::Matrix::transpose( $args{data} );
+        $args{data} = _transpose( $args{data} );
         $args{data} = ($args{pinhead} and !$args{headless})
             ? [ map [ @$_[1 .. $#$_], $_->[0] ], @{ $args{data} } ]
             : [ map [ CORE::reverse @$_ ], @{ $args{data} } ];
@@ -80,11 +77,11 @@ sub generate {
 
     } elsif ($args{theta} == -270) { # west
 
-        $args{data} = [@{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = [@{ _transpose( $args{data} ) }];
 
     } elsif ($args{theta} == 270) {
 
-        $args{data} = [ CORE::reverse @{ Math::Matrix::transpose( $args{data} ) }];
+        $args{data} = [ CORE::reverse @{ _transpose( $args{data} ) }];
     }
 
     if ($args{animate}) {
@@ -317,7 +314,7 @@ sub _args {
         $args->{_max_cols} = $fill{col} if (int($fill{col} || 0)) > ($args->{_max_cols});
     }
 
-    return ( $self, Clone::clone($data), $args );
+    return ( $self, [ map [@$_], @$data], $args );
 }
 
 sub _expand_code_or_hash {
@@ -333,6 +330,16 @@ sub _expand_code_or_hash {
     }
     $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
     return ( $cdata, $attr );
+}
+
+# credit: Math::Matrix
+sub _transpose {
+    my $data = shift;
+    my @trans;
+    for my $i (0 .. $#{ $data->[0] }) {
+        push @trans, [ map $_->[$i], @$data ]
+    }
+    return \@trans;
 }
 
 sub _range {grep!(($_-$_[0])%($_[2]||1)),$_[0]..$_[1]}
@@ -627,7 +634,7 @@ any reference to C<headings> will be discarded too.
 
 =item * C<animate: 0 or 1>
 
-Animate the table cells. See *L<Spreadsheet::HTML::Presets::Animate>.
+Animate the table cells. See L<Spreadsheet::HTML::Presets::Animate>.
 
 =item * C<headings>
 
@@ -635,11 +642,11 @@ Apply callback subroutine to each cell in headings row.
 
   headings => sub { join(" ", map {ucfirst lc $_} split "_", shift) }
 
-Or apply hash ref as attributes:
+Or apply hash reference as attributes:
 
   headings => { class => 'some-class' }
 
-Or both:
+Or both via array reference:
 
   headings => [ sub { uc shift }, { class => "foo" } ]
 
@@ -827,14 +834,6 @@ Used to generate HTML. Handles indentation and HTML entity encoding.
 Uses L<Tie::Hash::Attribute> to handle rotation of class attributes
 and L<HTML::Entities> for encoding of CDATA.
 
-=item * L<Math::Matrix>
-
-Used for transposing data from portrait to landscape.
-
-=item * L<Clone>
-
-Useful for preventing data from being clobbered.
-
 =back
 
 =head1 OPTIONAL
@@ -956,6 +955,10 @@ Thank you very much! :)
 =item * Neil Bowers
 
 Helped with Makefile.PL suggestions and corrections.
+
+=item * L<Math::Matrix>
+
+Implementation of 2D array transposition.
 
 =back
 

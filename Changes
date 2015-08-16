@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.42
+    - removed Clone and Math::Matrix dependencies
 
 0.41
     - added today param to calendar()
