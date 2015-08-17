@@ -433,7 +433,7 @@ Mapped colors can be overriden by their key number:
 
 Works well with presets. Change Cartman's cap and mitten colors:
 
-  beadwork( preset => 'carman', -2 => 'purple', -3 => 'green' )
+  beadwork( preset => 'cartman', -2 => 'purple', -3 => 'green' )
 
 =back
 
