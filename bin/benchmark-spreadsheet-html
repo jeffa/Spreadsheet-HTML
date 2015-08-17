@@ -11,6 +11,7 @@ use Data::Dumper;
 GetOptions (
     'size=i'        => \my $size,
     'count=i'       => \my $count,
+    'module=s'      => \my @include,
     'help'          => \my $help,
     'man'           => \my $man,
 );
@@ -38,6 +39,15 @@ for (keys %modules) {
     delete $modules{$_} if $@;
 }
 
+if (@include) {
+    my %include = map { $_ => 1 } @include;
+    for (keys %modules) {
+        delete $modules{$_} unless $include{$_};
+    }
+}
+
+print "Going to compare the following modules:\n";
+print "\t$_\n" for sort keys %modules;
 Benchmark::cmpthese( $count, \%modules );
 
 
@@ -125,6 +135,7 @@ benchmark-spreadsheet-html - HTML table generator benchmarks.
 benchmark-spreadsheet-html
 
  Options:
+   --modules        benchmark only these modules
    --size           number of rows and columns in table
    --count          number of times to run benchmarks
    --help           list usage
@@ -134,13 +145,23 @@ benchmark-spreadsheet-html
 
 =over 8
 
+=item B<--modules>
+
+Benchmark only these modules.
+
+  benchmark-spreadsheet-html --module Template --module HTML::Template
+
 =item B<--size>
 
 Number of rows and columns in sample table. Default 500.
 
+  benchmark-spreadsheet-html --size 1000
+
 =item B<--count>
 
 Number of times to run benchmarks. Default 5.
+
+  benchmark-spreadsheet-html --count 10
 
 =item B<--help>
 
