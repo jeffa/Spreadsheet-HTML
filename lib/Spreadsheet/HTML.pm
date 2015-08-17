@@ -384,10 +384,13 @@ Rewrap existing tables from Excel, HTML, JSON, CSV and YAML files.
 
 THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
-=head1 CLI TOOL
+=head1 CLI TOOLS
 
-A command line interface tool is available for you to quickly
-generate tables without writing a script: C<mktable>
+=over 4
+
+=item * C<mktable>
+
+Quickly generate tables without writing a script:
 
   $ mktable landscape --param file=data.xls --param preserve=1 > out.html
 
@@ -401,6 +404,13 @@ your default browser:
   $ mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
 
 Run C<mktable --man> for more documentation.
+
+=item * C<benchmark-spreadsheet-html>
+
+This tool runs benchmarks against several different HTML table generators
+available on CPAN. See C<benchmark-spreadsheet-html --man> for more.
+
+=back
 
 =head1 METHODS
 

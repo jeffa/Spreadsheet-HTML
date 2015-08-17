@@ -8,7 +8,7 @@ WriteMakefile(
     AUTHOR           => q{Jeff Anderson <jeffa@cpan.org>},
     VERSION_FROM     => 'lib/Spreadsheet/HTML.pm',
     ABSTRACT_FROM    => 'lib/Spreadsheet/HTML.pm',
-    EXE_FILES        => [ 'bin/mktable' ],
+    EXE_FILES        => [ 'bin/mktable', 'bin/benchmark-spreadsheet-html' ],
     LICENSE          => 'artistic_2',
     PL_FILES         => {},
     MIN_PERL_VERSION => 5.006,
