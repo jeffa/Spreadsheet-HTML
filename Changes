@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.42
+    - added thead.tr and tfoot.tr tag params
     - added benchmark tool
     - refactor td/tr decision (slight speed increase)
     - removed Clone and Math::Matrix dependencies

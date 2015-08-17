@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 12;
+use Test::More tests => 17;
 
 use Spreadsheet::HTML;
 
@@ -64,3 +64,23 @@ is $table->generate( tgroups => 1, group => 2 ),
 is $table->generate( matrix => 1, tgroups => 1, group => 2 ),
     '<table><tbody><tr><td>header1</td><td>header2</td><td>header3</td><td>header4</td></tr><tr><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr></tbody><tbody><tr><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr></tbody><tbody><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
     "group chunks and wraps chunks in tbody tags (matrix)";
+
+is $table->generate( tgroups => 0, tr => { class => [qw(odd even)] } ),
+    '<table><tr class="odd"><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr><tr class="even"><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr class="odd"><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr class="even"><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr class="odd"><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></table>',
+    "styles applying to tr impact all rows when thead 0";
+
+is $table->generate( tgroups => 1, tr => { class => [qw(odd even)] } ),
+    '<table><thead><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tbody><tr class="odd"><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr class="even"><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr class="odd"><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr class="even"><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
+    "styles applying to tr do not impact thead when thead 1";
+
+is $table->generate( tgroups => 2, tr => { class => [qw(odd even)] } ),
+    '<table><thead><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tfoot><tr><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tfoot><tbody><tr class="odd"><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr class="even"><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr class="odd"><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr></tbody></table>',
+    "styles applying to tr do not impact thead and tfoot when thead 1";
+
+is $table->generate( tgroups => 1, tr => { class => [qw(odd even)] }, 'thead.tr' => { class => "thead" } ),
+    '<table><thead><tr class="thead"><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tbody><tr class="odd"><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr class="even"><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr class="odd"><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr><tr class="even"><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tbody></table>',
+    "thead.tr impacts thead rows";
+
+is $table->generate( tgroups => 2, tr => { class => [qw(odd even)] }, 'tfoot.tr' => { class => "tfoot" } ),
+    '<table><thead><tr><th>header1</th><th>header2</th><th>header3</th><th>header4</th></tr></thead><tfoot><tr class="tfoot"><td>foo4</td><td>bar4</td><td>baz4</td><td>qux4</td></tr></tfoot><tbody><tr class="odd"><td>foo1</td><td>bar1</td><td>baz1</td><td>qux1</td></tr><tr class="even"><td>foo2</td><td>bar2</td><td>baz2</td><td>qux2</td></tr><tr class="odd"><td>foo3</td><td>bar3</td><td>baz3</td><td>qux3</td></tr></tbody></table>',
+    "tfoot.tr impacts thead rows";

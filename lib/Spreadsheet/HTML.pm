@@ -179,8 +179,8 @@ sub _make_table {
         my $head = shift @body unless $args{matrix} and scalar @{ $args{data} } > 2;
         my $foot = pop @body if !$args{matrix} and $args{tgroups} > 1 and scalar @{ $args{data} } > 2;
 
-        my $head_row  = { tag => 'tr', attr => $args{tr}, cdata => $head };
-        my $foot_row  = { tag => 'tr', attr => $args{tr}, cdata => $foot };
+        my $head_row  = { tag => 'tr', attr => $args{'thead.tr'}, cdata => $head };
+        my $foot_row  = { tag => 'tr', attr => $args{'tfoot.tr'}, cdata => $foot };
         my $body_rows = [ map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @body ];
 
         if (int($args{group} || 0) > 1) {
@@ -756,6 +756,9 @@ Hash ref. Apply these attributes to the specified tag.
 
   tr => { style => { background => [qw( color1 color2 )]' } }
 
+Does not apply to <tr> groups found within <thead> or <tfoot>.
+(See C<thead.tr> and C<tfoot.tr> below.)
+
 =item * C<th>
 
 =item * C<td>
@@ -793,6 +796,16 @@ tags within a colgroup tag. Same usage as C<colgroup>.
   col => { span => 2, style => { 'background-color' => 'orange' } }
 
   col => [ { span => 20 }, { span => 1, class => 'end' } ]
+
+=item * C<thead.tr>
+
+When C<tgroups> is 1 or 2, this tag parameter is available to control
+the attributes of the <tr> tag within the <thead> group.
+
+=item * C<tfoot.tr>
+
+When C<tgroups> is 2, this tag parameter is available to control
+the attributes of the <tr> tag within the <tfoot> group.
 
 =back
 
