@@ -1,0 +1,155 @@
+#!/usr/bin/env perl 
+
+use strict;
+use warnings;
+
+use Benchmark;
+use Pod::Usage;
+use Getopt::Long;
+use Data::Dumper;
+
+GetOptions (
+    'size=i'        => \my $size,
+    'count=i'       => \my $count,
+    'help'          => \my $help,
+    'man'           => \my $man,
+);
+pod2usage( -verbose => 0 ) if $help;
+pod2usage( -verbose => 2 ) if $man;
+
+$size  ||= 500;
+$count ||= 5;
+our $data = [ map [($_)x$size], 1..$size ];
+
+my %modules = (
+    'CGI'                   => \&cgi,
+    'Template'              => \&template,
+    'HTML::Tiny'            => \&html_tiny,
+    'HTML::Table'           => \&html_table,
+    'HTML::Element'         => \&html_element,
+    'HTML::AutoTag'         => \&html_autotag,
+    'HTML::Template'        => \&html_template,
+    'DBIx::XHTML_Table'     => \&dbix_xhtml_table,
+    'Spreadsheet::HTML'     => \&spreadsheet_html,
+);
+
+for (keys %modules) {
+    eval "use $_";
+    delete $modules{$_} if $@;
+}
+
+Benchmark::cmpthese( $count, \%modules );
+
+
+sub brute_force {
+    my $str = '';
+    $str .= "<table>\n";
+    for (@$data) {
+        $str .= "    <tr>\n";
+        for (@$_) {
+            $str .= "        <td>$_</td>\n";
+        }
+        $str .= "    </tr>\n";
+    }
+    $str .= "</table>\n";
+    return $str;
+}
+
+sub cgi {
+    my $q = CGI->new;
+    $q->table( $q->Tr([ map $q->td( $_ ), @$data ]) );
+}
+
+sub template {
+    my $tmpl = '<table>[% FOREACH row = rows %]
+    <tr>[% FOREACH cell = row %]
+        <td>[% cell %]</td>[% END %]
+    </tr>[% END %]
+</table>
+';
+    my $table = Template->new;
+    my $out = '';
+    $table->process( \$tmpl, { rows => $data }, \$out ) or warn $table->error, $/;
+}
+
+sub html_template {
+    my $tmpl = q(<table><tmpl_loop rows>
+    <tr><tmpl_loop row>
+        <td><tmpl_var cell></td></tmpl_loop>
+    </tr></tmpl_loop>
+</table>
+);
+    my $table = HTML::Template->new( scalarref => \$tmpl, die_on_bad_params => 0 );
+    $table->param( rows => [ map { row => [ map { cell => $_ }, @$_ ] }, @$data  ] );
+    $table->output;
+}
+
+sub html_table {
+    my $table = new HTML::Table( $data );
+    $table->getTable;
+}
+
+sub html_element {
+    my $table = HTML::Element->new_from_lol( [table => map [tr => map [td => $_ ], @$_ ], @$data ]);
+    $table->as_HTML;
+}
+
+sub html_tiny {
+    my $h = HTML::Tiny->new;
+    $h->table( [ map $h->tr( [ map $h->td( $_ ), @$_ ] ), @$data ]);
+}
+
+sub html_autotag {
+    my $auto = HTML::AutoTag->new;
+    $auto->tag( tag => 'table', cdata => [ map { tag => 'tr', cdata => [ map { tag => 'td', cdata => $_, }, @$_ ], }, @$data ] );
+}
+
+sub dbix_xhtml_table {
+    my $table = DBIx::XHTML_Table->new( $data );
+    $table->output;
+}
+
+sub spreadsheet_html {
+    my $table = Spreadsheet::HTML->new( data => $data );
+    $table->generate;
+}
+
+
+__END__
+=head1 NAME
+
+benchmark-spreadsheet-html - HTML table generator benchmarks.
+
+=head1 SYNOPSIS
+
+benchmark-spreadsheet-html
+
+ Options:
+   --size           number of rows and columns in table
+   --count          number of times to run benchmarks
+   --help           list usage
+   --man            print man page
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--size>
+
+Number of rows and columns in sample table. Default 500.
+
+=item B<--count>
+
+Number of times to run benchmarks. Default 5.
+
+=item B<--help>
+
+Print a brief help message and exits.
+
+=item B<--man>
+
+Prints the manual page and exits.
+
+=back
+
+=cut
