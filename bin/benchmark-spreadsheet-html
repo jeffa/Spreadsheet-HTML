@@ -40,7 +40,10 @@ my %modules = (
 
 for (keys %modules) {
     eval "use $_";
-    delete $modules{$_} if $@;
+    if ($@) { 
+        warn "$_ not installed\n";
+        delete $modules{$_};
+    }
 }
 
 if (@include) {
