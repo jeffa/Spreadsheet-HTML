@@ -21,15 +21,19 @@ pod2usage( -verbose => 2 ) if $man;
 $size  ||= 500;
 $count ||= 5;
 our $data = [ map [($_)x$size], 1..$size ];
+our $header = [ map ++$size, @{ $data->[0] } ];
 
 my %modules = (
     'CGI'                   => \&cgi,
     'Template'              => \&template,
+    'Data::Table'           => \&data_table,
     'HTML::Tiny'            => \&html_tiny,
     'HTML::Table'           => \&html_table,
     'HTML::Element'         => \&html_element,
     'HTML::AutoTag'         => \&html_autotag,
     'HTML::Template'        => \&html_template,
+    'HTML::Tabulate'        => \&html_tabulate,
+    'HTML::FromArrayref'    => \&html_fromarrayref,
     'DBIx::XHTML_Table'     => \&dbix_xhtml_table,
     'Spreadsheet::HTML'     => \&spreadsheet_html,
 );
@@ -117,6 +121,20 @@ sub html_autotag {
 sub dbix_xhtml_table {
     my $table = DBIx::XHTML_Table->new( $data );
     $table->output;
+}
+
+sub html_fromarrayref {
+    HTML::FromArrayref::HTML( [ table => {}, map [ tr => {}, map [ td => $_ ], @$_ ], @$data ] );
+}
+
+sub data_table {
+    my $t = Data::Table->new( $data, $header, 0 );
+    $t->html;
+}
+
+sub html_tabulate {
+    my $t = HTML::Tabulate->new;
+    $t->render( $data);
 }
 
 sub spreadsheet_html {
