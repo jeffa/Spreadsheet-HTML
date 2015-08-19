@@ -20,8 +20,11 @@ pod2usage( -verbose => 2 ) if $man;
 
 $size  ||= 500;
 $count ||= 5;
-our $data = [ map [($_)x$size], 1..$size ];
-our $header = [ map ++$size, @{ $data->[0] } ];
+our $data   = [ map [($_)x$size], 1..$size ];
+
+# Data::Table requires unique headings;
+my $head    = $size;
+our $header = [ map $head++, @{ $data->[0] } ];
 
 my %modules = (
     'CGI'                   => \&cgi,
@@ -38,10 +41,11 @@ my %modules = (
     'Spreadsheet::HTML'     => \&spreadsheet_html,
 );
 
+my @skipped;
 for (keys %modules) {
     eval "use $_";
     if ($@) { 
-        warn "$_ not installed\n";
+        push @skipped, $_;
         delete $modules{$_};
     }
 }
@@ -53,7 +57,12 @@ if (@include) {
     }
 }
 
-print "Going to compare the following modules:\n";
+if (@skipped) {
+    print "Skipping these modules (not installed):\n";
+    print "\t$_\n" for sort @skipped;
+}
+
+print "Comparing these modules ($size x $size for $count iters):\n";
 print "\t$_\n" for sort keys %modules;
 Benchmark::cmpthese( $count, \%modules );
 
