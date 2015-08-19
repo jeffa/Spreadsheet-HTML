@@ -179,7 +179,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Animate - Generate animated table cells and backgrounds.
+Spreadsheet::HTML::Presets::Animate - Generate animated HTML table cells and backgrounds.
 
 =head1 DESCRIPTION
 
