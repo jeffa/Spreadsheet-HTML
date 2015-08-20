@@ -846,8 +846,8 @@ with little to no additional coding.
 
 =back
 
-See L<Spreadsheet::HTML::Presets> for more documentation (and the source
-for more usage examples).
+See L<Spreadsheet::HTML::Presets> for more documentation (and its source
+code for usage examples).
 
 =head1 REQUIRES
 
