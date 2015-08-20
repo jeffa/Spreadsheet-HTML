@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.42
+    - added worksheet param (for multiple data tables)
     - added thead.tr and tfoot.tr tag params
     - added benchmark tool
     - refactor td/tr decision (slight speed increase)

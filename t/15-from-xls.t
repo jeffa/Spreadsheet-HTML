@@ -9,7 +9,7 @@ plan skip_all => "Spreadsheet::Read required" if $@;
 eval "use Spreadsheet::ParseExcel";
 plan skip_all => "Spreadsheet:: ParseExcel required" if $@;
 
-plan tests => 7;
+plan tests => 9;
 
 use_ok 'Spreadsheet::HTML';
 
@@ -41,4 +41,14 @@ is Spreadsheet::HTML::landscape( %file ),
 is Spreadsheet::HTML::generate( file => 'absent.xls' ),
     '<table><tr><th>cannot load absent.xls</th></tr><tr><td>No such file or directory</td></tr></table>',
     "handles file not found"
+;
+
+is $table->generate( file => 't/data/multiple.xls', worksheet => 2 ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>',
+    "loaded second worksheet data via method"
+;
+
+is Spreadsheet::HTML::generate( file => 't/data/multiple.xls', worksheet => 2 ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>',
+    "loaded second worksheet data via procedure"
 ;

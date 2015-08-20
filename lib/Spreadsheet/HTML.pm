@@ -288,6 +288,7 @@ sub _args {
 
     return ( $self, $self->{data}, $args ) if $self and $self->{is_cached};
 
+    $args->{worksheet} ||= 1;
     $data = Spreadsheet::HTML::File::Loader::parse( $args ) if $args->{file};
     $data = [ $data ] unless ref($data);
     $data = [ $data ] unless ref($data->[0]);
@@ -361,8 +362,7 @@ Spreadsheet::HTML - Just another HTML table generator.
     print $generator->portrait;
     print $generator->landscape( encodes => '<>' );
 
-    # load from files (first table found)
-    $generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+    $generator = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
     print $generator->generate( preserve => 1 );
 
 Procedural interface:
@@ -503,13 +503,15 @@ are XLS, CSV, JSON, YAML and HTML (first table found).
 
   file => 'foo.json'
 
-If you want to filter your database queries then install
+If you want to filter your database queries then please see
 L<DBIx::HTML> which uses this module as its generator.
 
-  use DBIx::HTML;
-  my $generator = DBIx::HTML->connect( @db_credentials );
-  $generator->do( $query, @bind_args );
-  print $table->portrait( %params );
+=item * C<worksheet>
+
+If multiple worksheets or data tables are present, use this
+parameter to select which one (index 1 based).
+
+  worksheet => 3 # the third data table or worksheet found  
 
 =item * C<preserve>
 

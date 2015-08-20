@@ -7,22 +7,23 @@ eval "use Spreadsheet::Read";
 our $NOT_AVAILABLE = $@;
 
 sub parse {
-    my $args = shift;
-    my $file     = delete $args->{file};
-    my $preserve = delete $args->{preserve};
+    my $args     = shift;
+    my $file     = $args->{file};
+    my $preserve = $args->{preserve};
 
     if ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::File::HTML::parse( $file );
+        return Spreadsheet::HTML::File::HTML::parse( $args );
     } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::File::JSON::parse( $file );
+        return Spreadsheet::HTML::File::JSON::parse( $args );
     } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::File::YAML::parse( $file );
+        return Spreadsheet::HTML::File::YAML::parse( $args );
     }
 
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
 
-    my $parsed = ReadData( $file, attr => $preserve )->[1];
+    my $workbook = ReadData( $file, attr => $preserve, clip => 0 );
+    my $parsed   = $workbook->[ $args->{worksheet} ];
 
     if ($preserve and ref $parsed->{attr} eq 'ARRAY' and scalar@{$parsed->{attr}}) {
 
@@ -97,7 +98,7 @@ You may stop reading now :)
 
 =over 4
 
-=item * C<parse()>
+=item * C<parse( \%args )>
 
 =back
 
@@ -117,6 +118,7 @@ Spreadsheet::HTML::File::YAML - Load data from YAML encoded data files.
 =over 4
 
 =item * C<parse()>
+=item * C<parse( \%args )>
 
 =back
 
@@ -138,7 +140,8 @@ eval "use YAML";
 our $NOT_AVAILABLE = $@;
 
 sub parse {
-    my $file = shift;
+    my $args = shift;
+    my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install YAML' ]] if $NOT_AVAILABLE;
 
@@ -159,7 +162,7 @@ Spreadsheet::HTML::File::JSON - Load data from JSON encoded data files.
 
 =over 4
 
-=item * C<parse()>
+=item * C<parse( \%args )>
 
 =back
 
@@ -181,7 +184,8 @@ eval "use JSON";
 our $NOT_AVAILABLE = $@;
 
 sub parse {
-    my $file = shift;
+    my $args = shift;
+    my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install JSON' ]] if $NOT_AVAILABLE;
 
@@ -204,7 +208,7 @@ Spreadsheet::HTML::File::HTML - Load data from Hypertext Markup files.
 
 =over 4
 
-=item * C<parse()>
+=item * C<parse( \%args )>
 
 =back
 
@@ -226,14 +230,16 @@ eval "use HTML::TableExtract";
 our $NOT_AVAILABLE = $@;
 
 sub parse {
-    my $file = shift;
+    my $args = shift;
+    my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
 
     my @data;
     my $extract = HTML::TableExtract->new( keep_headers => 1 );
     $extract->parse_file( $file );
-    return [ $extract->tables ? $extract->rows : [undef] ];
+    my $table = ($extract->tables)[ $args->{worksheet} - 1 ];
+    return [ $table ? $table->rows : [undef] ];
 }
 
 1;
