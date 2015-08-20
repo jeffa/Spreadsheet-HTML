@@ -353,6 +353,8 @@ Spreadsheet::HTML - Just another HTML table generator.
 
 =head1 SYNOPSIS
 
+Object oriented interface:
+
     use Spreadsheet::HTML;
 
     $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
