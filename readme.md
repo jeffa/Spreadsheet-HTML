@@ -37,7 +37,7 @@ print $generator->portrait;
 print $generator->landscape( encodes => '<>' );
 
 # load from files (first table found)
-$generator = Spreadsheet::HTML->new( file => 'data.xls', cache => 1 );
+$generator = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
 print $generator->generate( preserve => 1 );
 ```
 
