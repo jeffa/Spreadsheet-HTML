@@ -6,7 +6,7 @@ Revision history for Spreadsheet-HTML
     - added worksheet param (for multiple data tables)
     - added thead.tr and tfoot.tr tag params
     - added benchmark tool
-    - refactor td/tr decision (slight speed increase)
+    - refactor td/th decision (slight speed increase)
     - removed Clone and Math::Matrix dependencies
 
 0.41
