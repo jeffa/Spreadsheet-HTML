@@ -283,7 +283,7 @@ sub _args {
         encodes => exists $args->{encodes} ? $args->{encodes} : '',
         indent  => $args->{indent},
         level   => $args->{level},
-        sorted  => $args->{sorted_attrs}
+        sorted  => $args->{sorted_attrs},
     );
 
     return ( $self, $self->{data}, $args ) if $self and $self->{is_cached};
@@ -300,9 +300,7 @@ sub _args {
         ];
     }
 
-    if ($args->{apply}) {
-        $data = Spreadsheet::HTML::Engine::apply( $data, $args->{apply} );
-    }
+    $data = Spreadsheet::HTML::Engine::apply( $data, $args->{apply} ) if $args->{apply};
 
     $args->{_max_rows} = scalar @{ $data }      || 1;
     $args->{_max_cols} = scalar @{ $data->[0] } || 1;
