@@ -947,15 +947,13 @@ Please report any bugs or feature requests to either
 I will be notified, and then you'll automatically be notified of progress
 on your bug as I make changes.
 
-=head1 GITHUB
-
-The Github project is L<https://github.com/jeffa/Spreadsheet-HTML>
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc Spreadsheet::HTML
+
+The Github project is L<https://github.com/jeffa/Spreadsheet-HTML>
 
 You can also look for information at:
 
