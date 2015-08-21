@@ -11,15 +11,16 @@ sub tictactoe {
 
     my @args = (
         @_,
+        table => { id => 'tictactoe', style => 'font-family: cursive, sans-serif; font-size: xx-large;' },
         td => {
             height => 100,
             width  => 100,
             align  => 'center',
         },
-        -r1      => { style => 'border-top:1px solid black; border-bottom:1px solid black;' },
-        -r0c1    => { style => 'border-left:1px solid black; border-right:1px solid black;' },
-        -r1c1    => { style => 'border-left:1px solid black; border-right:1px solid black; border-top:1px solid black; border-bottom:1px solid black;' },
-        -r2c1    => { style => 'border-left:1px solid black; border-right:1px solid black;' },
+        -r1      => { style => 'border-top:1px  solid black; border-bottom:1px solid black;' },
+        -r0c1    => { style => 'border-left:1px solid black; border-right:1px  solid black;' },
+        -r1c1    => { style => 'border-left:1px solid black; border-right:1px  solid black; border-top:1px solid black; border-bottom:1px solid black;' },
+        -r2c1    => { style => 'border-left:1px solid black; border-right:1px  solid black;' },
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
@@ -96,7 +97,7 @@ sub _js_tmpl {
 
     play = function () {
         var indicator = 1;
-        $('tr').each( function () {
+        $('#tictactoe tr').each( function () {
             var row = new Array;
             $.each( this.cells, function () {
                 this.indicator = indicator;
