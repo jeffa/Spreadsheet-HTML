@@ -264,6 +264,34 @@ sub calendar {
     return $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
 }
 
+sub tictactoe {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @args = (
+        @_,
+        td => {
+            height => 100,
+            width  => 100,
+            align  => 'center',
+        },
+        -r1      => { style => 'border-top:1px solid black; border-bottom:1px solid black;' },
+        -r0c1    => { style => 'border-left:1px solid black; border-right:1px solid black;' },
+        -r1c1    => { style => 'border-left:1px solid black; border-right:1px solid black; border-top:1px solid black; border-bottom:1px solid black;' },
+        -r2c1    => { style => 'border-left:1px solid black; border-right:1px solid black;' },
+        tgroups  => 0,
+        headless => 0,
+        pinhead  => 0,
+        matrix   => 1,
+        wrap     => 0,
+        fill     => '3x3',
+    );
+
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $table;
+}
+
 sub checkers {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
@@ -278,8 +306,6 @@ sub checkers {
         [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ],
         [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
     );
-
-    my $sub = sub { sprintf '<div class="game-piece">%s</div>', shift };
 
     my @args = (
         table => {
@@ -421,6 +447,10 @@ Generates a static maze.
 
 Generates a checkers game board (US). Currently you can only
 move the pieces around without regard to any rules.
+
+=item * C<tictactoe( %params )>
+
+Generates a checkers game board (US). Non-functioning.
 
 =back
 

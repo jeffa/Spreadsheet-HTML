@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 28;
+use Test::More tests => 30;
 
 use Spreadsheet::HTML;
 
@@ -41,6 +41,9 @@ ok Spreadsheet::HTML::checkers,             "checkers by procedure";
 
 ok $table->chess,                           "chess by method";
 ok Spreadsheet::HTML::chess,                "chess by procedure";
+
+ok $table->tictactoe,                       "tictactoe by method";
+ok Spreadsheet::HTML::tictactoe,            "tictactoe by procedure";
 
 ok $table->beadwork,                        "beadwork by method";
 ok Spreadsheet::HTML::beadwork,             "beadwork by procedure";

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.43
+    - added groundwork for tictactoe()
     - moved chess sub into its package
 
 0.42
