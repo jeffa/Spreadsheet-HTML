@@ -443,6 +443,10 @@ A simple HTML table calculator.
 
 Turn cell backgrounds into Conway's game of life.
 
+=item * L<Spreadsheet::HTML::Presets::TicTacToe>
+
+Creats a Tic-Tac-Toe board.
+
 =item * L<Spreadsheet::HTML::Presets::Chess>
 
 Work in progress. Hope to interface with a pre-existing
