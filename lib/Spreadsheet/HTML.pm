@@ -30,7 +30,7 @@ sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
 sub handson         { Spreadsheet::HTML::Presets::Handson::handson( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
-sub chess           { Spreadsheet::HTML::Presets::chess(            @_ ) }
+sub chess           { Spreadsheet::HTML::Presets::Chess::chess(     @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
 sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }

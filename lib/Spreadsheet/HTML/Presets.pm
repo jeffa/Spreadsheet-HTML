@@ -317,55 +317,6 @@ sub checkers {
     return $js . $table;
 }
 
-sub chess {
-    my ($self,$data,$args);
-    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
-    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
-
-    my @data = (
-        [ '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' ],
-        [ '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;' ],
-        [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ],
-        [ '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;' ],
-        [ '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' ],
-    );
-
-    my @args = (
-        table => {
-            width => '65%',
-            style => {
-                border => 'thick outset',
-                %{ $args->{table}{style} || {} },
-            },
-            %{ $args->{table} || {} },
-        },
-        @_,
-        td => [
-            {
-                height => 65,
-                width  => 65,
-                align  => 'center',
-                style  => { 
-                    'font-size' => 'xx-large',
-                    border => 'thin inset',
-                    'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
-                }
-            }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
-        ],
-        tgroups  => 0,
-        headless => 0,
-        pinhead  => 0,
-        matrix   => 1,
-        wrap     => 0,
-        fill     => '8x8',
-        data     => \@data,
-    );
-
-    my $js    = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
-    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
-}
-
 sub _js_wrapper {
     my %args = @_;
 
@@ -469,11 +420,6 @@ Generates a static maze.
 =item * C<checkers( %params )>
 
 Generates a checkers game board (US). Currently you can only
-move the pieces around without regard to any rules.
-
-=item * C<chess( %params )>
-
-Generates a chess game board. Currently you can only
 move the pieces around without regard to any rules.
 
 =back

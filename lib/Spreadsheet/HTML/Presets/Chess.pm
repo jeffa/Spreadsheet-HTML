@@ -4,6 +4,55 @@ use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
+sub chess {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my @data = (
+        [ '&#9820;', '&#9822;', '&#9821;', '&#9819;', '&#9818;', '&#9821;', '&#9822;', '&#9820;' ],
+        [ '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;', '&#9823;' ],
+        [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ], [ ('') x 8 ],
+        [ '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;', '&#9817;' ],
+        [ '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' ],
+    );
+
+    my @args = (
+        table => {
+            width => '65%',
+            style => {
+                border => 'thick outset',
+                %{ $args->{table}{style} || {} },
+            },
+            %{ $args->{table} || {} },
+        },
+        @_,
+        td => [
+            {
+                height => 65,
+                width  => 65,
+                align  => 'center',
+                style  => { 
+                    'font-size' => 'xx-large',
+                    border => 'thin inset',
+                    'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
+                }
+            }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
+        ],
+        tgroups  => 0,
+        headless => 0,
+        pinhead  => 0,
+        matrix   => 1,
+        wrap     => 0,
+        fill     => '8x8',
+        data     => \@data,
+    );
+
+    my $js    = Spreadsheet::HTML::Presets::Chess::_javascript( %$args );
+    my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
+    return $js . $table;
+}
+
 sub _javascript {
     my %args = @_;
 
@@ -36,7 +85,40 @@ END_JAVASCRIPT
 
 Spreadsheet::HTML::Presets::Chess - Chess/checkers boards implemented with Javascript and HTML tables.
 
-See L<Spreadsheet::HTML::Presets>
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> preset methods.
+These methods are not meant to be called from this package.
+Instead, use the Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new;
+  print $generator->chess();
+
+  # or
+  use Spreadsheet::HTML qw( chess );
+  print chess();
+
+=head1 METHODS
+
+=over 4
+
+=item * C<chess( %params )>
+
+Generates a chess game board. Currently you can only
+move the pieces around without regard to any rules.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+=item L<Spreadsheet::HTML::Presets>
+
+=back
 
 =head1 AUTHOR
 

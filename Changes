@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 0.43
+    - moved chess sub into its package
 
 0.42
     - added worksheet param (for multiple data tables)
