@@ -32,7 +32,7 @@ sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
 sub chess           { Spreadsheet::HTML::Presets::Chess::chess(     @_ ) }
 sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
-sub tictactoe       { Spreadsheet::HTML::Presets::tictactoe(        @_ ) }
+sub tictactoe       { Spreadsheet::HTML::Presets::TicTacToe::tictactoe( @_ ) }
 sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
