@@ -408,7 +408,7 @@ Run C<mktable --man> for more documentation.
 
 =item * C<benchmark-spreadsheet-html>
 
-This tool runs benchmarks against several different HTML table generators
+Run benchmarks against several different HTML table generators
 available on CPAN. See C<benchmark-spreadsheet-html --man> for more.
 
 =back
