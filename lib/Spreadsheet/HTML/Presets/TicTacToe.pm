@@ -148,7 +148,9 @@ Instead, use the Spreadsheet::HTML interface:
 
 =item * C<tictactoe( %params )>
 
-Generates a tictactoe game board.
+Generates a tictactoe game board implemented with an HTML table
+and Javascript. Intended for two human players but plan to 
+implement a computer opponent.
 
 =back
 
