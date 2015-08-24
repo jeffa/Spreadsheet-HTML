@@ -1,9 +1,9 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 9;
+use Test::More tests => 8;
 
-use_ok 'Spreadsheet::HTML';
+use Spreadsheet::HTML;
 
 my $data = [
     [qw(header1 header2 header3 header4 )],
