@@ -37,7 +37,7 @@ sub tictactoe {
 
 sub _javascript {
     my %args = @_;
-    $args{copyright} = 'Copyright (c) http://jsfiddle.net/rtoal/5wKfF/';
+    $args{copyright} = 'Copyright (c) Ray Toal http://jsfiddle.net/rtoal/5wKfF/';
     return Spreadsheet::HTML::Presets::_js_wrapper( code => _js_tmpl(), %args );
 }
 
