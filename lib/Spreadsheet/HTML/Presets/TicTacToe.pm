@@ -45,7 +45,8 @@ sub _js_tmpl {
     return <<'END_JAVASCRIPT';
 
 /* install JavaScript::Minifier to minify this code */
-/* Copyright (c) http://jsfiddle.net/rtoal/5wKfF/ */
+/* Copyright (c) Ray Toal */
+/* http://jsfiddle.net/rtoal/5wKfF/ */
 
 (function () {
 
@@ -191,7 +192,7 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2015 Jeff Anderson.
+Copyright 2015 Ray Toal (Javascript) and Jeff Anderson (Perl).
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
