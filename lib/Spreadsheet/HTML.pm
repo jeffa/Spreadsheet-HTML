@@ -636,14 +636,13 @@ Useful for loading data from files only once.
 
 =item * C<matrix: 0 or 1>
 
-Treat headings as a regular row. Render the table with
-only td tags, no th tags.
+Render the headings row with only <td> tags, no <th> tags.
 
 =item * C<headless: 0 or 1>
 
 Render the table with without the headings row at all. 
-The first row after the headings is still C<-r1>, thus
-any reference to C<headings> will be discarded too.
+The first row after the headings is still C<-r1>, and
+any configuration to C<headings> or C<-r0> will be discarded.
 
 =item * C<animate: 0 or 1>
 
