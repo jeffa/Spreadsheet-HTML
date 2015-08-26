@@ -117,7 +117,6 @@ Spreadsheet::HTML::File::YAML - Load data from YAML encoded data files.
 
 =over 4
 
-=item * C<parse()>
 =item * C<parse( \%args )>
 
 =back
