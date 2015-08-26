@@ -12,11 +12,11 @@ sub parse {
     my $preserve = $args->{preserve};
 
     if ($file =~ /\.html?$/) {
-        return Spreadsheet::HTML::File::HTML::parse( $args );
+        return Spreadsheet::HTML::File::HTML::_parse( $args );
     } elsif ($file =~ /\.jso?n$/) {
-        return Spreadsheet::HTML::File::JSON::parse( $args );
+        return Spreadsheet::HTML::File::JSON::_parse( $args );
     } elsif ($file =~ /\.ya?ml$/) {
-        return Spreadsheet::HTML::File::YAML::parse( $args );
+        return Spreadsheet::HTML::File::YAML::_parse( $args );
     }
 
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
@@ -66,6 +66,20 @@ sub _attr_map {(
 
 Spreadsheet::HTML::File::Loader - Load data from files.
 
+=head1 DESCRIPTION
+
+This is a container for L<Spreadsheet::HTML> file loading methods.
+These package is not meant to be directly used. Instead, use the
+Spreadsheet::HTML interface:
+
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new( file => 'foo.xls' );
+  print $generator->generate();
+
+  # or
+  use Spreadsheet::HTML qw( generate );
+  print generate( file => 'foo.xls' );
+
 =head1 SUPPORTED FORMATS
 
 =over 4
@@ -88,17 +102,14 @@ Parses with (requires) L<YAML>.
 
 =back
 
-=head1 BEGIN REQUISITE DOCUMENTATION
-
-The rest of this document exists to make POD tests happy. 
-
-You may stop reading now :)
-
 =head1 METHODS
 
 =over 4
 
 =item * C<parse( \%args )>
+
+This method is called internally on your behalf when you pass
+the C<file> parameter with a path to a valid file.
 
 =back
 
@@ -109,20 +120,6 @@ You may stop reading now :)
 
 
 package Spreadsheet::HTML::File::YAML;
-=head1 NAME
-
-Spreadsheet::HTML::File::YAML - Load data from YAML encoded data files.
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse( \%args )>
-
-=back
-
-=cut
-
 use Carp;
 use strict;
 use warnings FATAL => 'all';
@@ -130,7 +127,7 @@ use warnings FATAL => 'all';
 eval "use YAML";
 our $NOT_AVAILABLE = $@;
 
-sub parse {
+sub _parse {
     my $args = shift;
     my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
@@ -145,20 +142,6 @@ sub parse {
 
 
 package Spreadsheet::HTML::File::JSON;
-=head1 NAME
-
-Spreadsheet::HTML::File::JSON - Load data from JSON encoded data files.
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse( \%args )>
-
-=back
-
-=cut
-
 use Carp;
 use strict;
 use warnings FATAL => 'all';
@@ -166,7 +149,7 @@ use warnings FATAL => 'all';
 eval "use JSON";
 our $NOT_AVAILABLE = $@;
 
-sub parse {
+sub _parse {
     my $args = shift;
     my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
@@ -183,20 +166,6 @@ sub parse {
 
 
 package Spreadsheet::HTML::File::HTML;
-=head1 NAME
-
-Spreadsheet::HTML::File::HTML - Load data from Hypertext Markup files.
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse( \%args )>
-
-=back
-
-=cut
-
 use Carp;
 use strict;
 use warnings FATAL => 'all';
@@ -204,7 +173,7 @@ use warnings FATAL => 'all';
 eval "use HTML::TableExtract";
 our $NOT_AVAILABLE = $@;
 
-sub parse {
+sub _parse {
     my $args = shift;
     my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
