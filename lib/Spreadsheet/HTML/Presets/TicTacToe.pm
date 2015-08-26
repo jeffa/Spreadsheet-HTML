@@ -26,6 +26,7 @@ sub tictactoe {
         pinhead  => 0,
         matrix   => 1,
         wrap     => 0,
+        data     => [],
         fill     => '3x3',
     );
 
