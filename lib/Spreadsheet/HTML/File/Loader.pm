@@ -72,19 +72,19 @@ Spreadsheet::HTML::File::Loader - Load data from files.
 
 =item * CSV/XLS
 
-Parses with L<Spreadsheet::Read>.
+Parses with (requires) L<Spreadsheet::Read>.
 
 =item * HTML
 
-Parses with L<HTML::TableExtract>.
+Parses with (requires) L<HTML::TableExtract>.
 
 =item * JSON
 
-Parses with L<JSON>.
+Parses with (requires) L<JSON>.
 
 =item * YAML
 
-Parses with L<YAML>.
+Parses with (requires) L<YAML>.
 
 =back
 
@@ -118,14 +118,6 @@ Spreadsheet::HTML::File::YAML - Load data from YAML encoded data files.
 =over 4
 
 =item * C<parse( \%args )>
-
-=back
-
-=head1 REQUIRES
-
-=over 4
-
-=item * L<YAML>
 
 =back
 
@@ -165,14 +157,6 @@ Spreadsheet::HTML::File::JSON - Load data from JSON encoded data files.
 
 =back
 
-=head1 REQUIRES
-
-=over 4
-
-=item * L<JSON>
-
-=back
-
 =cut
 
 use Carp;
@@ -208,14 +192,6 @@ Spreadsheet::HTML::File::HTML - Load data from Hypertext Markup files.
 =over 4
 
 =item * C<parse( \%args )>
-
-=back
-
-=head1 REQUIRES
-
-=over 4
-
-=item * L<HTML::TableExtract>
 
 =back
 
