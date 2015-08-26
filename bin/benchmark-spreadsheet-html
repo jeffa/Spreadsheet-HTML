@@ -12,6 +12,7 @@ GetOptions (
     'size=i'        => \my $size,
     'count=i'       => \my $count,
     'module=s'      => \my @include,
+    'only-self'     => \my $only_self,
     'help'          => \my $help,
     'man'           => \my $man,
 );
@@ -42,11 +43,50 @@ my %modules = (
 );
 
 my @skipped;
-for (keys %modules) {
-    eval "use $_";
-    if ($@) { 
-        push @skipped, $_;
-        delete $modules{$_};
+
+if ($only_self) {
+    eval "use Spreadsheet::HTML";
+    die "must install Spreadsheet::HTML to run --only-self benchmarks\n" if $@;
+
+    %modules = (
+        north               => sub { self_only( north    => data => $data ) },
+        south               => sub { self_only( south    => data => $data ) },
+        east                => sub { self_only( east     => data => $data ) },
+        west                => sub { self_only( west     => data => $data ) },
+
+        fill                => sub { self_only( generate => fill => join( 'x', $size, $size ) ) },
+        wrap                => sub { self_only( generate => data => $data, wrap         => 10 ) },
+        indent              => sub { self_only( generate => data => $data, indent       => '    ' ) },
+        encodes             => sub { self_only( generate => data => $data, encodes      => '<>&="' ) },
+        empty               => sub { self_only( generate => data => $data, empty        => ' ' ) },
+        tgroups1            => sub { self_only( generate => data => $data, tgroups      => 1 ) },
+        tgroups2            => sub { self_only( generate => data => $data, tgroups      => 2 ) },
+        group               => sub { self_only( generate => data => $data, group        => 10 ) },
+        matrix              => sub { self_only( generate => data => $data, matrix       => 1 ) },
+        headless            => sub { self_only( generate => data => $data, headless     => 1 ) },
+        sorted_attrs        => sub { self_only( generate => data => $data, sorted_attrs => 1 ) },
+        headings            => sub { self_only( generate => data => $data, headings     => [ sub { shift }, { class => "headings" } ] ) },
+
+        tr                  => sub { self_only( generate => data => $data, tr           => [ sub { shift }, { class => "tr"       } ] ) },
+        td                  => sub { self_only( generate => data => $data, td           => [ sub { shift }, { class => "td"       } ] ) },
+
+        animate             => sub { self_only( animate      => data => $data ) },
+        checkerboard        => sub { self_only( checkerboard => data => $data ) },
+        conway              => sub { self_only( conway       => data => $data ) },
+        tictactoe           => sub { self_only( tictactoe    => data => $data ) },
+        calculator          => sub { self_only( calculator   => data => $data ) },
+        calendar            => sub { self_only( calendar     => data => $data ) },
+        beadwork_dk         => sub { self_only( beadwork     => data => $data, preset => 'dk' ) },
+    );
+
+} else {
+
+    for (keys %modules) {
+        eval "use $_";
+        if ($@) { 
+            push @skipped, $_;
+            delete $modules{$_};
+        }
     }
 }
 
@@ -62,7 +102,7 @@ if (@skipped) {
     print "\t$_\n" for sort @skipped;
 }
 
-print "Comparing these modules ($size x $size for $count iters):\n";
+printf "Comparing these %s (%d x %d for %d iters):\n", ( $only_self ? 'methods' : 'modules' ), $size, $size, $count;
 print "\t$_\n" for sort keys %modules;
 Benchmark::cmpthese( $count, \%modules );
 
@@ -154,6 +194,12 @@ sub spreadsheet_html {
     $table->generate;
 }
 
+sub self_only {
+    my $method = shift;
+    my $table = Spreadsheet::HTML->new( @_ );
+    $table->$method;
+}
+
 
 __END__
 =head1 NAME
@@ -168,6 +214,7 @@ benchmark-spreadsheet-html
    --modules        benchmark only these modules
    --size           number of rows and columns in table
    --count          number of times to run benchmarks
+   --only-self      test various configurations on distro only
    --help           list usage
    --man            print man page
 
@@ -192,6 +239,13 @@ Number of rows and columns in sample table. Default 500.
 Number of times to run benchmarks. Default 5.
 
   benchmark-spreadsheet-html --count 10
+
+=item B<--only-self>
+
+Benchmark various configurations on Spreadsheet::HTML only.
+Runs many configurations, so lower the size of the data to expedite results.
+
+  benchmark-spreadsheet-html --only-self --size 100
 
 =item B<--help>
 
