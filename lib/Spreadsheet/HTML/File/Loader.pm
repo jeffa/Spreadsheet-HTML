@@ -6,7 +6,7 @@ use warnings FATAL => 'all';
 eval "use Spreadsheet::Read";
 our $NOT_AVAILABLE = $@;
 
-sub parse {
+sub _parse {
     my $args     = shift;
     my $file     = $args->{file};
     my $preserve = $args->{preserve};
@@ -99,17 +99,6 @@ Parses with (requires) L<JSON>.
 =item * YAML
 
 Parses with (requires) L<YAML>.
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item * C<parse( \%args )>
-
-This method is called internally on your behalf when you pass
-the C<file> parameter with a path to a valid file.
 
 =back
 
