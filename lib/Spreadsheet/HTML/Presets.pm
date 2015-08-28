@@ -280,6 +280,9 @@ sub checkers {
         [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
     );
 
+    my $on  = $args->{on}  || 'red';
+    my $off = $args->{off} || 'white';
+
     my @args = (
         table => {
             width => '65%',
@@ -298,7 +301,7 @@ sub checkers {
                 style  => { 
                     'font-size'         => 'xx-large',
                     border              => 'thin inset',
-                    'background-color'  => [ ('white', 'red')x4, ('red', 'white')x4 ],
+                    'background-color'  => [ ($off, $on)x4, ($on, $off)x4 ],
                     %{ $args->{td}{style} || {} },
                 },
                 %{ $args->{td} || {} },
@@ -418,10 +421,14 @@ Generates a static maze.
 
   maze( fill => '10x10', on => 'red', off => 'black' ) 
 
-=item * C<checkers( %params )>
+=item * C<checkers( on, off, %params )>
 
 Generates a checkers game board (US). Currently you can only
-move the pieces around without regard to any rules.
+move the pieces around without regard to any rules. Defaults
+to red and white squares which can be overriden with C<on>
+and C<off>, respectively:
+
+  checkers( on => 'blue', off => 'gray' ) 
 
 =back
 
