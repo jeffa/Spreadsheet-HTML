@@ -296,10 +296,12 @@ sub checkers {
                 width  => 65,
                 align  => 'center',
                 style  => { 
-                    'font-size' => 'xx-large',
-                    border => 'thin inset',
-                    'background-color' => [ ('white', 'red')x4, ('red', 'white')x4 ]
-                }
+                    'font-size'         => 'xx-large',
+                    border              => 'thin inset',
+                    'background-color'  => [ ('white', 'red')x4, ('red', 'white')x4 ],
+                    %{ $args->{td}{style} || {} },
+                },
+                %{ $args->{td} || {} },
             }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
         ],
         tgroups  => 0,
