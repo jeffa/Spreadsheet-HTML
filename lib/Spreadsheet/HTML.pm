@@ -1,7 +1,7 @@
 package Spreadsheet::HTML;
 use strict;
 use warnings FATAL => 'all';
-our $VERSION = '0.44';
+our $VERSION = '1.00';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -382,8 +382,6 @@ portrait, landscape and other rotated views, Handsontable tables, HTML
 calendars, checkerboard patterns, games such as sudoku, banners and mazes,
 and create animations of cell values and backgrounds via supplied jQuery.
 Rewrap existing tables from Excel, HTML, JSON, CSV and YAML files.
-
-THIS MODULE IS AN ALPHA RELEASE! Although we are very close to BETA.
 
 =head1 CLI TOOLS
 
