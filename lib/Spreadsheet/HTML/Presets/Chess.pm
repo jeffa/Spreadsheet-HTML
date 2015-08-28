@@ -17,6 +17,9 @@ sub chess {
         [ '&#9814;', '&#9816;', '&#9815;', '&#9813;', '&#9812;', '&#9815;', '&#9816;', '&#9814;' ],
     );
 
+    my $on  = $args->{on}  || '#aaaaaa';
+    my $off = $args->{off} || 'white';
+
     my @args = (
         table => {
             width => '65%',
@@ -35,8 +38,10 @@ sub chess {
                 style  => { 
                     'font-size' => 'xx-large',
                     border => 'thin inset',
-                    'background-color' => [ ('white', '#aaaaaa')x4, ('#aaaaaa', 'white')x4 ]
-                }
+                    'background-color'  => [ ($off, $on)x4, ($on, $off)x4 ],
+                    %{ $args->{td}{style} || {} },
+                },
+                %{ $args->{td} || {} },
             }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
         ],
         tgroups  => 0,
