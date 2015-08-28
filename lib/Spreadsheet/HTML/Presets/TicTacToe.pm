@@ -11,8 +11,17 @@ sub tictactoe {
 
     my @args = (
         @_,
-        table => { id => 'tictactoe', style => 'font-family: cursive, sans-serif; font-size: xx-large;' },
+        table => { 
+            %{ $args->{table} || {} },
+            id => 'tictactoe', 
+            style => {
+                'font-family' => 'cursive, sans-serif',
+                'font-size'   => 'xx-large',
+                %{ $args->{table}{style} || {} },
+            },
+        },
         td => {
+            %{ $args->{td} || {} },
             height => 100,
             width  => 100,
             align  => 'center',
