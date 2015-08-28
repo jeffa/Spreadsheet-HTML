@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+0.44
+
 0.43
     - added new preset tictactoe()
     - moved chess sub into its package
