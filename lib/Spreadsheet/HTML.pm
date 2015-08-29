@@ -921,11 +921,6 @@ their output, if installed:
 
 Uses this module (Spreadsheet::HTML) to format SQL query results.
 
-=item * L<DBIx::XHTML_Table>
-
-My original from 2001. Can handle advanced grouping, individual cell
-value contol, rotating attributes and totals/subtotals.
-
 =item * L<http://www.w3.org/TR/html5/tabular-data.html>
 
 =item * L<http://en.wikipedia.org/wiki/Rotation_matrix>
