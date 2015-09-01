@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+1.03
+
 1.02
     - require HTML::AutoTag v1.00
     - two mistakes in a row!
