@@ -302,7 +302,7 @@ sub _args {
         ];
     }
 
-    $data = Spreadsheet::HTML::Engine::apply( $data, $args->{apply} ) if $args->{apply};
+    $data = Spreadsheet::HTML::Engine::_apply( $data, $args->{apply} ) if $args->{apply};
 
     $args->{_max_rows} = scalar @{ $data }      || 1;
     $args->{_max_cols} = scalar @{ $data->[0] } || 1;

@@ -1,6 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 1.03
+    - make Spreadsheet::HTML::Engine method "private"
+    - correct Spreadsheet::HTML::Engine POD
 
 1.02
     - require HTML::AutoTag v1.00

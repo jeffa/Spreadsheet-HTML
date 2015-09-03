@@ -5,7 +5,7 @@ use warnings FATAL => 'all';
 eval "use Spreadsheet::Engine";
 our $NO_ENGINE = $@;
 
-sub apply {
+sub _apply {
     return $_[0] if $NO_ENGINE;
     my ($data,$formula) = @_;
     $formula = [ $formula ] unless ref $formula;
@@ -48,13 +48,19 @@ sub _export {
 
 Spreadsheet::HTML::Engine - interface to Spreadsheet::Engine 
 
-=head1 METHODS
+=head1 DESCRIPTION
 
-=over 4
+This is a container for L<Spreadsheet::HTML>. This
+package is not meant to be directly used. Instead,
+use the Spreadsheet::HTML interface:
 
-=item C<apply( formula )>
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new( apply => 'set B6 formula SUM(B2:B5)' );
+  print $generator->generate();
 
-=back
+  # or
+  use Spreadsheet::HTML qw( generate );
+  print generate( apply => 'set B6 formula SUM(B2:B5)' );
 
 =head1 SEE ALSO
 
