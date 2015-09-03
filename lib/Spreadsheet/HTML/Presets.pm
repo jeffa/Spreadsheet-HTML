@@ -379,11 +379,10 @@ no HTML entity encoding in table cells.
 
 Preset for tables with checkerboard colors.
 
-  checkerboard( colors => [qw(yellow orange)], extra => 'blue' )
+  checkerboard( colors => [qw(yellow orange blue)] )
 
-Attempts to form diagonal patterns by adding an extra color
-if need be. C<colors> default to red and green and C<extra>
-defaults to white.
+Forms diagonal patterns by alternating the starting background
+colors for each row. C<colors> defaults to red and green.
 
 =item * C<banner( dir, text, emboss, on, off, fill, %params )>
 
