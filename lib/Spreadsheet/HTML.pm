@@ -141,7 +141,7 @@ sub _process {
             my ( $cdata, $attr ) = ( $data->[$row][$col], undef );
             for ($tag, "-c$col", "-r$row", "-r${row}c${col}") {
                 next unless exists $args->{$_};
-                ( $cdata, $attr ) = _expand_code_or_hash( $cdata, $attr, $args->{$_} );
+                ( $cdata, $attr ) = _extrapolate( $cdata, $attr, $args->{$_} );
             }
 
             do{ no warnings; $cdata =~ s/^\s*$/$empty/g };
@@ -317,7 +317,7 @@ sub _args {
     return ( $self, [ map [@$_], @$data], $args );
 }
 
-sub _expand_code_or_hash {
+sub _extrapolate {
     my ( $cdata, $attr, $thingy ) = @_;
     my $new_attr;
     $thingy = [ $thingy ] unless ref( $thingy ) eq 'ARRAY';
