@@ -169,7 +169,7 @@ sub _parse {
     return [[ "cannot load $file" ],[ 'please install HTML::TableExtract' ]] if $NOT_AVAILABLE;
 
     my @data;
-    my $extract = HTML::TableExtract->new( keep_headers => 1 );
+    my $extract = HTML::TableExtract->new( keep_headers => 1, decode => 0 );
     $extract->parse_file( $file );
     my $table = ($extract->tables)[ $args->{worksheet} - 1 ];
     return [ $table ? $table->rows : [undef] ];
