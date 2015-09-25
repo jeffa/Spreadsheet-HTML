@@ -500,7 +500,7 @@ an array ref of array refs.
 =item * C<file>
 
 The name of the data file to read. Supported formats
-are XLS, CSV, JSON, YAML and HTML (first table found).
+are XLS, CSV, JSON, YAML and HTML.
 
   file => 'foo.json'
 
