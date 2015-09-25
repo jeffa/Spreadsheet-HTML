@@ -64,7 +64,17 @@ use the Spreadsheet::HTML interface:
 
 =head1 SEE ALSO
 
-See L<Spreadsheet::Engine>
+=over 4
+
+=item * L<Spreadsheet::HTML>
+
+The interface for this functionality.
+
+=item * L<Spreadsheet::Engine>
+
+The engine that provides this functionality.
+
+=back
 
 =head1 AUTHOR
 
