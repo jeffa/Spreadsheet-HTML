@@ -168,10 +168,6 @@ sub _process {
 sub _make_table {
     my %args = @_;
 
-    for (qw( table tr thead tbody tfoot )) {
-        delete $args{$_} unless ref($args{$_}) eq 'HASH';
-    }
-
     my @cdata = ( _caption( %args ), _colgroup( %args ) );
 
     if ($args{tgroups}) {
