@@ -4,6 +4,7 @@ Revision history for Spreadsheet-HTML
     - init HTML::TableExtract with ( decode => 0 )
     - make SH::Engine method "private"
     - correct SH::Engine and SH::Presets POD
+    - require HTML::AutoTag v1.01
 
 1.02
     - require HTML::AutoTag v1.00
