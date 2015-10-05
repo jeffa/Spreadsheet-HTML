@@ -168,7 +168,7 @@ Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new;
-  print $generator->tictactoe();
+  print $generator->tictactoe;
 
   # or
   use Spreadsheet::HTML qw( tictactoe );

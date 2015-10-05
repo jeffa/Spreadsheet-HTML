@@ -178,12 +178,12 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
-  print $generator->conway();
+  my $generator = Spreadsheet::HTML->new( data => \@data );
+  print $generator->conway;
 
   # or
   use Spreadsheet::HTML qw( conway );
-  print conway( data => [[1],[2]] );
+  print conway( data => \@data );
 
 =head1 METHODS
 
@@ -199,14 +199,12 @@ Set the timer with C<interval> (defaults to 200 miliseconds).
 
   conway( interval => 75 )
 
-If you have L<Color::Spectrum> installed (and optionally
-L<Color::Library>) then you can turn fade on for more
-effects:
+If you have L<Color::Spectrum> installed then you can
+activate a fading effect like so:
 
-  # without Color::Library
   conway( on => '#FF0000', off => '#999999', fade => 1 )
 
-  # with Color::Library
+  # color names via Color::Library
   conway( on => 'red', off => 'gray', fade => 1 )
 
 Uses Google's jQuery API unless you specify another URI via
@@ -226,6 +224,14 @@ The interface for this functionality.
 =item L<Spreadsheet::HTML::Presets>
 
 More presets.
+
+=item L<Color::Spectrum>
+
+Generates spectrums of HTML color strings.
+
+=item L<Color::Library>
+
+Comprehensive named color dictionary.
 
 =back
 

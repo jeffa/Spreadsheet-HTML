@@ -98,7 +98,7 @@ Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new;
-  print $generator->chess();
+  print $generator->chess;
 
   # or
   use Spreadsheet::HTML qw( chess );

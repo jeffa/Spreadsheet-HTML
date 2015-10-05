@@ -189,7 +189,7 @@ Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new;
-  print $generator->calculator();
+  print $generator->calculator;
 
   # or
   use Spreadsheet::HTML qw( calculator );

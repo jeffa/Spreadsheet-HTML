@@ -152,7 +152,7 @@ Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new;
-  print $generator->sudoku();
+  print $generator->sudoku;
 
   # or
   use Spreadsheet::HTML qw( sudoku );

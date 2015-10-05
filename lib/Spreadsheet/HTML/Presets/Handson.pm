@@ -89,12 +89,12 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
-  print $generator->handson( );
+  my $generator = Spreadsheet::HTML->new( data => \@data );
+  print $generator->handson;
 
   # or
   use Spreadsheet::HTML qw( handson );
-  print handson( data => [[1],[2]] );
+  print handson( data => \@data );
 
 =head1 METHODS
 

@@ -356,12 +356,12 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
-  print $generator->layout();
+  my $generator = Spreadsheet::HTML->new( data => \@data );
+  print $generator->layout;
 
   # or
   use Spreadsheet::HTML qw( layout );
-  print layout( data => [[1],[2]] );
+  print layout( data => \@data );
 
 =head1 METHODS
 

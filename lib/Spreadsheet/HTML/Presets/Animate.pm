@@ -188,12 +188,12 @@ These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
-  my $generator = Spreadsheet::HTML->new( data => [[1],[2]] );
-  print $generator->animate();
+  my $generator = Spreadsheet::HTML->new( data => \@data );
+  print $generator->animate;
 
   # or
   use Spreadsheet::HTML qw( animate );
-  print animate( data => [[1],[2]] );
+  print animate( data => \@data );
 
 =head1 METHODS
 
@@ -205,8 +205,8 @@ Moves the contents (C<fgdirection> for CDATA, C<bgdirection>
 for attributes) of each cell in the direction specified.
 Valid values are C<up>, C<down>, C<left> and C<right>, or
 you can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
-to specify which axis(es) to animate. (Ditto for C<bx> and
-C<by> for C<bgdirection>.)
+to specify which axis(es) to animate, as well as C<bx> and
+C<by> instead of C<bgdirection>.
 
   animate( fgdirection => 'left' )
 
@@ -218,7 +218,7 @@ C<by> for C<bgdirection>.)
 
 Set the timer with C<interval> (defaults to 200 miliseconds).
 
-  animate( fgdirection => 'right', interval => 300 )
+  animate( fgdirection => 'right', interval => 500 )
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified via

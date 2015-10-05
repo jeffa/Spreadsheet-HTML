@@ -354,9 +354,7 @@ Object oriented interface:
 
     use Spreadsheet::HTML;
 
-    $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
-
-    $generator = Spreadsheet::HTML->new( data => $data, indent => "\t" );
+    $generator = Spreadsheet::HTML->new( data => \@data, indent => "\t" );
 
     print $generator->portrait;
     print $generator->landscape( encodes => '<>' );
@@ -368,8 +366,8 @@ Procedural interface:
 
     use Spreadsheet::HTML qw( portrait landscape );
 
-    print portrait( $data, td => sub { sprintf "%02d", shift } );
-    print landscape( $data, tr => { class => [qw(odd even)] } );
+    print portrait( \@data, td => sub { sprintf "%02d", shift } );
+    print landscape( \@data, tr => { class => [qw(odd even)] } );
 
 =head1 DESCRIPTION
 
@@ -392,11 +390,17 @@ Quickly generate tables without writing a script:
 If you have L<HTML::Display> installed, you can direct the output to
 your default browser:
 
-  $ mktable sudoku --display
-
   $ mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
 
   $ mktable conway --param data=[1..300] --param wrap=20 --param matrix=1 --display
+
+  $ mktable sudoku --display
+
+  $ mktable tictactoe --display
+
+  $ mktable calendar --param today='{bgcolor=>"red"}' --display
+
+  $ mktable beadwork --param preset=dk --display
 
 Run C<mktable --man> for more documentation.
 
