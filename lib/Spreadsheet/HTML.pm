@@ -432,7 +432,7 @@ generating methods below:
 
 =item * C<north( %params )>
 
-These three methods all generate an HTML table with its headings positioned at the top.
+These three methods all generate an HTML table with headings positioned at the top.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
@@ -445,7 +445,7 @@ These three methods all generate an HTML table with its headings positioned at t
 
 =item * C<west( %params )>
 
-These two methods generate an HTML table with its headings positioned at the left.
+These two methods generate an HTML table with headings positioned at the left.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
@@ -455,7 +455,7 @@ These two methods generate an HTML table with its headings positioned at the lef
 
 =item * C<south( %params )>
 
-This method generates an HTML table with its headings positioned at the bottom.
+This method generates an HTML table with headings positioned at the bottom.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
@@ -464,7 +464,7 @@ This method generates an HTML table with its headings positioned at the bottom.
 
 =item * C<east( %params )>
 
-This method generates an HTML table with its headings positioned at the right.
+This method generates an HTML table with headings positioned at the right.
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
@@ -473,14 +473,17 @@ This method generates an HTML table with its headings positioned at the right.
 
 =back
 
-For most cases, C<portrait> and C<landscape> are all you need.
+For most cases, C<portrait> (headings at top)
+and C<landscape> (headings at left) are all you need.
 
 =head1 PARAMETERS
 
-All methods/procedures accept the same named parameters. All
-parameters are initally undefined.  You do not necessarily have
+All methods/procedures accept the same named parameters. With the
+exception of presets, all parameters are initally undefined. If
+they are defined, they may be overrided. You do not necessarily have
 to specify C<data>, any bare array references will be collected
-and assigned to C<data>.
+and assigned to C<data>. Just because you can, however, does not
+mean you should. Everything is meant to be convenient.
 
 =head2 LITERAL PARAMETERS
 
@@ -504,23 +507,24 @@ are XLS, CSV, JSON, YAML and HTML.
 
   file => 'foo.json'
 
-If you want to filter your database queries then please see
-L<DBIx::HTML> which uses this module as its generator.
+If you want to decorate your database queries then
+please consider using L<DBIx::HTML> which uses this
+module as its generator.
 
 =item * C<worksheet>
 
-If multiple worksheets or data tables are present, use this
+Can be supplied in conjunction with C<file>. If multiple
+worksheets or data tables are present, use this
 parameter to select which one (index 1 based).
 
   worksheet => 3 # the third data table or worksheet found  
 
 =item * C<preserve>
 
-Can be supplied in addition to C<file>. Attempts to copy
+Can be supplied in conjunction with C<file>. Attempts to copy
 over all formatting styles from original document to table.
 Styles are not currently deduped, so use with care as the
 final output will contain a lot of redundant cell styles.
-Work is being done to alleviate this.
 
   file => 'foo.xls', preserve => 1
 
@@ -528,7 +532,7 @@ Work is being done to alleviate this.
 
 Can be supplied instead of C<data> to generate empty
 cells, or in conjunction with C<data> to pad existing
-cells (currently only pads the right and bottom sides.)
+cells (currently pads the right and bottom sides only.)
 
   fill => '5x12'
 
@@ -543,7 +547,7 @@ of likely mangling the headings.
 
 =item * C<apply>
 
-Applies formulas parsable by Spreadsheet::Engine to data.
+Applies formulas parsable by L<Spreadsheet::Engine> to data.
 
   apply => 'set B6 formula SUM(B2:B5)'
 
@@ -590,6 +594,9 @@ to insert into to.
 
   level => 4
 
+This value does not say 'use 4 spaces', it applies the
+repetition operator to the value of C<indent> 4 times.
+
 =item * C<encodes>
 
 HTML Encode contents of <th> and/or <td> tags. Defaults to
@@ -624,8 +631,7 @@ Will chunk body rows into tbody groups of size C<group>.
 
   group => 4
 
-Currently only accepts integers although it should be possilbe
-to group by changes in a column in the future.
+Currently only accepts integers (not column names).
 
 =item * C<cache: 0 or 1>
 
@@ -846,8 +852,8 @@ with little to no additional coding.
 
 =back
 
-See L<Spreadsheet::HTML::Presets> for more documentation (and its source
-code for usage examples).
+See L<Spreadsheet::HTML::Presets> for more documentation
+(and source code for usage examples).
 
 =head1 REQUIRES
 
@@ -908,8 +914,6 @@ their output, if installed:
 =item * L<JavaScript::Minifier>
 
 =item * L<Color::Spectrum>
-
-=item * L<Color::Library>
 
 =back
 
