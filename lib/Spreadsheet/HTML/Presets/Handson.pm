@@ -128,11 +128,13 @@ via L<Javascript::Minifier> if it is installed.
 
 =over 4
 
-=item L<http://www.handsontable.com/>
-
 =item L<Spreadsheet::HTML>
 
+The interface for this functionality.
+
 =item L<Spreadsheet::HTML::Presets>
+
+More presets.
 
 =back
 

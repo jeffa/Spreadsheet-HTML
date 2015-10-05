@@ -470,6 +470,16 @@ Generate 9x9 HTML table sudoku boards.
 
 =back
 
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<Spreadsheet::HTML>
+
+The interface for this functionality.
+
+=back
+
 =head1 AUTHOR
 
 Jeff Anderson, C<< <jeffa at cpan.org> >>

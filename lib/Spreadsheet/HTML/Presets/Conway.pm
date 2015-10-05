@@ -221,7 +221,11 @@ via L<Javascript::Minifier> if it is installed.
 
 =item L<Spreadsheet::HTML>
 
+The interface for this functionality.
+
 =item L<Spreadsheet::HTML::Presets>
+
+More presets.
 
 =back
 

@@ -121,7 +121,11 @@ move the pieces around without regard to any rules.
 
 =item L<Spreadsheet::HTML>
 
+The interface for this functionality.
+
 =item L<Spreadsheet::HTML::Presets>
+
+More presets.
 
 =back
 

@@ -192,7 +192,11 @@ implement a computer opponent.
 
 =item L<Spreadsheet::HTML>
 
+The interface for this functionality.
+
 =item L<Spreadsheet::HTML::Presets>
+
+More presets.
 
 =back
 

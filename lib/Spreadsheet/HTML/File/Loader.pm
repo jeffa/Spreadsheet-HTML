@@ -102,6 +102,16 @@ Parses with (requires) L<YAML>.
 
 =back
 
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<Spreadsheet::HTML>
+
+The interface for this functionality.
+
+=back
+
 =cut
 
 1;
