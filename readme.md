@@ -1,6 +1,6 @@
 Spreadsheet-HTML
 ================
-Just another HTML table generator.
+Just another HTML table generator. [![CPAN version](https://badge.fury.io/pl/Spreadsheet-HTML.svg)](https://badge.fury.io/pl/Spreadsheet-HTML)
 
 Description
 -----------
