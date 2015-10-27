@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+1.05
+
 1.04
     - Spreadsheet::Read options now available via ::File::Loader
 
