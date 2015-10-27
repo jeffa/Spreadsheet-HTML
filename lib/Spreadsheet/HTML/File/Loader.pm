@@ -7,9 +7,8 @@ eval "use Spreadsheet::Read";
 our $NOT_AVAILABLE = $@;
 
 sub _parse {
-    my $args     = shift;
-    my $file     = $args->{file};
-    my $preserve = $args->{preserve};
+    my $args = shift;
+    my $file = $args->{file};
 
     if ($file =~ /\.html?$/) {
         return Spreadsheet::HTML::File::HTML::_parse( $args );
@@ -22,10 +21,20 @@ sub _parse {
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
 
-    my $workbook = ReadData( $file, attr => $preserve, clip => 0 );
-    my $parsed   = $workbook->[ $args->{worksheet} ];
+    my $workbook = ReadData( $file,
+        attr    => $args->{preserve},
+        clip    => $args->{clip},
+        cells   => $args->{cells},
+        rc      => $args->{rc} || 1,
+        sep     => $args->{sep},
+        strip   => $args->{strip},
+        quote   => $args->{quote},
+        parser  => $args->{parser},
+    );
 
-    if ($preserve and ref $parsed->{attr} eq 'ARRAY' and scalar@{$parsed->{attr}}) {
+    my $parsed = $workbook->[ $args->{worksheet} ];
+
+    if ($args->{preserve} and ref $parsed->{attr} eq 'ARRAY' and scalar@{$parsed->{attr}}) {
 
         my %attr_map = _attr_map();
         for my $row (1 .. $#{ $parsed->{attr} }) {
@@ -86,19 +95,33 @@ Spreadsheet::HTML interface:
 
 =item * CSV/XLS
 
-Parses with (requires) L<Spreadsheet::Read>.
+Parses with (requires) L<Spreadsheet::Read>. (See its documentation for
+customizing its options, such as C<sep> for specifying separators other
+than a comma.
+
+  generate( file => 'foo.csv' )
+  generate( file => 'foo.csv', sep => '|' )
 
 =item * HTML
 
 Parses with (requires) L<HTML::TableExtract>.
 
+  generate( file => 'foo.htm' )
+  generate( file => 'foo.html' )
+
 =item * JSON
 
 Parses with (requires) L<JSON>.
 
+  generate( file => 'foo.jsn' )
+  generate( file => 'foo.json' )
+
 =item * YAML
 
 Parses with (requires) L<YAML>.
+
+  generate( file => 'foo.yml' )
+  generate( file => 'foo.yaml' )
 
 =back
 
