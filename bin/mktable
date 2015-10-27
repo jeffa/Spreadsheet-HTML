@@ -24,7 +24,7 @@ GetOptions (
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
 
-my @skip  = qw( fill file art map );
+my @skip  = qw( fill file art map sep );
 my @undef = qw( encodes empty );
 
 my %args;
