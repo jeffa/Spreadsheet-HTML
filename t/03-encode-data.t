@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use Spreadsheet::HTML;
 
@@ -74,3 +74,6 @@ $expected_spaces = [
 ];
 $table = Spreadsheet::HTML->new( data => $spaces, empty => 0 );
 is_deeply scalar $table->_process, $expected_spaces,  "correctly substituted spaces";
+
+$table = Spreadsheet::HTML->new( data => '&bar', encodes => 'a&' );
+is $table->generate, '<table><tr><th>&amp;b&#97;r</th></tr></table>',  "ampersand does not double encode";
