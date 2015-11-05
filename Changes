@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+1.06
+
 1.05
     - !! animate is now deprectated, use scroll instead (animate will return ...) !!
 
