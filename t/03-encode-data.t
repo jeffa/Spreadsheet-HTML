@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use Spreadsheet::HTML;
 
@@ -29,19 +29,20 @@ is_deeply scalar $table->_process, $expected_encodes,  "only processes once";
 
 is $table->generate(),
     q(<table><tr><th><</th><th>=</th><th>&</th><th>></th><th>"</th><th>'</th></tr><tr><td><</td><td>=</td><td>&</td><td>></td><td>"</td><td>'</td></tr></table>),
-    "no HTML entities encoded";
+    "encodes turned off by default";
 
-is $table->generate( encodes => '<=&>' ),
-    q(<table><tr><th>&lt;</th><th>&#61;</th><th>&amp;</th><th>&gt;</th><th>"</th><th>'</th></tr><tr><td>&lt;</td><td>&#61;</td><td>&amp;</td><td>&gt;</td><td>"</td><td>'</td></tr></table>),
-    "encoding certain HTML entities";
+is $table->generate( encode => 1 ),
+    q(<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>),
+    "setting encode to true encodes default chars";
 
-is $table->generate( encodes => '<=&>"\'' ),
-    '<table><tr><th>&lt;</th><th>&#61;</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>&#61;</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>',
-    "encoding some more HTML entities";
+is $table->generate( encode => 1, encodes => '' ),
+    q(<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>),
+    "setting encodes to '' with encode set to true encodes default";
 
-is $table->generate( encodes => undef ),
-    '<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>',
-    "encoding all HTML entities";
+is $table->generate( encode => 1, encodes => undef ),
+    q(<table><tr><th>&lt;</th><th>=</th><th>&amp;</th><th>&gt;</th><th>&quot;</th><th>&#39;</th></tr><tr><td>&lt;</td><td>=</td><td>&amp;</td><td>&gt;</td><td>&quot;</td><td>&#39;</td></tr></table>),
+    "setting encodes to undef with encode set to true encodes default";
+
 
 $table = Spreadsheet::HTML->new( data => $spaces );
 is_deeply scalar $table->_process, $expected_spaces,  "correctly substituted spaces";
@@ -77,3 +78,6 @@ is_deeply scalar $table->_process, $expected_spaces,  "correctly substituted spa
 
 $table = Spreadsheet::HTML->new( data => '&bar', encodes => 'a&' );
 is $table->generate, '<table><tr><th>&amp;b&#97;r</th></tr></table>',  "ampersand does not double encode";
+
+$table = Spreadsheet::HTML->new( data => 0, encodes => 0 );
+is $table->generate, '<table><tr><th>&#48;</th></tr></table>',  "ampersand does not double encode";

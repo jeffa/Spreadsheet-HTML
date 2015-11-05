@@ -145,7 +145,7 @@ sub _process {
             }
 
             do{ no warnings;
-                $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if exists $args->{encodes};
+                $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if $args->{encode} || exists $args->{encodes};
                 $cdata =~ s/^\s*$/$empty/g;
             };
 
@@ -599,13 +599,18 @@ to insert into to.
 This value does not say 'use 4 spaces', it applies the
 repetition operator to the value of C<indent> 4 times.
 
+=item * C<encode>
+
+Encode HTML entities. Boolean. Defaults to false, which produces no encoding.
+If set to true without further specifying a value for C<encodes> (see below),
+will encode all control chars, high bit chars and '<', '&', '>', ''' and '"'.
+
+  encode => 1
+
 =item * C<encodes>
 
-HTML Encode contents of <th> and/or <td> tags. Defaults to
-empty string which performs no encoding of entities. Pass
-a string like '<>&=' to perform encoding on any characters
-found.  If the value is C<undef> then all unsafe characters
-will be encoded as HTML entites. Uses L<HTML::Entities>.
+Encode HTML entities. String. Set value to those characters you wish to
+have encoded.
 
   encodes => '<>"'
 
