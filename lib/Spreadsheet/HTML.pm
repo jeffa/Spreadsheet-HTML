@@ -362,10 +362,10 @@ Object oriented interface:
 
     use Spreadsheet::HTML;
 
-    $generator = Spreadsheet::HTML->new( data => \@data, indent => "\t" );
+    $generator = Spreadsheet::HTML->new( data => \@data, encode => 1 );
 
-    print $generator->portrait;
-    print $generator->landscape( encodes => '<>' );
+    print $generator->portrait( indent => '   ' );
+    print $generator->landscape( indent => "\t" );
 
     $generator = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
     print $generator->generate( preserve => 1 );

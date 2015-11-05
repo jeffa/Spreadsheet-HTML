@@ -31,10 +31,10 @@ use Spreadsheet::HTML;
 
 $data = [ [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] ];
 
-$generator = Spreadsheet::HTML->new( data => $data, indent => "\t" );
+$generator = Spreadsheet::HTML->new( data => \@data, encode => 1 );
 
-print $generator->portrait;
-print $generator->landscape( encodes => '<>' );
+print $generator->portrait( indent => '   ' );
+print $generator->landscape( indent => "\t" );
 
 # load from file
 $generator = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
