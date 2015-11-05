@@ -3,7 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
-use Spreadsheet::HTML::Presets::Animate;
+use Spreadsheet::HTML::Presets::Scroll;
 use Spreadsheet::HTML::Presets::Beadwork;
 use Spreadsheet::HTML::Presets::Calculator;
 use Spreadsheet::HTML::Presets::Conway;
@@ -240,7 +240,7 @@ sub calendar {
         }
 
         my $caption = join( ' ', $time->fullmonth, $time->year );
-        if ($args->{animate}) {
+        if ($args->{scroll}) {
             $caption = qq{<p>$caption</p><button id="toggle" onClick="toggle()">Start</button>};
         }
 
@@ -435,9 +435,9 @@ and C<off>, respectively:
 
 =over 4
 
-=item * L<Spreadsheet::HTML::Presets::Animate>
+=item * L<Spreadsheet::HTML::Presets::Scroll>
 
-Provides the animate param.
+Provides the scroll param.
 
 =item * L<Spreadsheet::HTML::Presets::Beadwork>
 

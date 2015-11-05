@@ -70,7 +70,7 @@ if ($only_self) {
         tr                  => sub { self_only( generate => data => $data, tr           => [ sub { shift }, { class => "tr"       } ] ) },
         td                  => sub { self_only( generate => data => $data, td           => [ sub { shift }, { class => "td"       } ] ) },
 
-        animate             => sub { self_only( animate      => data => $data ) },
+        scroll             => sub { self_only( scroll      => data => $data ) },
         checkerboard        => sub { self_only( checkerboard => data => $data ) },
         conway              => sub { self_only( conway       => data => $data ) },
         tictactoe           => sub { self_only( tictactoe    => data => $data ) },

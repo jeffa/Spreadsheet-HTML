@@ -1,10 +1,15 @@
-package Spreadsheet::HTML::Presets::Animate;
+package Spreadsheet::HTML::Presets::Scroll;
 use strict;
 use warnings FATAL => 'all';
 
 use Spreadsheet::HTML::Presets;
 
 sub animate {
+    warn "animate() is deprecated, use scroll() instead\n";
+    scroll( @_ ); 
+}
+
+sub scroll {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
@@ -19,7 +24,7 @@ sub animate {
             my $cell = sprintf '-r%sc%s', $r, $c;
             push @cells, $cell => {
                 id     => join( '-', $r, $c ),
-                class  => 'animate',
+                class  => 'scroll',
             };
         }
     }
@@ -31,7 +36,7 @@ sub animate {
     );
 
     my $js = _javascript( %$args );
-    return( $js, @args ) if $args->{animate};
+    return( $js, @args ) if $args->{scroll};
 
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
@@ -179,7 +184,7 @@ END_JAVASCRIPT
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Animate - Generate animated HTML table cells and backgrounds.
+Spreadsheet::HTML::Presets::Scroll - Generate scrolling HTML table cells and backgrounds.
 
 =head1 DESCRIPTION
 
@@ -189,11 +194,11 @@ Instead, use the Spreadsheet::HTML interface:
 
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new( data => \@data );
-  print $generator->animate;
+  print $generator->scroll;
 
   # or
-  use Spreadsheet::HTML qw( animate );
-  print animate( data => \@data );
+  use Spreadsheet::HTML qw( scroll );
+  print scroll( data => \@data );
 
 =head1 METHODS
 
@@ -201,33 +206,37 @@ Instead, use the Spreadsheet::HTML interface:
 
 =item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
 
+Deprecated. Use C<scroll()> instead.
+
+=item * C<scroll( fgdirection, bgdirection, interval, jquery, %params )>
+
 Moves the contents (C<fgdirection> for CDATA, C<bgdirection>
 for attributes) of each cell in the direction specified.
 Valid values are C<up>, C<down>, C<left> and C<right>, or
 you can optionally use C<fx> and/or C<fy> instead of C<fgdirection>
-to specify which axis(es) to animate, as well as C<bx> and
+to specify which axis(es) to scroll, as well as C<bx> and
 C<by> instead of C<bgdirection>.
 
-  animate( fgdirection => 'left' )
+  scroll( fgdirection => 'left' )
 
   # same as
-  animate( fx => -1 )
+  scroll( fx => -1 )
 
   # produce diagonal (left and up)
-  animate( fx => -1, fy => -1 )
+  scroll( fx => -1, fy => -1 )
 
 Set the timer with C<interval> (defaults to 200 miliseconds).
 
-  animate( fgdirection => 'right', interval => 500 )
+  scroll( fgdirection => 'right', interval => 500 )
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified via
 L<Javascript::Minifier> if it is installed.
 
 Virtually all other Spreadsheet::HTML generating methods/procedures
-also can additionally specify C<animate> et. al. as a literal parameters:
+also can additionally specify C<scroll> et. al. as a literal parameters:
 
-  print $generator->landscape( animate => 1, by => -1, bx => 1 )
+  print $generator->landscape( scroll => 1, by => -1, bx => 1 )
 
 =back
 

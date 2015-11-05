@@ -18,11 +18,11 @@ ok Spreadsheet::HTML::handson,              "handson by procedure";
 ok $table->checkerboard,                    "checkerboard by method";
 ok Spreadsheet::HTML::checkerboard,         "checkerboard by procedure";
 
-my $animate = '<table><caption align="bottom"><button id="toggle" onClick="toggle()">Start</button></caption><tr><th class="animate" id="0-0">&nbsp;</th></tr></table>';
-is scrub_js( @{ [ $table->animate ] }[0] ), $animate,                                       "animate by method";
-is scrub_js( @{ [ Spreadsheet::HTML::animate( %attr ) ] }[0] ), $animate,                   "animate by procedure";
-is scrub_js( @{ [ $table->generate( animate => 1 ) ] }[0] ), $animate,                      "animate by method";
-is scrub_js( @{ [ Spreadsheet::HTML::generate( animate => 1, %attr ) ] }[0] ), $animate,    "animate by procedure";
+my $scroll = '<table><caption align="bottom"><button id="toggle" onClick="toggle()">Start</button></caption><tr><th class="scroll" id="0-0">&nbsp;</th></tr></table>';
+is scrub_js( @{ [ $table->scroll ] }[0] ), $scroll,                                       "scroll by method";
+is scrub_js( @{ [ Spreadsheet::HTML::scroll( %attr ) ] }[0] ), $scroll,                   "scroll by procedure";
+is scrub_js( @{ [ $table->generate( scroll => 1 ) ] }[0] ), $scroll,                      "scroll by method";
+is scrub_js( @{ [ Spreadsheet::HTML::generate( scroll => 1, %attr ) ] }[0] ), $scroll,    "scroll by procedure";
 
 ok $table->banner,                          "banner by method";
 ok Spreadsheet::HTML::banner,               "banner by procedure";

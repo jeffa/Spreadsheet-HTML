@@ -78,7 +78,7 @@ Example:
   mktable sudoku --display
 
   # banner requires you to install and configure Text::FIGlet
-  mktable banner --param text="'hello world'" --param animate=1 --param bx=1 --display
+  mktable banner --param text="'hello world'" --param scroll=1 --param bx=1 --display
 
   # wrap references with quotes:
   mktable --param -r1='{class=>"foo"}'

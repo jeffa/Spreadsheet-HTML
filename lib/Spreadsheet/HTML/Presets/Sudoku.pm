@@ -67,7 +67,7 @@ sub sudoku {
         matrix   => 1,
         headless => 0,
         theta    => 0,
-        animate  => 0,
+        scroll  => 0,
     );
 
     my $js    = _javascript( %$args );

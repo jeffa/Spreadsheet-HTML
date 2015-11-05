@@ -7,10 +7,10 @@ use Exporter 'import';
 our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west handson
-    layout checkerboard animate
+    layout checkerboard scroll
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork
+    beadwork animate
 );
 
 use HTML::AutoTag;
@@ -36,7 +36,8 @@ sub tictactoe       { Spreadsheet::HTML::Presets::TicTacToe::tictactoe( @_ ) }
 sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
-sub animate         { Spreadsheet::HTML::Presets::Animate::animate( @_ ) }
+sub scroll          { Spreadsheet::HTML::Presets::Scroll::scroll(   @_ ) }
+sub animate         { Spreadsheet::HTML::Presets::Scroll::animate(  @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub beadwork        { Spreadsheet::HTML::Presets::Beadwork::beadwork( @_ ) }
@@ -86,7 +87,12 @@ sub generate {
     }
 
     if ($args{animate}) {
-        my ($js, %new_args) = Spreadsheet::HTML::Presets::Animate::animate(
+        warn "animate is deprecated, use scroll instead\n";
+        $args{scroll} = delete $args{animate};
+    }
+
+    if ($args{scroll}) {
+        my ($js, %new_args) = Spreadsheet::HTML::Presets::Scroll::scroll(
             %args,
             data => [ map [ map $_->{cdata}, @$_ ], @{ $args{data} } ],
         );
@@ -655,7 +661,7 @@ Render the table with without the headings row at all.
 The first row after the headings is still C<-r1>, and
 any configuration to C<headings> or C<-r0> will be discarded.
 
-=item * C<animate: 0 or 1>
+=item * C<scroll: 0 or 1>
 
 Animate the table cells. See L<Spreadsheet::HTML::Presets::Animate>.
 
@@ -837,7 +843,11 @@ with little to no additional coding.
 
 =item * C<calendar( month, year, %params )>
 
+=item * C<scroll( fgdirection, bgdirection, jquery, %params )>
+
 =item * C<animate( fgdirection, bgdirection, jquery, %params )>
+
+Deprecated. Use C<scroll> instead.
 
 =item * C<conway( on, off, fade, jquery, %params )>
 
