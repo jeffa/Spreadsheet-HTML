@@ -144,7 +144,10 @@ sub _process {
                 ( $cdata, $attr ) = _extrapolate( $cdata, $attr, $args->{$_} );
             }
 
-            do{ no warnings; $cdata =~ s/^\s*$/$empty/g };
+            do{ no warnings;
+                $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if exists $args->{encodes};
+                $cdata =~ s/^\s*$/$empty/g;
+            };
 
             $data->[$row][$col] = { 
                 tag => $tag, 
@@ -277,7 +280,6 @@ sub _args {
     $data = delete $args->{data} if exists $args->{data};
 
     $args->{_auto} = HTML::AutoTag->new(
-        encodes => exists $args->{encodes} ? $args->{encodes} : '',
         indent  => $args->{indent},
         level   => $args->{level},
         sorted  => $args->{sorted_attrs},

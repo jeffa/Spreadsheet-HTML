@@ -19,7 +19,7 @@ WriteMakefile(
         'Test::More'        => 0,
     },
     PREREQ_PM => {
-        'HTML::AutoTag'     => 1.01,
+        'HTML::AutoTag'     => 1.02,
     },
     (! eval { ExtUtils::MakeMaker->VERSION(6.46) } ? () :
         (META_ADD => {

@@ -1,7 +1,9 @@
 Revision history for Spreadsheet-HTML
 
 1.05
-    - added sep to list of skipped params (is this safe?)
+    - encoding now takes place within _process instead of delegating to HTML::AutoTag
+    - require HTML::AutoTag v1.02
+    - mktable: added sep to list of skipped params (is this safe?)
 
 1.04
     - Spreadsheet::Read options now available via ::File::Loader
@@ -13,8 +15,7 @@ Revision history for Spreadsheet-HTML
     - require HTML::AutoTag v1.01
 
 1.02
-    - require HTML::AutoTag v1.00
-    - two mistakes in a row!
+    - broken, do not use
 
 1.01
     - require HTML::AutoTag v1.00
