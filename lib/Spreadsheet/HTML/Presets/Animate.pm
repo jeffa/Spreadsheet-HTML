@@ -4,7 +4,7 @@ use warnings FATAL => 'all';
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::Animate - Generate scrolling HTML table cells and backgrounds.
+Spreadsheet::HTML::Presets::Animate - Generate anmiated HTML table cells and backgrounds.
 
 =head1 DESCRIPTION
 

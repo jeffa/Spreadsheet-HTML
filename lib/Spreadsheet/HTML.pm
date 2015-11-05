@@ -663,7 +663,7 @@ any configuration to C<headings> or C<-r0> will be discarded.
 
 =item * C<scroll: 0 or 1>
 
-Animate the table cells. See L<Spreadsheet::HTML::Presets::Animate>.
+Scrolls the table cells. See L<Spreadsheet::HTML::Presets::Scroll>.
 
 =item * C<headings>
 
