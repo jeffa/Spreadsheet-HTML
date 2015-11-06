@@ -16,6 +16,8 @@ sub list {
         $list = @$data[$args->{row}];
     }
 
+    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
+
     # limitation: does not allow <li> to have sub refs :(
     return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
@@ -23,6 +25,10 @@ sub list {
         cdata => [
             map {
                 my ( $cdata, $attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $args->{li} );
+                do{ no warnings;
+                    $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if $args->{encode} || exists $args->{encodes};
+                    $cdata =~ s/^\s*$/$empty/g;
+                };
                 { tag => 'li', attr => $attr, cdata => $cdata }
             } @$list
         ]

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.07
+    - added encoding and empty to list()
 
 1.06
     - added list() preset (for making HTML lists)
