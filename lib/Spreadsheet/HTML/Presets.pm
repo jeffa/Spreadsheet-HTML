@@ -3,6 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use Spreadsheet::HTML;
+use Spreadsheet::HTML::Presets::List;
 use Spreadsheet::HTML::Presets::Scroll;
 use Spreadsheet::HTML::Presets::Beadwork;
 use Spreadsheet::HTML::Presets::Calculator;

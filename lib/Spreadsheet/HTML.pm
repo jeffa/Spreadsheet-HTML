@@ -27,6 +27,7 @@ sub south   { generate( @_, theta => -180, tgroups => 0, pinhead => 1 ) }
 sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
+sub list            { Spreadsheet::HTML::Presets::List::list(       @_ ) }
 sub handson         { Spreadsheet::HTML::Presets::Handson::handson( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
@@ -836,6 +837,8 @@ with little to no additional coding.
 =over 4
 
 =item * C<layout( %params )>
+
+=item * C<list( ordered, %params )>
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 

@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 30;
+use Test::More tests => 32;
 
 use Spreadsheet::HTML;
 
@@ -11,6 +11,9 @@ my $table = Spreadsheet::HTML->new( %attr );
 my $layout = '<table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><td>&nbsp;</td></tr></table>';
 is $table->layout, $layout,                          "layout by method";
 is Spreadsheet::HTML::layout( %attr ), $layout,      "layout by procedure";
+
+ok $table->list,                            "list by method";
+ok Spreadsheet::HTML::list,                 "list by procedure";
 
 ok $table->handson,                         "handson by method";
 ok Spreadsheet::HTML::handson,              "handson by procedure";
