@@ -21,7 +21,10 @@ sub list {
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
         cdata => [
-            map { tag => 'li', attr => $args->{li}, cdata => $_ }, @$list
+            map {
+                my ( $cdata, $attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $args->{li} );
+                { tag => 'li', attr => $attr, cdata => $cdata }
+            } @$list
         ]
     );
 }
@@ -36,6 +39,14 @@ This is a container for L<Spreadsheet::HTML> preset methods.
 These methods are not meant to be called from this package.
 Instead, use the Spreadsheet::HTML interface:
 
+  use Spreadsheet::HTML;
+  my $generator = Spreadsheet::HTML->new( data => \@data );
+  print $generator->list( ordered => 1 );
+
+  # or
+  use Spreadsheet::HTML qw( list );
+  print list( data => \@data, col => 2 );
+
 =head1 METHODS
 
 =over 4
@@ -48,9 +59,17 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
+=item C<ordered>
+
+Uses <ol> instead of <ul> container when true.
+
 =item C<row>
 
+Emit this row. Default 0. (Zero index based.)
+
 =item C<col>
+
+Emit this column. Default 0. (Zero index based.)
 
 =back
 
@@ -60,9 +79,15 @@ Instead, use the Spreadsheet::HTML interface:
 
 =item C<ol>
 
+Hash reference of attributes.
+
 =item C<ul>
 
+Hash reference of attributes.
+
 =item C<li>
+
+Accepts hash reference, sub reference, or array ref containing either or both.
 
 =back
 

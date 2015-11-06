@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard scroll
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork animate
+    beadwork animate list
 );
 
 use HTML::AutoTag;
@@ -838,7 +838,7 @@ with little to no additional coding.
 
 =item * C<layout( %params )>
 
-=item * C<list( ordered, %params )>
+=item * C<list( ordered, col, row, %params )>
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 
