@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::Scroll;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 sub animate {
     warn "animate() is deprecated, use scroll() instead\n";
     scroll( @_ ); 

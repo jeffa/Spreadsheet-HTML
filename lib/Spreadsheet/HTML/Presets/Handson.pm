@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::Handson;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 eval "use JSON";
 our $NO_JSON = $@;
 

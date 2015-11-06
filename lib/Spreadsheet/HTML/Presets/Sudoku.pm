@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::Sudoku;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 eval "use Games::Sudoku::Component";
 our $NO_SUDOKU = $@;
 

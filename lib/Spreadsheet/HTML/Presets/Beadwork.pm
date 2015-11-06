@@ -3,7 +3,6 @@ use strict;
 use warnings FATAL => 'all';
 use Carp;
 
-use Spreadsheet::HTML::Presets;
 use Spreadsheet::HTML::File::Loader;
 
 sub beadwork {

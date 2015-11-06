@@ -1,10 +1,11 @@
 Revision history for Spreadsheet-HTML
 
 1.06
+    - removed unecessary 'use Spreadsheet::HTML::Presets' from presets
+    - removed all mention of Animate
 
 1.05
     - !! animate is now deprectated, use scroll instead (animate will return ...) !!
-
     - you may safely encode ampersand and still have &nbsp; work
     - added encode param (boolean) to augment encodes param (string of chars to encode)
     - encoding now takes place within _process instead of delegating to HTML::AutoTag

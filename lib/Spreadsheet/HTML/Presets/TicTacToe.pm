@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::TicTacToe;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 sub tictactoe {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;

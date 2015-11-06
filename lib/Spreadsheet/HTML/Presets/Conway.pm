@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::Conway;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
 

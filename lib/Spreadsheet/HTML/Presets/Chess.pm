@@ -2,8 +2,6 @@ package Spreadsheet::HTML::Presets::Chess;
 use strict;
 use warnings FATAL => 'all';
 
-use Spreadsheet::HTML::Presets;
-
 sub chess {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
