@@ -7,8 +7,16 @@ sub list {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my $list = @{ $data }[0];
+    my $list = [];
+    if (exists $args->{col}) {
+        $args->{col} = 0 unless $args->{col} =~ /^\d+$/;
+        $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
+    } else {
+        $args->{row} = 0 unless $args->{row} && $args->{row} =~ /^\d+$/;
+        $list = @$data[$args->{row}];
+    }
 
+    # limitation: does not allow <li> to have sub refs :(
     return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
@@ -33,6 +41,28 @@ Instead, use the Spreadsheet::HTML interface:
 =over 4
 
 =item C<list()>
+
+=back
+
+=head2 LITERAL PARAMETERS
+
+=over 4
+
+=item C<row>
+
+=item C<col>
+
+=back
+
+=head2 TAG PARAMETERS
+
+=over 4
+
+=item C<ol>
+
+=item C<ul>
+
+=item C<li>
 
 =back
 
