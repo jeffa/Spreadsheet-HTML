@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+1.07
+
 1.06
     - added list() preset (for making HTML lists)
     - removed unecessary 'use Spreadsheet::HTML::Presets' from presets
