@@ -18,7 +18,6 @@ sub list {
 
     my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
 
-    # limitation: does not allow <li> to have sub refs :(
     return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
