@@ -16,18 +16,13 @@ sub list {
         $list = @$data[$args->{row}];
     }
 
-    my $empty = exists $args->{empty} ? $args->{empty} : '&nbsp;';
-
     return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
         cdata => [
             map {
                 my ( $cdata, $attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $args->{li} );
-                do{ no warnings;
-                    $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if $args->{encode} || exists $args->{encodes};
-                    $cdata =~ s/^\s*$/$empty/g;
-                };
+                $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if $args->{encode} || exists $args->{encodes};
                 { tag => 'li', attr => $attr, cdata => $cdata }
             } @$list
         ]
