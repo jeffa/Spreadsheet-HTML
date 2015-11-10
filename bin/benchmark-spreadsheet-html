@@ -67,8 +67,8 @@ if ($only_self) {
         sorted_attrs        => sub { self_only( generate => data => $data, sorted_attrs => 1 ) },
         headings            => sub { self_only( generate => data => $data, headings     => [ sub { shift }, { class => "headings" } ] ) },
 
-        tr                  => sub { self_only( generate => data => $data, tr           => [ sub { shift }, { class => "tr"       } ] ) },
-        td                  => sub { self_only( generate => data => $data, td           => [ sub { shift }, { class => "td"       } ] ) },
+        tr                  => sub { self_only( generate => data => $data, tr => { class => "tr" } ) },
+        td                  => sub { self_only( generate => data => $data, td => [ sub { shift }, { class => "td"       } ] ) },
 
         scroll             => sub { self_only( scroll      => data => $data ) },
         checkerboard        => sub { self_only( checkerboard => data => $data ) },
@@ -77,6 +77,11 @@ if ($only_self) {
         calculator          => sub { self_only( calculator   => data => $data ) },
         calendar            => sub { self_only( calendar     => data => $data ) },
         beadwork_dk         => sub { self_only( beadwork     => data => $data, preset => 'dk' ) },
+
+        list_by_col         => sub { self_only( list         => data => $data ) },
+        list_by_row         => sub { self_only( list         => data => $data, row => 0 ) },
+        select_by_col       => sub { self_only( select       => data => $data, labels => 1 ) },
+        select_by_row       => sub { self_only( select       => data => $data, labels => 1, row => 0 ) },
     );
 
 } else {
