@@ -8,12 +8,12 @@ sub list {
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
     my $list = [];
-    if (exists $args->{col}) {
-        $args->{col} = 0 unless $args->{col} =~ /^\d+$/;
-        $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
-    } else {
-        $args->{row} = 0 unless $args->{row} && $args->{row} =~ /^\d+$/;
+    if (exists $args->{row}) {
+        $args->{row} = 0 unless $args->{row} =~ /^\d+$/;
         $list = @$data[$args->{row}];
+    } else {
+        $args->{col} = 0 unless $args->{col} && $args->{col} =~ /^\d+$/;
+        $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
     }
 
     return $args->{_auto}->tag(
