@@ -90,7 +90,7 @@ sub generate {
 
     if ($args{animate}) {
         warn "animate is deprecated, use scroll instead\n";
-        $args{scroll} = delete $args{animate};
+        $args{scroll} = $args{animate};
     }
 
     if ($args{scroll}) {
@@ -124,14 +124,14 @@ sub _process {
     }
 
     # headings is an alias for -r0
-    $args->{-r0} = delete $args->{headings} if exists $args->{headings};
+    $args->{-r0} = $args->{headings} if exists $args->{headings};
 
     # headings to index mapping (alias for some -cX)
     my %index = ();
     if ($#{ $data->[0] }) {
         %index = map { '-' . ($data->[0][$_] || '') => $_ } 0 .. $#{ $data->[0] };
         for (grep /^-/, keys %$args) {
-            $args->{"-c$index{$_}" } = delete $args->{$_} if exists $index{$_};
+            $args->{"-c$index{$_}" } = $args->{$_} if exists $index{$_};
         }
     }
 
@@ -204,7 +204,7 @@ sub _make_table {
         push @cdata, (
             ( $head ? { tag => 'thead', attr => $args{thead}, cdata => $head_row } : () ),
             ( $foot ? { tag => 'tfoot', attr => $args{tfoot}, cdata => $foot_row } : () ),
-            ( map { tag => 'tbody', attr => $args{tbody}, cdata => [ @$_ ] }, @$body_rows ),
+            ( map     { tag => 'tbody', attr => $args{tbody}, cdata => $_ }, @$body_rows ),
         );
 
 
@@ -212,7 +212,7 @@ sub _make_table {
         push @cdata, map { tag => 'tr', attr => $args{tr}, cdata => $_ }, @{ $args{data} };
     }
 
-    return $args{_auto}->tag( tag => 'table', attr => $args{table}, cdata => [ @cdata ] );
+    return $args{_auto}->tag( tag => 'table', attr => $args{table}, cdata => \@cdata );
 }
 
 sub _caption {
