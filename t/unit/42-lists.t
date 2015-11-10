@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 15;
+use Test::More tests => 32;
 
 use Spreadsheet::HTML;
 
@@ -11,7 +11,6 @@ my %by_row = ( file => 't/data/list-byrow.csv' );
 my %by_col = ( file => 't/data/list-bycol.csv' );
 
 # list
-
 is $generator->list( %by_col ),
     '<ul><li>id1</li><li>id2</li><li>id3</li><li>id4</li><li>id5</li></ul>',
     "default list() args expect columns"
@@ -29,7 +28,7 @@ is $generator->list( %by_col, col => 1 ),
 
 is $generator->list( %by_row, row => 0 ),
     '<ul><li>id1</li><li>id2</li><li>id3</li><li>id4</li><li>id5</li></ul>',
-    "default list() args works on rows"
+    "list() row instead of column"
 ;
 
 is $generator->list( %by_row, , row => 0, ordered => 1 ),
@@ -89,3 +88,87 @@ is $generator->list( %by_col, col => 1, encodes => 'lb' ),
 
 
 # select()
+is $generator->select( %by_col ),
+    '<select><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "default select() args expect columns"
+;
+
+is $generator->select( %by_col, col => 1 ),
+    '<select><option>lb1</option><option>lb2</option><option>lb3</option><option>lb4</option><option>lb5</option></select>',
+    "select() specific col param works"
+;
+
+is $generator->select( %by_col, label => 'a label' ),
+    '<label>a label</label><select><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() label param as text"
+;
+
+is $generator->select( %by_col, label => { 'a label' => { class => 'label' } } ),
+    '<label class="label">a label</label><select><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() label param as hash ref"
+;
+
+is $generator->select( %by_row, row => 0 ),
+    '<select><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() row instead of column"
+;
+
+is $generator->select( %by_row, row => 1 ),
+    '<select><option>lb1</option><option>lb2</option><option>lb3</option><option>lb4</option><option>lb5</option></select>',
+    "select() specific row param works"
+;
+
+is $generator->select( %by_col, select => { class => 'select' } ),
+    '<select class="select"><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() attribute works"
+;
+
+is $generator->select( %by_col, labels => 1 ),
+    '<select><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() labels by default column"
+;
+
+is $generator->select( %by_row, row => 0, labels => 1 ),
+    '<select><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() labels by row"
+;
+
+is $generator->select( %by_col, labels => 1, texts => 'id2' ),
+    '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() selected text"
+;
+
+is $generator->select( %by_col, labels => 1, texts => [qw( id2 id4 )] ),
+    '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option value="id3">lb3</option><option selected="selected" value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() selected texts"
+;
+
+is $generator->select( %by_col, labels => 1, values => 'lb1' ),
+    '<select><option selected="selected" value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() selected value"
+;
+
+is $generator->select( %by_col, labels => 1, values => [qw( lb2 lb3 )] ),
+    '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option selected="selected" value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() selected values"
+;
+
+is $generator->select( %by_col, col => 1, labels => 1, encode => 1 ),
+    '<select><option value="lb1">&lt;extra&gt;</option><option value="lb2">&lt;extra&gt;</option><option value="lb3">&lt;extra&gt;</option><option value="lb4">&lt;extra&gt;</option><option value="lb5">&lt;extra&gt;</option></select>',
+    "select() default encoded texts by col"
+;
+
+is $generator->select( %by_row, row => 1, labels => 1, encode => 1 ),
+    '<select><option value="lb1">&lt;extra&gt;</option><option value="lb2">&lt;extra&gt;</option><option value="lb3">&lt;extra&gt;</option><option value="lb4">&lt;extra&gt;</option><option value="lb5">&lt;extra&gt;</option></select>',
+    "select() default encoded texts by row"
+;
+
+is $generator->select( %by_col, col => 1, labels => 1, encodes => 'a' ),
+    '<select><option value="lb1"><extr&#97;></option><option value="lb2"><extr&#97;></option><option value="lb3"><extr&#97;></option><option value="lb4"><extr&#97;></option><option value="lb5"><extr&#97;></option></select>',
+    "select() specific encoded texts by col"
+;
+
+is $generator->select( %by_col, col => 2, labels => 1, encode => 1 ),
+    '<select><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option></select>',
+    "select() attribute names are NOT encoded"
+;

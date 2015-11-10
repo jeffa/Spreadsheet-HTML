@@ -44,33 +44,35 @@ sub select {
 
     my $texts  = [];
     my $values = [];
-    if (exists $args->{col}) {
-        $args->{col} = 0 unless $args->{col} =~ /^\d+$/;
-        $texts  = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
-        $values = [ map { $data->[$_][$args->{col} + 1 ] } 0 .. $#$data ];
-    } else {
-        $args->{row} = 0 unless $args->{row} && $args->{row} =~ /^\d+$/;
+    if (exists $args->{row}) {
+        $args->{row} = 0 unless $args->{row} =~ /^\d+$/;
         $texts  = @$data[$args->{row}];
         $values = @$data[$args->{row} + 1];
+    } else {
+        $args->{col} = 0 unless $args->{col} && $args->{col} =~ /^\d+$/;
+        $texts  = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
+        $values = [ map { $data->[$_][$args->{col} + 1 ] } 0 .. $#$data ];
     }
 
-    if ($args->{encode} || exists $args->{encodes}) {
-        HTML::Entities::encode_entities( $_ ) for @$texts, @$values;
-    }
+#    if ($args->{encode} || exists $args->{encodes}) {
+#        HTML::Entities::encode_entities( $_, $args->{encodes} ) for @$texts, @$values;
+#    }
 
     my $selected = [];
-    if ($args->{texts} and @{ $args->{texts} }) {
+    if ($args->{texts}) {
+        $args->{texts} = [ $args->{texts} ] unless ref $args->{texts};
         for my $text (@$texts) {
             if (grep $_ eq $text, @{ $args->{texts} }) {
-                push @$selected, 1;
+                push @$selected, 'selected';
             } else {
                 push @$selected, undef;
             }
         }
-    } elsif ($args->{values} and @{ $args->{values} }) {
+    } elsif ($args->{values}) {
+        $args->{values} = [ $args->{values} ] unless ref $args->{values};
         for my $value (@$values) {
             if (grep $_ eq $value, @{ $args->{values} }) {
-                push @$selected, 1;
+                push @$selected, 'selected';
             } else {
                 push @$selected, undef;
             }
@@ -81,8 +83,16 @@ sub select {
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
-    my $label  = _label( %$args );
-    my $select = $args->{_auto}->tag(
+    # we do not reuse $self->{_auto} because its encoding is disabled
+    my $auto = HTML::AutoTag->new(
+        encode  => $args->{encode},
+        encodes => $args->{encodes},
+        indent  => $args->{indent},
+        level   => $args->{level},
+        sorted  => $args->{sorted_attrs},
+    );
+
+    my $select = $auto->tag(
         tag   => 'select', 
         attr  => $args->{select},
         cdata => [
@@ -92,7 +102,7 @@ sub select {
         ]
     );
 
-    return $label . $select;
+    return _label( %$args ) . $select;
 }
 
 sub _label {
