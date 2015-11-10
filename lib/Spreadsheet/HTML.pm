@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard scroll
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork animate list
+    beadwork animate list select
 );
 
 use HTML::AutoTag;
@@ -28,6 +28,7 @@ sub west    { generate( @_, theta => -270, tgroups => 0 ) }
 
 sub layout          { Spreadsheet::HTML::Presets::layout(           @_ ) }
 sub list            { Spreadsheet::HTML::Presets::List::list(       @_ ) }
+sub select          { Spreadsheet::HTML::Presets::List::select(     @_ ) }
 sub handson         { Spreadsheet::HTML::Presets::Handson::handson( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
@@ -839,6 +840,8 @@ with little to no additional coding.
 =item * C<layout( %params )>
 
 =item * C<list( ordered, col, row, %params )>
+
+=item * C<select( col, row, labels, default, label, %params )>
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 

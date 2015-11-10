@@ -29,6 +29,79 @@ sub list {
     );
 }
 
+sub select {
+    my ($self,$data,$args);
+    $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
+    ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
+
+    my $texts  = [];
+    my $values = [];
+    if (exists $args->{col}) {
+        $args->{col} = 0 unless $args->{col} =~ /^\d+$/;
+        $texts  = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
+        $values = [ map { $data->[$_][$args->{col} + 1 ] } 0 .. $#$data ];
+    } else {
+        $args->{row} = 0 unless $args->{row} && $args->{row} =~ /^\d+$/;
+        $texts  = @$data[$args->{row}];
+        $values = @$data[$args->{row} + 1];
+    }
+
+    if ($args->{encode} || exists $args->{encodes}) {
+        HTML::Entities::encode_entities( $_ ) for @$texts, @$values;
+    }
+
+    my $selected = [];
+    if ($args->{texts} and @{ $args->{texts} }) {
+        for my $text (@$texts) {
+            if (grep $_ eq $text, @{ $args->{texts} }) {
+                push @$selected, 1;
+            } else {
+                push @$selected, undef;
+            }
+        }
+    } elsif ($args->{values} and @{ $args->{values} }) {
+        for my $value (@$values) {
+            if (grep $_ eq $value, @{ $args->{values} }) {
+                push @$selected, 1;
+            } else {
+                push @$selected, undef;
+            }
+        }
+    }
+
+    my $attr = {};
+    $attr->{value}    = $texts   if $args->{labels};
+    $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
+
+    my $label  = _label( %$args );
+    my $select = $args->{_auto}->tag(
+        tag   => 'select', 
+        attr  => $args->{select},
+        cdata => [
+            map {
+                { tag => 'option', attr => $attr, cdata => $_ }
+            } $args->{labels} ? @$values : @$texts
+        ]
+    );
+
+    return $label . $select;
+}
+
+sub _label {
+    my %args  = @_;
+    my $label = {};
+
+    if (ref($args{label}) eq 'HASH') {
+        (my $cdata) = keys %{ $args{label} };
+        (my $attr)  = values %{ $args{label} };
+        $label = { tag => 'label', attr => $attr, cdata => $cdata };
+    } elsif (defined $args{label} ) {
+        $label = { tag => 'label', cdata => $args{label} };
+    } 
+    
+    return %$label ? $args{_auto}->tag( %$label ) : '';
+}
+
 =head1 NAME
 
 Spreadsheet::HTML::Presets::List - Generate ordered and unordered HTML lists.
@@ -51,13 +124,15 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item C<list()>
+=item * C<list()>
+
+Renders ordered <ol> and unordered <ul> lists.
 
 =back
 
 =head2 LITERAL PARAMETERS
 
-=over 4
+=over 8
 
 =item C<ordered>
 
@@ -75,7 +150,7 @@ Emit this column. Default 0. (Zero index based.)
 
 =head2 TAG PARAMETERS
 
-=over 4
+=over 8
 
 =item C<ol>
 
@@ -88,6 +163,57 @@ Hash reference of attributes.
 =item C<li>
 
 Accepts hash reference, sub reference, or array ref containing either or both.
+
+=back
+
+=over 4
+
+=item * C<select()>
+
+Renders <select> lists.
+
+=back
+
+=head2 LITERAL PARAMETERS
+
+=over 8
+
+=item C<row>
+
+Emit this row as the texts (always) and the next row as the values (if C<labels> is true).
+Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first row
+is used to create the <select> list.
+
+=item C<col>
+
+Emit this column as the texts (always) and the next column as the values (if Clabels> is true).
+Default 0. (Zero index based.)
+
+=item C<labels>
+
+Optional boolean. Uses either the next row or column as the values for the text arguments.
+
+=item C<texts>
+
+Optional array ref of default texts to be initially selected.
+
+=item C<values>
+
+Optional array ref of default values to be initially selected.
+
+=item C<label>
+
+Emits <label> tag for list.
+
+=back
+
+=head2 TAG PARAMETERS
+
+=over 8
+
+=item C<select>
+
+Hash reference of attributes.
 
 =back
 

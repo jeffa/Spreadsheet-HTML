@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.08
+    - added select() for generating <select> lists
     - removed empty (&nbsp;) from <ol> and <ul> lists
 
 1.07
