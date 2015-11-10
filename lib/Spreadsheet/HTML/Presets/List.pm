@@ -16,13 +16,21 @@ sub list {
         $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
     }
 
-    return $args->{_auto}->tag(
+    # we do not reuse $self->{_auto} because its encoding is disabled
+    my $auto = HTML::AutoTag->new(
+        encode  => $args->{encode},
+        encodes => $args->{encodes},
+        indent  => $args->{indent},
+        level   => $args->{level},
+        sorted  => $args->{sorted_attrs},
+    );
+
+    return $auto->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
         cdata => [
             map {
                 my ( $cdata, $attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $args->{li} );
-                $cdata = HTML::Entities::encode_entities( $cdata, $args->{encodes} ) if $args->{encode} || exists $args->{encodes};
                 { tag => 'li', attr => $attr, cdata => $cdata }
             } @$list
         ]
@@ -138,13 +146,15 @@ Renders ordered <ol> and unordered <ul> lists.
 
 Uses <ol> instead of <ul> container when true.
 
-=item C<row>
-
-Emit this row. Default 0. (Zero index based.)
-
 =item C<col>
 
 Emit this column. Default 0. (Zero index based.)
+If neither C<col> nor C<row> are specified then the first column is used.
+
+=item C<row>
+
+Emit this row. Default 0. (Zero index based.)
+If neither C<col> nor C<row> are specified then the first column is used.
 
 =back
 
@@ -178,15 +188,15 @@ Renders <select> lists.
 
 =over 8
 
-=item C<row>
+=item C<col>
 
-Emit this row as the texts (always) and the next row as the values (if C<labels> is true).
+Emit this column as the texts (always) and the next column as the values (if C<labels> is true).
 Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first row
 is used to create the <select> list.
 
-=item C<col>
+=item C<row>
 
-Emit this column as the texts (always) and the next column as the values (if Clabels> is true).
+Emit this row as the texts (always) and the next row as the values (if C<labels> is true).
 Default 0. (Zero index based.)
 
 =item C<labels>

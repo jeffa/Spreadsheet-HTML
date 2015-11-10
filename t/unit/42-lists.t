@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 11;
+use Test::More tests => 15;
 
 use Spreadsheet::HTML;
 
@@ -64,7 +64,27 @@ is $generator->list( %by_col, li => { class => [qw(odd even)] } ),
 
 is $generator->list( %by_col, ordered => 1, li => { class => [qw(odd even)] } ),
     '<ol><li class="odd">id1</li><li class="even">id2</li><li class="odd">id3</li><li class="even">id4</li><li class="odd">id5</li></ol>',
-    "list() li param works for <ol>"
+    "list() li param as attributes works for <ol>"
+;
+
+is $generator->list( %by_col, li => sub { uc shift } ),
+    '<ul><li>ID1</li><li>ID2</li><li>ID3</li><li>ID4</li><li>ID5</li></ul>',
+    "list() li param as sub ref works for <ol>"
+;
+
+is $generator->list( %by_col, ordered => 1, li => [{ class => [qw(odd even)] }, sub { uc shift }] ),
+    '<ol><li class="odd">ID1</li><li class="even">ID2</li><li class="odd">ID3</li><li class="even">ID4</li><li class="odd">ID5</li></ol>',
+    "list() li param as attributes and sub ref works for <ol>"
+;
+
+is $generator->list( %by_col, col => 2, encode => 1 ),
+    '<ul><li>&lt;extra&gt;</li><li>&lt;extra&gt;</li><li>&lt;extra&gt;</li><li>&lt;extra&gt;</li><li>&lt;extra&gt;</li></ul>',
+    "list() default encoding works"
+;
+
+is $generator->list( %by_col, col => 1, encodes => 'lb' ),
+    '<ul><li>&#108;&#98;1</li><li>&#108;&#98;2</li><li>&#108;&#98;3</li><li>&#108;&#98;4</li><li>&#108;&#98;5</li></ul>',
+    "list() specific encoding works"
 ;
 
 
