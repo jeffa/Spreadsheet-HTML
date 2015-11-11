@@ -20,9 +20,19 @@ GetOptions (
     'display'   => \my $display,
     'help'      => \my $help,
     'man'       => \my $man,
+    'version'   => \my $version,
 );
 pod2usage( -verbose => 0 ) if $help;
 pod2usage( -verbose => 2 ) if $man;
+
+if ($version) {
+    print "$_\n" for 
+        "   Spreadsheet::HTML version: $Spreadsheet::HTML::VERSION",
+        "       HTML::AutoTag version: $HTML::AutoTag::VERSION",
+        "Tie::Hash::Attribute version: $Tie::Hash::Attribute::VERSION",
+    ;
+    exit;
+}
 
 my @skip  = qw( fill file art map sep );
 my @undef = qw( encodes empty );
@@ -102,6 +112,10 @@ Print a brief help message and exits.
 =item B<--man>
 
 Prints the manual page and exits.
+
+=item B<--version>
+
+Prints the versions of the core modules used.
 
 =back
 
