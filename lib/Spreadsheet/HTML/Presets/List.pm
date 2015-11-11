@@ -77,17 +77,20 @@ sub select {
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
+    my $options = [ map { { tag => 'option', attr => $attr, cdata => $_ } } $args->{labels} ? @$values : @$texts ];
+
+    if (ref( $args->{optgroup} ) eq 'ARRAY' and @{ $args->{optgroup} }) {
+        my @groups = @{ $args->{optgroup} };
+        my @ranges = Spreadsheet::HTML::_range( 0, $#$options, $#groups );
+        splice( @$options, $_, 0, { tag => 'optgroup', attr => { label => pop @groups } } ) for reverse @ranges;
+    }
+
     $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
     $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
     return _label( %$args ) . $args->{_auto}->tag(
         tag   => 'select', 
         attr  => $args->{select},
-        cdata => [
-            ( $placeholder || () ),
-            map {
-                { tag => 'option', attr => $attr, cdata => $_ }
-            } $args->{labels} ? @$values : @$texts
-        ]
+        cdata => [ ( $placeholder || () ), @$options ],
     );
 }
 
