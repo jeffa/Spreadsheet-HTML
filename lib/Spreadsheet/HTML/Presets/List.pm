@@ -132,7 +132,7 @@ Instead, use the Spreadsheet::HTML interface:
   # or
   use Spreadsheet::HTML qw( list );
   print list( data => \@data, col => 2 );
-  print Spreadsheet::HTML::select( row => 0, option => { class => [qw(odd even)] } );
+  print Spreadsheet::HTML::select( data => \@data, row => 0 );
 
 Note that C<select()> is not exportable, due to the existance of Perl's
 built-in C<select()> function.
@@ -160,14 +160,14 @@ Boolean. Uses <ol> instead of <ul> container when true.
 =item C<col>
 
 Emit this column. Default 0. (Zero index based.)
-If neither C<col> nor C<row> are specified then the first column is used.
+If neither C<col> nor C<row> are specified then the first column (0) is used.
 
   col => 2
 
 =item C<row>
 
 Emit this row. (Zero index based.)
-If neither C<col> nor C<row> are specified then the first column is used.
+If neither C<col> nor C<row> are specified then the first column (0) is used.
 
   row => 0
 
@@ -181,13 +181,13 @@ If neither C<col> nor C<row> are specified then the first column is used.
 
 Hash reference of attributes.
 
-  ol => { class => 'ordered' }
+  ol => { class => 'list' }
 
 =item C<ul>
 
 Hash reference of attributes.
 
-  ul => { class => 'unordered' }
+  ul => { class => 'list' }
 
 =item C<li>
 
@@ -214,15 +214,15 @@ Renders <select> lists.
 =item C<col>
 
 Emit this column as the texts (always) and the next column as the values (if C<labels> is true).
-Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first row
+Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first column (0)
 is used to create the <select> list.
 
   col => 2
 
 =item C<row>
 
-Emit this row as the texts (always) and the next row as the values (if C<labels> is true).
-(Zero index based.)
+Emit this row (zero index based) as the texts (always) and the next row as the values (if C<labels> is true).
+If neither C<row> nor C<col> is specified, then the first column (0) is used to create the <select> list.
 
   row => 0
 
