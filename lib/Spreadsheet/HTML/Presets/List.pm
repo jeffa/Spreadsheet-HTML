@@ -69,6 +69,11 @@ sub select {
         }
     }
 
+    my $placeholder;
+    if ($args->{placeholder}) {
+        $placeholder = { tag => 'option', attr => { value => '' }, cdata => $args->{placeholder} };
+    }
+
     my $attr = {};
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
@@ -80,6 +85,7 @@ sub select {
         tag   => 'select', 
         attr  => $args->{select},
         cdata => [
+            ( $placeholder || () ),
             map {
                 { tag => 'option', attr => $attr, cdata => $_ }
             } $args->{labels} ? @$values : @$texts
@@ -204,6 +210,12 @@ Optional array ref of default texts to be initially selected.
 =item C<values>
 
 Optional array ref of default values to be initially selected.
+
+=item C<placeholder>
+
+Optional string. Inserts the C<placeholder> as the first <option> in the <select> list.
+This <option> will always have a value attribute set to empty string regardless of the
+value of C<labels>.
 
 =item C<label>
 

@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 32;
+use Test::More tests => 34;
 
 use Spreadsheet::HTML;
 
@@ -172,3 +172,14 @@ is $generator->select( %by_col, col => 2, labels => 1, encode => 1 ),
     '<select><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option></select>',
     "select() attribute names are NOT encoded"
 ;
+
+is $generator->select( %by_col, placeholder => 'select' ),
+    '<select><option value="">select</option><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() placeholder param correct"
+;
+
+is $generator->select( %by_col, labels => 1, placeholder => 'select' ),
+    '<select><option value="">select</option><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() placeholder param with labels param correct"
+;
+
