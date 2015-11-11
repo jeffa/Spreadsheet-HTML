@@ -158,6 +158,10 @@ Renders ordered <ol> and unordered <ul> lists.
 
 =over 8
 
+=item C<headless>
+
+Discard first element. Useful for datasets that include headings.
+
 =item C<ordered>
 
 Boolean. Uses <ol> instead of <ul> container when true.
@@ -217,6 +221,10 @@ Renders <select> lists.
 =head2 LITERAL PARAMETERS
 
 =over 8
+
+=item C<headless>
+
+Discard first element. Useful for datasets that include headings.
 
 =item C<col>
 

@@ -839,9 +839,9 @@ with little to no additional coding.
 
 =item * C<layout( %params )>
 
-=item * C<list( ordered, col, row, %params )>
+=item * C<list( headless, ordered, col, row, %params )>
 
-=item * C<select( col, row, labels, texts, values, placeholder, label, %params )>
+=item * C<select( headless, col, row, labels, texts, values, placeholder, label, %params )>
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 
