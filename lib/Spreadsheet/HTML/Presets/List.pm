@@ -86,7 +86,10 @@ sub select {
         } $args->{labels} ? @$values : @$texts
     ];
 
-    shift @$options if $args->{headless};
+    if ($args->{headless}) {
+        shift @$options;
+        shift @{ $attr->{value} || [] };
+    }
 
     if (ref( $args->{optgroup} ) eq 'ARRAY' and @{ $args->{optgroup} }) {
         my @groups = @{ $args->{optgroup} };

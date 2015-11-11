@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 48;
+use Test::More tests => 49;
 
 use Spreadsheet::HTML;
 
@@ -160,6 +160,11 @@ is $generator->select( %by_col, option => { disabled => [undef, undef, 1] }),
 is $generator->select( %by_col, labels => 1 ),
     '<select><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
     "select() labels by default column"
+;
+
+is $generator->select( %by_col, labels => 1, headless => 1 ),
+    '<select><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
+    "select() headless works when labels is set"
 ;
 
 is $generator->select( %by_col, labels => 1, option => { class => [qw(odd even)] } ),
