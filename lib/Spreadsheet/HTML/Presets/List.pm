@@ -16,6 +16,8 @@ sub list {
         $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
     }
 
+    shift @$list if $args->{headless};
+
     $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
     $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
     return $args->{_auto}->tag(
@@ -83,6 +85,8 @@ sub select {
             { tag => 'option', attr => $new_attr, cdata => $cdata };
         } $args->{labels} ? @$values : @$texts
     ];
+
+    shift @$options if $args->{headless};
 
     if (ref( $args->{optgroup} ) eq 'ARRAY' and @{ $args->{optgroup} }) {
         my @groups = @{ $args->{optgroup} };

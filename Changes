@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.09
+    - added headless param for list() and select()
 
 1.08
     - reminder: animate has been deprecated since v1.05

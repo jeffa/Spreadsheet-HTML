@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 45;
+use Test::More tests => 48;
 
 use Spreadsheet::HTML;
 
@@ -14,6 +14,11 @@ my %by_col = ( file => 't/data/list-bycol.csv' );
 is $generator->list( %by_col ),
     '<ul><li>id1</li><li>id2</li><li>id3</li><li>id4</li><li>id5</li></ul>',
     "default list() args expect columns"
+;
+
+is $generator->list( %by_col, headless => 1 ),
+    '<ul><li>id2</li><li>id3</li><li>id4</li><li>id5</li></ul>',
+    "list() headless removes 1st element"
 ;
 
 is $generator->list( %by_col, ordered => 1 ),
@@ -95,6 +100,11 @@ is $generator->generate( %by_col ),
 is $generator->select( %by_col ),
     '<select><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
     "default select() args expect columns"
+;
+
+is $generator->select( %by_col, headless => 1 ),
+    '<select><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() headless param removes first element"
 ;
 
 is $generator->select( %by_col, col => 1 ),
@@ -219,6 +229,11 @@ is $generator->select( %by_col, col => 2, labels => 1, encode => 1 ),
 
 is $generator->select( %by_col, placeholder => 'select' ),
     '<select><option value="">select</option><option>id1</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
+    "select() placeholder param correct"
+;
+
+is $generator->select( %by_col, placeholder => 'select', headless => 1 ),
+    '<select><option value="">select</option><option>id2</option><option>id3</option><option>id4</option><option>id5</option></select>',
     "select() placeholder param correct"
 ;
 
