@@ -143,17 +143,23 @@ Renders ordered <ol> and unordered <ul> lists.
 
 =item C<ordered>
 
-Uses <ol> instead of <ul> container when true.
+Boolean. Uses <ol> instead of <ul> container when true.
+
+  ordered => 1
 
 =item C<col>
 
 Emit this column. Default 0. (Zero index based.)
 If neither C<col> nor C<row> are specified then the first column is used.
 
+  col => 2
+
 =item C<row>
 
-Emit this row. Default 0. (Zero index based.)
+Emit this row. (Zero index based.)
 If neither C<col> nor C<row> are specified then the first column is used.
+
+  row => 0
 
 =back
 
@@ -165,13 +171,21 @@ If neither C<col> nor C<row> are specified then the first column is used.
 
 Hash reference of attributes.
 
+  ol => { class => 'ordered' }
+
 =item C<ul>
 
 Hash reference of attributes.
 
+  ul => { class => 'unordered' }
+
 =item C<li>
 
 Accepts hash reference, sub reference, or array ref containing either or both.
+
+  li => { class => [qw( odd even )] }
+  li => sub { ucfirst shift }
+  li => [ { class => 'item' }, sub { sprintf '%2d', shift } ]
 
 =back
 
@@ -193,22 +207,32 @@ Emit this column as the texts (always) and the next column as the values (if C<l
 Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first row
 is used to create the <select> list.
 
+  col => 2
+
 =item C<row>
 
 Emit this row as the texts (always) and the next row as the values (if C<labels> is true).
-Default 0. (Zero index based.)
+(Zero index based.)
+
+  row => 0
 
 =item C<labels>
 
 Optional boolean. Uses either the next row or column as the values for the text arguments.
 
+  labels => 1
+
 =item C<texts>
 
 Optional array ref of default texts to be initially selected.
 
+  texts => [qw( id1 id4 )]
+
 =item C<values>
 
 Optional array ref of default values to be initially selected.
+
+  values => [qw( label2 label3 )]
 
 =item C<placeholder>
 
@@ -216,9 +240,15 @@ Optional string. Inserts the C<placeholder> as the first <option> in the <select
 This <option> will always have a value attribute set to empty string regardless of the
 value of C<labels>.
 
+  placeholder => 'Please select an option'
+
 =item C<label>
 
-Emits <label> tag for list.
+Emits <label> tag for list. Either a scalar string or a special hash ref whose
+only key is the CDATA for the <label> and the only value is the attributes as a hash ref.
+
+  label => 'Label with no attributes'
+  label => { 'Label with attributes' => { class => 'label' } }
 
 =back
 
@@ -229,6 +259,8 @@ Emits <label> tag for list.
 =item C<select>
 
 Hash reference of attributes.
+
+  select => { class => 'select' }
 
 =back
 
@@ -244,9 +276,7 @@ The interface for this functionality.
 
 More presets.
 
-=item L<http://www.w3.org/TR/html5/forms.html#the-select-element>
-
-=item L<http://www.w3.org/TR/html5/forms.html#the-option-element>
+=item L<http://www.w3.org/TR/html5/forms.html>
 
 =back
 
