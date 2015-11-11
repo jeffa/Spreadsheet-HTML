@@ -249,6 +249,10 @@ The interface for this functionality.
 
 More presets.
 
+=item L<http://www.w3.org/TR/html5/forms.html#the-select-element>
+
+=item L<http://www.w3.org/TR/html5/forms.html#the-option-element>
+
 =back
 
 =head1 AUTHOR
