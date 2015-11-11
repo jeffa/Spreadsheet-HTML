@@ -287,7 +287,7 @@ sub _args {
     $args = { %{ $self || {} }, %{ $args || {} } };
     $data = delete $args->{data} if exists $args->{data};
 
-    $args->{_auto} = HTML::AutoTag->new(
+    $args->{_auto} ||= HTML::AutoTag->new(
         indent  => $args->{indent},
         level   => $args->{level},
         sorted  => $args->{sorted_attrs},

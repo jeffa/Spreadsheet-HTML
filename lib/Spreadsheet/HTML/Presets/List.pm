@@ -16,9 +16,8 @@ sub list {
         $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
     }
 
-    local $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
-    local $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
-
+    $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
+    $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
     return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
@@ -78,10 +77,9 @@ sub select {
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
-    local $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
-    local $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
-
-    my $select = $args->{_auto}->tag(
+    $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
+    $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
+    return _label( %$args ) . $args->{_auto}->tag(
         tag   => 'select', 
         attr  => $args->{select},
         cdata => [
@@ -91,8 +89,6 @@ sub select {
             } $args->{labels} ? @$values : @$texts
         ]
     );
-
-    return _label( %$args ) . $select;
 }
 
 sub _label {

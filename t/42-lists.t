@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 34;
+use Test::More tests => 36;
 
 use Spreadsheet::HTML;
 
@@ -86,6 +86,10 @@ is $generator->list( %by_col, col => 1, encodes => 'lb' ),
     "list() specific encoding works"
 ;
 
+is $generator->generate( %by_col ),
+    '<table><tr><th>id1</th><th>lb1</th><th><extra></th><th>extra</th></tr><tr><td>id2</td><td>lb2</td><td><extra></td><td>extra</td></tr><tr><td>id3</td><td>lb3</td><td><extra></td><td>extra</td></tr><tr><td>id4</td><td>lb4</td><td><extra></td><td>extra</td></tr><tr><td>id5</td><td>lb5</td><td><extra></td><td>extra</td></tr></table>',
+    "list() encoding does not persist"
+;
 
 # select()
 is $generator->select( %by_col ),
@@ -167,6 +171,12 @@ is $generator->select( %by_col, col => 1, labels => 1, encodes => 'a' ),
     '<select><option value="lb1"><extr&#97;></option><option value="lb2"><extr&#97;></option><option value="lb3"><extr&#97;></option><option value="lb4"><extr&#97;></option><option value="lb5"><extr&#97;></option></select>',
     "select() specific encoded texts by col"
 ;
+
+is $generator->generate( %by_col ),
+    '<table><tr><th>id1</th><th>lb1</th><th><extra></th><th>extra</th></tr><tr><td>id2</td><td>lb2</td><td><extra></td><td>extra</td></tr><tr><td>id3</td><td>lb3</td><td><extra></td><td>extra</td></tr><tr><td>id4</td><td>lb4</td><td><extra></td><td>extra</td></tr><tr><td>id5</td><td>lb5</td><td><extra></td><td>extra</td></tr></table>',
+    "select() encoding does not persist"
+;
+
 
 is $generator->select( %by_col, col => 2, labels => 1, encode => 1 ),
     '<select><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option></select>',
