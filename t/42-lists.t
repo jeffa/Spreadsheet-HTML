@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 44;
+use Test::More tests => 45;
 
 use Spreadsheet::HTML;
 
@@ -140,6 +140,11 @@ is $generator->select( %by_col, option => sub { uc shift } ),
 is $generator->select( %by_col, option => [ { class => [qw(odd even)] }, sub { uc shift } ] ),
     '<select><option class="odd">ID1</option><option class="even">ID2</option><option class="odd">ID3</option><option class="even">ID4</option><option class="odd">ID5</option></select>',
     "select() option sub refs works"
+;
+
+is $generator->select( %by_col, option => { disabled => [undef, undef, 1] }),
+    '<select><option>id1</option><option>id2</option><option disabled="1">id3</option><option>id4</option><option>id5</option></select>',
+    "select() can disable specific options"
 ;
 
 is $generator->select( %by_col, labels => 1 ),
