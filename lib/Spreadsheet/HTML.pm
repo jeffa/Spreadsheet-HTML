@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard scroll
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork animate list select
+    beadwork animate list
 );
 
 use HTML::AutoTag;
@@ -841,7 +841,7 @@ with little to no additional coding.
 
 =item * C<list( ordered, col, row, %params )>
 
-=item * C<select( col, row, labels, default, label, %params )>
+=item * C<select( col, row, labels, texts, values, placeholder, label, %params )>
 
 =item * C<handson( handsonjs, jquery, css, %params )>
 
@@ -850,10 +850,6 @@ with little to no additional coding.
 =item * C<calendar( month, year, %params )>
 
 =item * C<scroll( fgdirection, bgdirection, jquery, %params )>
-
-=item * C<animate( fgdirection, bgdirection, jquery, %params )>
-
-Deprecated. Use C<scroll> instead.
 
 =item * C<conway( on, off, fade, jquery, %params )>
 
@@ -873,6 +869,8 @@ Deprecated. Use C<scroll> instead.
 
 =item * C<beadwork( %params )>
 
+=item * C<animate( %params )> - B<Deprecated>: use C<scroll()> instead.
+
 =back
 
 See L<Spreadsheet::HTML::Presets> for more documentation
@@ -884,9 +882,8 @@ See L<Spreadsheet::HTML::Presets> for more documentation
 
 =item * L<HTML::AutoTag>
 
-Used to generate HTML. Handles indentation and HTML entity encoding.
-Uses L<Tie::Hash::Attribute> to handle rotation of class attributes
-and L<HTML::Entities> for encoding of CDATA.
+Used to generate HTML tags and  attributes. Handles indentation and HTML entity encoding.
+Requires L<Tie::Hash::Attribute> and L<HTML::Entities>.
 
 =back
 
@@ -907,7 +904,7 @@ different file formats:
 
 =item * L<Spreadsheet::Read>
 
-Uses the following:
+Uses the following optional modules:
 
 =over 4
 
@@ -929,8 +926,7 @@ Uses the following:
 
 =back
 
-The following are used by some presets to enhance
-their output, if installed:
+The following are used by some presets to enhance output, if installed:
 
 =over 4
 

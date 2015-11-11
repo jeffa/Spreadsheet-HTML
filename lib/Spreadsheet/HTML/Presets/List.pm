@@ -116,7 +116,7 @@ sub _label {
 
 =head1 NAME
 
-Spreadsheet::HTML::Presets::List - Generate ordered and unordered HTML lists.
+Spreadsheet::HTML::Presets::List - Generate <select>, <ol> and <ul> lists.
 
 =head1 DESCRIPTION
 
@@ -127,10 +127,15 @@ Instead, use the Spreadsheet::HTML interface:
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new( data => \@data );
   print $generator->list( ordered => 1 );
+  print $generator->select( labels => 1, placeholder => 'Pick one' );
 
   # or
   use Spreadsheet::HTML qw( list );
   print list( data => \@data, col => 2 );
+  print Spreadsheet::HTML::select( row => 0, option => { class => [qw(odd even)] } );
+
+Note that C<select()> is not exportable, due to the existance of Perl's
+built-in C<select()> function.
 
 =head1 METHODS
 
