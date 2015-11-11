@@ -869,7 +869,7 @@ with little to no additional coding.
 
 =item * C<beadwork( %params )>
 
-=item * C<animate( %params )> - B<Deprecated>: use C<scroll()> instead.
+=item * C<animate( %params )> - Deprecated: use C<scroll()> instead.
 
 =back
 

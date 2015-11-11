@@ -436,6 +436,10 @@ and C<off>, respectively:
 
 =over 4
 
+=item * L<Spreadsheet::HTML::Presets::List>
+
+Generate <select>, <ol> and <ul> lists.
+
 =item * L<Spreadsheet::HTML::Presets::Scroll>
 
 Provides the scroll param.
