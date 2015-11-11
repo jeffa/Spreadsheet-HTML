@@ -16,16 +16,10 @@ sub list {
         $list = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
     }
 
-    # we do not reuse $self->{_auto} because its encoding is disabled
-    my $auto = HTML::AutoTag->new(
-        encode  => $args->{encode},
-        encodes => $args->{encodes},
-        indent  => $args->{indent},
-        level   => $args->{level},
-        sorted  => $args->{sorted_attrs},
-    );
+    local $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
+    local $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
 
-    return $auto->tag(
+    return $args->{_auto}->tag(
         tag   => $args->{ordered} ? 'ol' : 'ul', 
         attr  => $args->{ol} || $args->{ul},
         cdata => [
@@ -54,10 +48,6 @@ sub select {
         $values = [ map { $data->[$_][$args->{col} + 1 ] } 0 .. $#$data ];
     }
 
-#    if ($args->{encode} || exists $args->{encodes}) {
-#        HTML::Entities::encode_entities( $_, $args->{encodes} ) for @$texts, @$values;
-#    }
-
     my $selected = [];
     if ($args->{texts}) {
         $args->{texts} = [ $args->{texts} ] unless ref $args->{texts};
@@ -83,16 +73,10 @@ sub select {
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
-    # we do not reuse $self->{_auto} because its encoding is disabled
-    my $auto = HTML::AutoTag->new(
-        encode  => $args->{encode},
-        encodes => $args->{encodes},
-        indent  => $args->{indent},
-        level   => $args->{level},
-        sorted  => $args->{sorted_attrs},
-    );
+    local $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
+    local $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
 
-    my $select = $auto->tag(
+    my $select = $args->{_auto}->tag(
         tag   => 'select', 
         attr  => $args->{select},
         cdata => [
