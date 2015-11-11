@@ -73,11 +73,16 @@ sub select {
         $placeholder = { tag => 'option', attr => { value => '' }, cdata => $args->{placeholder} };
     }
 
-    my $attr = {};
+    my $attr = $args->{option} || {};
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
-    my $options = [ map { { tag => 'option', attr => $attr, cdata => $_ } } $args->{labels} ? @$values : @$texts ];
+    my $options = [
+        map { 
+            my ( $cdata, $new_attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $attr );
+            { tag => 'option', attr => $new_attr, cdata => $cdata };
+        } $args->{labels} ? @$values : @$texts
+    ];
 
     if (ref( $args->{optgroup} ) eq 'ARRAY' and @{ $args->{optgroup} }) {
         my @groups = @{ $args->{optgroup} };
@@ -261,6 +266,14 @@ only key is the CDATA for the <label> and the only value is the attributes as a 
 Hash reference of attributes.
 
   select => { class => 'select' }
+
+=item C<option>
+
+Accepts hash reference, sub reference, or array ref containing either or both.
+
+  option => { class => [qw( odd even )] }
+  option => sub { uc shift }
+  option => [ sub { uc shift }, { class => [qw( odd even )] } ]
 
 =back
 
