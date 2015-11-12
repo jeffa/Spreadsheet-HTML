@@ -75,13 +75,13 @@ sub select {
         $placeholder = { tag => 'option', attr => { value => '' }, cdata => $args->{placeholder} };
     }
 
-    my $attr = $args->{option} || {};
+    my $attr = {};
     $attr->{value}    = $texts   if $args->{labels};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
     my $options = [
         map { 
-            my ( $cdata, $new_attr ) = Spreadsheet::HTML::_extrapolate( $_, undef, $attr );
+            my ( $cdata, $new_attr ) = Spreadsheet::HTML::_extrapolate( $_, $attr, $args->{option} );
             { tag => 'option', attr => $new_attr, cdata => $cdata };
         } $args->{labels} ? @$values : @$texts
     ];
