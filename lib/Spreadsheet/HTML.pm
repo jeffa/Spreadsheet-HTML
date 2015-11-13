@@ -384,7 +384,7 @@ Procedural interface:
 Generate HTML tables with ease (HTML4, XHTML and HTML5). Generate
 portrait, landscape and other rotated views, Handsontable tables, HTML
 calendars, checkerboard patterns, games such as sudoku, banners and mazes,
-and create animations of cell values and backgrounds via supplied jQuery.
+and create animations of cell values and backgrounds via jQuery.
 Rewrap existing tables from Excel, HTML, JSON, CSV and YAML files.
 
 =head1 CLI TOOLS
@@ -438,48 +438,57 @@ generating methods below:
 
 =item * C<generate( %params )>
 
+Generate an HTML table with headings positioned at the top.
+
+  print $generator->generate();
+
 =item * C<portrait( %params )>
+
+Alias for C<generate()>.
+
+  print $generator->portrait();
 
 =item * C<north( %params )>
 
-These three methods all generate an HTML table with headings positioned at the top.
+Alias for C<generate()>.
+
+  print $generator->north();
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
 
-  print $generator->generate();
-  print $generator->portrait();
-  print $generator->north();
-
 =item * C<landscape( %params )>
+
+Generate an HTML table with headings positioned at the left.
+
+  print $generator->landscape();
 
 =item * C<west( %params )>
 
-These two methods generate an HTML table with headings positioned at the left.
+Alias for C<landscape>.
+
+  print $generator->west();
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
 
-  print $generator->landscape();
-  print $generator->west();
-
 =item * C<south( %params )>
 
-This method generates an HTML table with headings positioned at the bottom.
+Generate an HTML table with headings positioned at the bottom.
+
+  print $generator->south();
 
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
-
-  print $generator->south();
 
 =item * C<east( %params )>
 
 This method generates an HTML table with headings positioned at the right.
 
+  print $generator->east();
+
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr></table>
-
-  print $generator->east();
 
 =back
 
@@ -833,43 +842,78 @@ the attributes of the <tr> tag within the <tfoot> group.
 =head2 PRESETS
 
 The following presets are availble for creating tables that can be used
-with little to no additional coding.
+with little to no additional coding. All preset methods accept all of the
+above mentioned Parameters in addition to those specific to them.
 
 =over 4
 
-=item * C<layout( %params )>
+=item * C<layout( )>
 
-=item * C<list( headless, ordered, col, row, %params )>
+Generate layout tables.
 
-=item * C<select( headless, col, row, labels, texts, values, placeholder, label, %params )>
+=item * C<list( ordered, col, row )>
 
-=item * C<handson( handsonjs, jquery, css, %params )>
+Generate <ol> and <ul> list.
 
-=item * C<banner( on, off, text, font, %params )>
+=item * C<select( col, row, labels )>
 
-=item * C<calendar( month, year, %params )>
+Generate <select> form elements.
 
-=item * C<scroll( fgdirection, bgdirection, jquery, %params )>
+=item * C<handson( handsonjs, css )>
 
-=item * C<conway( on, off, fade, jquery, %params )>
-
-=item * C<calculator( jquery, %params )>
+Generate Handsontable tables. (Excel like interface for browsers.)
 
 =item * C<checkerboard( colors, %params )>
 
-=item * C<sudoku( blanks, attempts, %params )>
+Generate checkerboard patterns in cell backgrounds.
 
-=item * C<maze( on, off, fill, %params )>
+=item * C<banner( on, off, text, font )>
 
-=item * C<chess( %params )>
+Generate banners via Text::FIGlet.
 
-=item * C<checkers( %params )>
+=item * C<scroll( fgdirection, bgdirection )>
 
-=item * C<tictactoe( %params )>
+Scroll table cell foregrounds and backgrounds.
 
-=item * C<beadwork( %params )>
+=item * C<animate( )> 
 
-=item * C<animate( %params )> - Deprecated: use C<scroll()> instead.
+Deprecated. Use C<scroll()> instead.
+
+=item * C<calendar( month, year, today )>
+
+Generate calendars.
+
+=item * C<calculator( )>
+
+Generate a simple HTML table calculator.
+
+=item * C<beadwork( )>
+
+Turn cell backgrounds into 8-bit pixel art.
+
+=item * C<conway( on, off, fade )>
+
+Turn cell backgrounds into Conway's game of life.
+
+=item * C<sudoku( blanks, attempts )>
+
+Generate 9x9 HTML table sudoku boards.
+
+=item * C<maze( on, off, fill )>
+
+Generates a static maze.
+
+=item * C<tictactoe( )>
+
+Creates a playable Tic-Tac-Toe game board.
+
+=item * C<checkers( )>
+
+Creates a NON playable Checkers game board.
+
+=item * C<chess( )>
+
+Creates a NON playable Chess game board.
 
 =back
 
