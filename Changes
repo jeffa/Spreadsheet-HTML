@@ -1,14 +1,14 @@
 Revision history for Spreadsheet-HTML
 
 1.09
+    - reminder: animate has been deprecated since v1.05
     - renamed some params for select() (see docs)
     - mktable help option can now inform about methods and parameters
     - select() option attr properly handles code refs & default items
-    - added headless param for list() and select()
+    - enabled headless param for list() and select()
     - select() is no longer exported
 
 1.08
-    - reminder: animate has been deprecated since v1.05
     - added select() for generating <select> lists
     - removed empty (&nbsp;) from <ol> and <ul> lists
     - fixed bug in benchmark-spreadsheet-html (cannot use array ref for tr param)
