@@ -176,7 +176,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<tictactoe( %params )>
+=item * C<tictactoe( jquery, %params )>
 
 Generates a tictactoe game board implemented with an HTML table
 and Javascript. Intended for two human players but plan to 

@@ -139,7 +139,7 @@ built-in C<select()> function.
 
 =over 4
 
-=item * C<list()>
+=item * C<list( ordered, col, row, %params )>
 
 Renders ordered <ol> and unordered <ul> lists.
 
@@ -203,7 +203,7 @@ Accepts hash reference, sub reference, or array ref containing either or both.
 
 =over 4
 
-=item * C<select()>
+=item * C<select( col, row, values, selected, placeholder, optgroup, label, %params )>
 
 Renders <select> lists.
 

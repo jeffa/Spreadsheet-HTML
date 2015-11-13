@@ -388,7 +388,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<beadwork( art, map, bgcolor, preset, %params )>
+=item * C<beadwork( preset, art, map, bgcolor, %params )>
 
 Generates beadwork patters in the name of ASCII art.
 

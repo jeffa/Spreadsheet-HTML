@@ -843,23 +843,23 @@ the attributes of the <tr> tag within the <tfoot> group.
 
 The following presets are availble for creating tables that can be used
 with little to no additional coding. All preset methods accept all of the
-above mentioned Parameters in addition to those specific to them.
+above mentioned parameters (%params) in addition to those specific to themselves.
 
 =over 4
 
-=item * C<layout( )>
+=item * C<layout( %params )>
 
 Generate layout tables.
 
-=item * C<list( ordered, col, row )>
+=item * C<list( ordered, col, row, %params )>
 
 Generate <ol> and <ul> list.
 
-=item * C<select( col, row, values, selected, placeholder )>
+=item * C<select( col, row, values, selected, placeholder, optgroup, label, %params )>
 
 Generate <select> form elements.
 
-=item * C<handson( handsonjs, css )>
+=item * C<handson( args, jquery, handsonjs, css, %params )>
 
 Generate Handsontable tables. (Excel like interface for browsers.)
 
@@ -867,51 +867,51 @@ Generate Handsontable tables. (Excel like interface for browsers.)
 
 Generate checkerboard patterns in cell backgrounds.
 
-=item * C<banner( on, off, text, font )>
+=item * C<banner( on, off, text, font, dir, emboss, %params )>
 
 Generate banners via Text::FIGlet.
 
-=item * C<scroll( fgdirection, bgdirection )>
+=item * C<scroll( fgdirection, fx, fy, bgdirection, bx, by, interval, jquery, %params )>
 
 Scroll table cell foregrounds and backgrounds.
 
-=item * C<animate( )> 
+=item * C<animate( fgdirection, fx, fy, bgdirection, bx, by, interval, jquery, %params )>
 
 Deprecated. Use C<scroll()> instead.
 
-=item * C<calendar( month, year, today )>
+=item * C<calendar( month, year, today, -day, %params )>
 
 Generate calendars.
 
-=item * C<calculator( )>
+=item * C<calculator( jquery, %params )>
 
 Generate a simple HTML table calculator.
 
-=item * C<beadwork( )>
+=item * C<beadwork( preset, art, map, bgcolor, %params )>
 
 Turn cell backgrounds into 8-bit pixel art.
 
-=item * C<conway( on, off, fade )>
+=item * C<conway( on, off, colors, fade, interval, jquery, %params )>
 
 Turn cell backgrounds into Conway's game of life.
 
-=item * C<sudoku( blanks, attempts )>
+=item * C<sudoku( blanks, attempts, jquery, %params )>
 
 Generate 9x9 HTML table sudoku boards.
 
-=item * C<maze( on, off, fill )>
+=item * C<maze( on, off, %params )>
 
 Generates a static maze.
 
-=item * C<tictactoe( )>
+=item * C<tictactoe( jquery, %params )>
 
 Creates a playable Tic-Tac-Toe game board.
 
-=item * C<checkers( )>
+=item * C<checkers( on, off, jquery, %params )>
 
 Creates a NON playable Checkers game board.
 
-=item * C<chess( )>
+=item * C<chess( on, off, jquery, jqueryui, %params )>
 
 Creates a NON playable Chess game board.
 

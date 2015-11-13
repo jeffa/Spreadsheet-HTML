@@ -187,7 +187,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<conway( on, off, fill, fade, interval, jquery, %params )>
+=item * C<conway( on, off, colors, fade, interval, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 

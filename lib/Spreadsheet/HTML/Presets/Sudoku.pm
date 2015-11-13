@@ -160,7 +160,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<sudoku( blanks, attempts, %params )>
+=item * C<sudoku( blanks, attempts, jquery, %params )>
 
 Generates a static unsolved 9x9 sudoku board. You must have
 L<Games::Sudoku::Component> installed, which currently

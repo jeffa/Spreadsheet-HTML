@@ -106,7 +106,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<chess( %params )>
+=item * C<chess( on, off, jquery, jqueryui, %params )>
 
 Generates a chess game board. Currently you can only
 move the pieces around without regard to any rules.

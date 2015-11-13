@@ -98,7 +98,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<handson( jquery, handsonjs, css, %params )>
+=item * C<handson( args, jquery, handsonjs, css, %params )>
 
 Styles table with Handsontable, a "data grid component with
 and Excel-like appearance."
