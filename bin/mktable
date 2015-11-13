@@ -22,7 +22,7 @@ GetOptions (
     'man'       => \my $man,
     'version'   => \my $version,
 );
-print help( $help ) and exit if $help;
+print _lookup_help( $help ) and exit if $help;
 pod2usage( -verbose => 0 ) if defined $help;
 pod2usage( -verbose => 2 ) if $man;
 
@@ -60,18 +60,49 @@ if ($display) {
 
 print $generator->$method( %args ), $/;
 
-sub help {
-    my $which = lc shift;
+use Data::Dumper;
+sub _lookup_help {
+    my $value = shift;
+    my $preset_param;
 
-    open my $fh, '<', $INC{'Spreadsheet/HTML.pm'} or die "cannot read lib file\n";
-    my @pod     = do{ local $/ = "\n=item"; <$fh> };
-    my ($found) = grep / \* C<$which/, @pod;
-    close $fh;
-    return "can't find docs for $which\n" unless $found;
+    my $unfound = "can't find docs for '$value' :(\n";
+
+    my %chunks;
+    my @chunks = _chunk( $INC{'Spreadsheet/HTML.pm'} );
+    if ($value =~ /:/) {
+        ($value,$preset_param) = split /:/, $value;
+        %chunks = map {( $_ => [ _chunk( $INC{$_} ) ] )} grep m{^Spreadsheet/HTML/Preset}, sort keys %INC;
+    }
+
+    my ($found) = grep / \* C<$value/, @chunks;
+    return $unfound unless $found;
+
+    if ($preset_param) {
+        my ($target) = split /\n/, $found;
+        $target =~ s/\s*\*\s*//;
+        my $file;
+        for my $key (keys %chunks) {
+            ($found) = grep /\Q$target\E/, @{ $chunks{$key} };
+            if ($found) {
+                $file = $key;
+                last;
+            }
+        }
+        ($found) = grep / \* C<$preset_param/, @{ $chunks{$file} || [] };
+        return $unfound unless $found;
+    }
 
     $found =~ s/C<([^>]+)>/$1/g;
     $found =~ s{\s+=\w+.*}{$/}ms;
     return $found;
+}
+
+sub _chunk {
+    my $file = shift;
+    open my $fh, '<', $file or die "cannot read $file: $!\n";
+    my @chunk = do{ local $/ = "\n=item"; <$fh> };
+    close $fh;
+    return @chunk;
 }
 
 __END__
@@ -98,6 +129,10 @@ mktable method [options]
 The params. Use the B<--help> option to display
 documentation about a particular parameter (or method).
 
+  --param --file=/path/to/file.csv
+  --param --indent='"    "'
+  --param --table='{class=>"foo"}'
+
 =item B<--display>
 
 Display results to your browser via L<HTML::Display>.
@@ -105,7 +140,13 @@ Display results to your browser via L<HTML::Display>.
 =item B<--help>
 
 Will attempt to look up option value as a method
-or parameter, display it and exit.
+or parameter, display it and exit. If value is a
+colon separated 'tuple' then the first element is
+assumeted to be a preset method and the second is
+its specific parameter.
+
+  --help file
+  --help select:values
 
 =item B<--man>
 

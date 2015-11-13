@@ -149,24 +149,24 @@ Renders ordered <ol> and unordered <ul> lists.
 
 =over 8
 
-=item C<headless>
+=item * C<headless>
 
 Discard first element. Useful for datasets that include headings.
 
-=item C<ordered>
+=item * C<ordered>
 
 Boolean. Uses <ol> instead of <ul> container when true.
 
   ordered => 1
 
-=item C<col>
+=item * C<col>
 
 Emit this column. Default 0. (Zero index based.)
 If neither C<col> nor C<row> are specified then the first column (0) is used.
 
   col => 2
 
-=item C<row>
+=item * C<row>
 
 Emit this row. (Zero index based.)
 If neither C<col> nor C<row> are specified then the first column (0) is used.
@@ -179,19 +179,19 @@ If neither C<col> nor C<row> are specified then the first column (0) is used.
 
 =over 8
 
-=item C<ol>
+=item * C<ol>
 
 Hash reference of attributes.
 
   ol => { class => 'list' }
 
-=item C<ul>
+=item * C<ul>
 
 Hash reference of attributes.
 
   ul => { class => 'list' }
 
-=item C<li>
+=item * C<li>
 
 Accepts hash reference, sub reference, or array ref containing either or both.
 
@@ -213,27 +213,27 @@ Renders <select> lists.
 
 =over 8
 
-=item C<headless>
+=item * C<headless>
 
 Discard first element. Useful for datasets that include headings.
 
   headless => 1
 
-=item C<col>
+=item * C<col>
 
 Integer. Start at this column. If neither C<col> nor C<row> is specified,
 then the first column (0) is used.
 
   col => 2
 
-=item C<row>
+=item * C<row>
 
 Integer. Start at this row. If neither C<row> nor C<col> is specified,
 then the first column (0) is used (not the first row).
 
   row => 0
 
-=item C<values>
+=item * C<values>
 
 Optional boolean. Default false. The selected C<row> or C<col> will be
 used as the <option> tags' CDATA value.
@@ -246,7 +246,7 @@ be used as the <option> tags' CDATA value.
 
   values => 1
 
-=item C<selected>
+=item * C<selected>
 
 Optional scalar or array ref of default <option> CDATA values (if C<values> is false>)
 or <option> 'value' attributes (if C<values> is true) to be initially selected.
@@ -254,7 +254,7 @@ or <option> 'value' attributes (if C<values> is true) to be initially selected.
   selected => 'id1'
   selected => [qw( id1 id4 )]
 
-=item C<placeholder>
+=item * C<placeholder>
 
 Optional string. Inserts the C<placeholder> as the first <option> in the <select> list.
 This <option> will always have a value attribute set to empty string regardless of the
@@ -262,7 +262,7 @@ value of C<values>.
 
   placeholder => 'Please select an option'
 
-=item C<label>
+=item * C<label>
 
 Emits <label> tag for list. Either a scalar string or a special hash ref whose
 only key is the CDATA for the <label> and the only value is the attributes as a hash ref.
@@ -276,13 +276,13 @@ only key is the CDATA for the <label> and the only value is the attributes as a 
 
 =over 8
 
-=item C<select>
+=item * C<select>
 
 Hash reference of attributes.
 
   select => { class => 'select' }
 
-=item C<option>
+=item * C<option>
 
 Accepts hash reference, sub reference, or array ref containing either or both.
 
