@@ -85,7 +85,13 @@ sub select {
 
     $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
     $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
-    return _label( %$args ) . $args->{_auto}->tag(
+
+    my $label = '';
+    if ($args->{label}) {
+        $label = $args->{_auto}->tag( %{ Spreadsheet::HTML::_tag( %$args, tag => 'label' ) } );
+    }
+
+    return $label . $args->{_auto}->tag(
         tag   => 'select', 
         attr  => $args->{select},
         cdata => [
@@ -95,21 +101,6 @@ sub select {
             ), @$options
         ],
     );
-}
-
-sub _label {
-    my %args  = @_;
-    my $label = {};
-
-    if (ref($args{label}) eq 'HASH') {
-        (my $cdata) = keys %{ $args{label} };
-        (my $attr)  = values %{ $args{label} };
-        $label = { tag => 'label', attr => $attr, cdata => $cdata };
-    } elsif (defined $args{label} ) {
-        $label = { tag => 'label', cdata => $args{label} };
-    } 
-    
-    return %$label ? $args{_auto}->tag( %$label ) : '';
 }
 
 =head1 NAME

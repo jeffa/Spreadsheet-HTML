@@ -179,7 +179,7 @@ sub _process {
 sub _make_table {
     my %args = @_;
 
-    my @cdata = ( _caption( %args ), _colgroup( %args ) );
+    my @cdata = ( _tag( %args, tag => 'caption' ) || (), _colgroup( %args ) );
 
     if ($args{tgroups}) {
 
@@ -215,20 +215,19 @@ sub _make_table {
     return $args{_auto}->tag( tag => 'table', attr => $args{table}, cdata => \@cdata );
 }
 
-sub _caption {
+sub _tag {
     my %args = @_;
 
-    my $caption;
-
-    if (ref($args{caption}) eq 'HASH') {
-        (my $cdata) = keys %{ $args{caption} };
-        (my $attr)  = values %{ $args{caption} };
-        $caption = { tag => 'caption', attr => $attr, cdata => $cdata };
-    } elsif (defined $args{caption} ) {
-        $caption = { tag => 'caption', cdata => $args{caption} };
+    my $tag;
+    if (ref($args{ $args{tag} }) eq 'HASH') {
+        (my $cdata) = keys %{ $args{ $args{tag} } };
+        (my $attr)  = values %{ $args{ $args{tag} } };
+        $tag = { tag => $args{tag}, attr => $attr, cdata => $cdata };
+    } elsif (defined $args{ $args{tag} } ) {
+        $tag = { tag => $args{tag}, cdata => $args{ $args{tag} } };
     } 
     
-    return $caption ? $caption : ();
+    return $tag;
 }
 
 sub _colgroup {

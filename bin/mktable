@@ -91,7 +91,7 @@ sub _lookup_help {
         return $unfound unless $found;
     }
 
-    $found =~ s/C<([^>]+)>/$1/g;
+    $found =~ s/\w<([^>]+)>/$1/g;
     $found =~ s{\s+=\w+.*}{}ms;
     return "\n$found\n\n";
 }
