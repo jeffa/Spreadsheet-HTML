@@ -62,6 +62,7 @@ sub select {
     } elsif ($args->{values}) {
         $args->{values} = [ $args->{values} ] unless ref $args->{values};
         for my $value (@$values) {
+            next unless defined $value;
             if (grep $_ eq $value, @{ $args->{values} }) {
                 push @$selected, 'selected';
             } else {
