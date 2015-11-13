@@ -37,33 +37,23 @@ sub select {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my $texts  = [];
+    my $cdata  = [];
     my $values = [];
     if (exists $args->{row}) {
         $args->{row} = 0 unless $args->{row} =~ /^\d+$/;
-        $texts  = @$data[$args->{row}];
+        $cdata  = @$data[$args->{row}];
         $values = @$data[$args->{row} + 1];
     } else {
         $args->{col} = 0 unless $args->{col} && $args->{col} =~ /^\d+$/;
-        $texts  = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
+        $cdata  = [ map { $data->[$_][$args->{col}] } 0 .. $#$data ];
         $values = [ map { $data->[$_][$args->{col} + 1 ] } 0 .. $#$data ];
     }
 
     my $selected = [];
-    if ($args->{texts}) {
-        $args->{texts} = [ $args->{texts} ] unless ref $args->{texts};
-        for my $text (@$texts) {
-            if (grep $_ eq $text, @{ $args->{texts} }) {
-                push @$selected, 'selected';
-            } else {
-                push @$selected, undef;
-            }
-        }
-    } elsif ($args->{values}) {
-        $args->{values} = [ $args->{values} ] unless ref $args->{values};
-        for my $value (@$values) {
-            next unless defined $value;
-            if (grep $_ eq $value, @{ $args->{values} }) {
+    if ($args->{selected}) {
+        $args->{selected} = [ $args->{selected} ] unless ref $args->{selected};
+        for my $text (@$cdata) {
+            if (grep $_ eq $text, @{ $args->{selected} }) {
                 push @$selected, 'selected';
             } else {
                 push @$selected, undef;
@@ -71,26 +61,16 @@ sub select {
         }
     }
 
-    my $placeholder;
-    if ($args->{placeholder}) {
-        $placeholder = { tag => 'option', attr => { value => '' }, cdata => $args->{placeholder} };
-    }
-
-    my $attr = {};
-    $attr->{value}    = $texts   if $args->{labels};
+    my $attr = { value => [] };
+    $attr->{value}    = $cdata   if $args->{values};
     $attr->{selected} = $selected if map defined $_ ? $_ : (), @$selected;
 
     my $options = [
         map { 
-            my ( $cdata, $new_attr ) = Spreadsheet::HTML::_extrapolate( $_, $attr, $args->{option} );
-            { tag => 'option', attr => $new_attr, cdata => $cdata };
-        } $args->{labels} ? @$values : @$texts
+            my ( $cdata, $opt_attr ) = Spreadsheet::HTML::_extrapolate( $_, $attr, $args->{option} );
+            { tag => 'option', attr => $opt_attr, cdata => $cdata };
+        } $args->{values} ? @$values : @$cdata
     ];
-
-    if ($args->{headless}) {
-        shift @$options;
-        shift @{ $attr->{value} || [] };
-    }
 
     if (ref( $args->{optgroup} ) eq 'ARRAY' and @{ $args->{optgroup} }) {
         my @groups = @{ $args->{optgroup} };
@@ -98,12 +78,22 @@ sub select {
         splice( @$options, $_, 0, { tag => 'optgroup', attr => { label => pop @groups } } ) for reverse @ranges;
     }
 
+    if ($args->{headless}) {
+        shift @$options;
+        shift @{ $attr->{value} };
+    }
+
     $HTML::AutoTag::ENCODE  = defined $args->{encode}  ? $args->{encode}  : exists $args->{encodes};
     $HTML::AutoTag::ENCODES = defined $args->{encodes} ? $args->{encodes} : '';
     return _label( %$args ) . $args->{_auto}->tag(
         tag   => 'select', 
         attr  => $args->{select},
-        cdata => [ ( $placeholder || () ), @$options ],
+        cdata => [
+            ( $args->{placeholder} 
+                ? { tag => 'option', attr => { value => '' }, cdata => $args->{placeholder} } 
+                : ()
+            ), @$options
+        ],
     );
 }
 
@@ -135,7 +125,7 @@ Instead, use the Spreadsheet::HTML interface:
   use Spreadsheet::HTML;
   my $generator = Spreadsheet::HTML->new( data => \@data );
   print $generator->list( ordered => 1 );
-  print $generator->select( labels => 1, placeholder => 'Pick one' );
+  print $generator->select( values => 1, placeholder => 'Pick one' );
 
   # or
   use Spreadsheet::HTML qw( list );
@@ -227,44 +217,48 @@ Renders <select> lists.
 
 Discard first element. Useful for datasets that include headings.
 
+  headless => 1
+
 =item C<col>
 
-Emit this column as the texts (always) and the next column as the values (if C<labels> is true).
-Default 0. (Zero index based.) If neither C<row> nor C<col> is specified, then the first column (0)
-is used to create the <select> list.
+Integer. Start at this column. If neither C<col> nor C<row> is specified,
+then the first column (0) is used.
 
   col => 2
 
 =item C<row>
 
-Emit this row (zero index based) as the texts (always) and the next row as the values (if C<labels> is true).
-If neither C<row> nor C<col> is specified, then the first column (0) is used to create the <select> list.
+Integer. Start at this row. If neither C<row> nor C<col> is specified,
+then the first column (0) is used (not the first row).
 
   row => 0
 
-=item C<labels>
-
-Optional boolean. Uses either the next row or column as the values for the text arguments.
-
-  labels => 1
-
-=item C<texts>
-
-Optional array ref of default texts to be initially selected.
-
-  texts => [qw( id1 id4 )]
-
 =item C<values>
 
-Optional array ref of default values to be initially selected.
+Optional boolean. Default false. The selected C<row> or C<col> will be
+used as the <option> tags' CDATA value.
 
-  values => [qw( label2 label3 )]
+  values => 0
+
+When set to true the selected C<col> or C<row> will be used as the <option>
+tags' 'value' attribute and the NEXT C<col> or C<row> (respectively) will
+be used as the <option> tags' CDATA value.
+
+  values => 1
+
+=item C<selected>
+
+Optional scalar or array ref of default <option> CDATA values (if C<values> is false>)
+or <option> 'value' attributes (if C<values> is true) to be initially selected.
+
+  selected => 'id1'
+  selected => [qw( id1 id4 )]
 
 =item C<placeholder>
 
 Optional string. Inserts the C<placeholder> as the first <option> in the <select> list.
 This <option> will always have a value attribute set to empty string regardless of the
-value of C<labels>.
+value of C<values>.
 
   placeholder => 'Please select an option'
 

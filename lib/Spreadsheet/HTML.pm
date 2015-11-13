@@ -855,7 +855,7 @@ Generate layout tables.
 
 Generate <ol> and <ul> list.
 
-=item * C<select( col, row, labels )>
+=item * C<select( col, row, values, selected, placeholder )>
 
 Generate <select> form elements.
 

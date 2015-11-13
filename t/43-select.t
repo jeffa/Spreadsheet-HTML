@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 35;
+use Test::More tests => 30;
 
 use Spreadsheet::HTML;
 
@@ -65,9 +65,9 @@ is $generator->select( %by_col, option => [ { class => [qw(odd even)] }, sub { u
     "select() option sub refs works"
 ;
 
-is $generator->select( %by_col, option => [ { class => [qw(odd even)] }, sub { uc shift } ], texts => [qw(id2 id4)] ),
+is $generator->select( %by_col, option => [ { class => [qw(odd even)] }, sub { uc shift } ], selected => [qw(id2 id4)] ),
     '<select><option class="odd">ID1</option><option class="even" selected="selected">ID2</option><option class="odd">ID3</option><option class="even" selected="selected">ID4</option><option class="odd">ID5</option></select>',
-    "select() option sub refs works with select texts"
+    "select() option sub refs works with selected"
 ;
 
 is $generator->select( %by_col, option => { disabled => [undef, undef, 1] }),
@@ -75,79 +75,54 @@ is $generator->select( %by_col, option => { disabled => [undef, undef, 1] }),
     "select() can disable specific options"
 ;
 
-is $generator->select( %by_col, labels => 1 ),
+is $generator->select( %by_col, values => 1 ),
     '<select><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() labels by default column"
+    "select() with values by default column"
 ;
 
-is $generator->select( %by_col, labels => 1, headless => 1 ),
+is $generator->select( %by_col, values => 1, headless => 1 ),
     '<select><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() headless works when labels is set"
+    "select() headless works when values is set"
 ;
 
-is $generator->select( %by_col, labels => 1, option => { class => [qw(odd even)] } ),
+is $generator->select( %by_col, values => 1, option => { class => [qw(odd even)] } ),
     '<select><option class="odd" value="id1">lb1</option><option class="even" value="id2">lb2</option><option class="odd" value="id3">lb3</option><option class="even" value="id4">lb4</option><option class="odd" value="id5">lb5</option></select>',
-    "select() option attributes with labels"
+    "select() option attributes with values"
 ;
 
-is $generator->select( %by_row, row => 0, labels => 1 ),
+is $generator->select( %by_row, row => 0, values => 1 ),
     '<select><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() labels by row"
+    "select() with values by row"
 ;
 
-is $generator->select( %by_col, labels => 1, texts => 'id2' ),
+is $generator->select( %by_col, values => 1, selected => 'id2' ),
     '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
     "select() selected text"
 ;
 
-is $generator->select( %by_col, labels => 1, texts => [qw( id2 id4 )] ),
+is $generator->select( %by_col, values => 1, selected => [qw( id2 id4 )] ),
     '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option value="id3">lb3</option><option selected="selected" value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() selected texts"
+    "select() selected with values"
 ;
 
-is $generator->select( %by_col, labels => 1, texts => [qw( id2 id4 )], option => { class => [qw(odd even)] } ),
+is $generator->select( %by_col, values => 1, selected => [qw( id2 id4 )], option => { class => [qw(odd even)] } ),
     '<select><option class="odd" value="id1">lb1</option><option class="even" selected="selected" value="id2">lb2</option><option class="odd" value="id3">lb3</option><option class="even" selected="selected" value="id4">lb4</option><option class="odd" value="id5">lb5</option></select>',
-    "select() option attributes with selected texts"
+    "select() option attributes with selected param"
 ;
 
-is $generator->select( %by_col, labels => 1, values => 'lb1' ),
-    '<select><option selected="selected" value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() selected value"
-;
-
-is $generator->select( %by_col, labels => 1, col => 3, values => 'lb1' ),
-    '<select><option value="extra" /><option value="extra" /><option value="extra" /><option value="extra" /><option value="extra" /></select>',
-    "select() selected value out of bounds by col"
-;
-
-is $generator->select( %by_row, labels => 1, row => 3, values => 'lb1' ),
-    '',
-    "select() selected value out of bounds by row"
-;
-
-is $generator->select( %by_col, labels => 1, values => [qw( lb2 lb3 )] ),
-    '<select><option value="id1">lb1</option><option selected="selected" value="id2">lb2</option><option selected="selected" value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() selected values"
-;
-
-is $generator->select( %by_col, labels => 1, values => [qw( lb2 lb3 )], option => { class => [qw(odd even)] } ),
-    '<select><option class="odd" value="id1">lb1</option><option class="even" selected="selected" value="id2">lb2</option><option class="odd" selected="selected" value="id3">lb3</option><option class="even" value="id4">lb4</option><option class="odd" value="id5">lb5</option></select>',
-    "select() option attributes with selected values"
-;
-
-is $generator->select( %by_col, col => 1, labels => 1, encode => 1 ),
+is $generator->select( %by_col, col => 1, values => 1, encode => 1 ),
     '<select><option value="lb1">&lt;extra&gt;</option><option value="lb2">&lt;extra&gt;</option><option value="lb3">&lt;extra&gt;</option><option value="lb4">&lt;extra&gt;</option><option value="lb5">&lt;extra&gt;</option></select>',
-    "select() default encoded texts by col"
+    "select() default encoded cdata by col"
 ;
 
-is $generator->select( %by_row, row => 1, labels => 1, encode => 1 ),
+is $generator->select( %by_row, row => 1, values => 1, encode => 1 ),
     '<select><option value="lb1">&lt;extra&gt;</option><option value="lb2">&lt;extra&gt;</option><option value="lb3">&lt;extra&gt;</option><option value="lb4">&lt;extra&gt;</option><option value="lb5">&lt;extra&gt;</option></select>',
-    "select() default encoded texts by row"
+    "select() default encoded cdata by row"
 ;
 
-is $generator->select( %by_col, col => 1, labels => 1, encodes => 'a' ),
+is $generator->select( %by_col, col => 1, values => 1, encodes => 'a' ),
     '<select><option value="lb1"><extr&#97;></option><option value="lb2"><extr&#97;></option><option value="lb3"><extr&#97;></option><option value="lb4"><extr&#97;></option><option value="lb5"><extr&#97;></option></select>',
-    "select() specific encoded texts by col"
+    "select() specific encoded cdata by col"
 ;
 
 is $generator->generate( %by_col ),
@@ -155,7 +130,7 @@ is $generator->generate( %by_col ),
     "select() encoding does not persist"
 ;
 
-is $generator->select( %by_col, col => 2, labels => 1, encode => 1 ),
+is $generator->select( %by_col, col => 2, values => 1, encode => 1 ),
     '<select><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option><option value="<extra>">extra</option></select>',
     "select() attribute names are NOT encoded"
 ;
@@ -170,9 +145,9 @@ is $generator->select( %by_col, placeholder => 'select', headless => 1 ),
     "select() placeholder param correct"
 ;
 
-is $generator->select( %by_col, labels => 1, placeholder => 'select' ),
+is $generator->select( %by_col, values => 1, placeholder => 'select' ),
     '<select><option value="">select</option><option value="id1">lb1</option><option value="id2">lb2</option><option value="id3">lb3</option><option value="id4">lb4</option><option value="id5">lb5</option></select>',
-    "select() placeholder param with labels param correct"
+    "select() placeholder param with values param correct"
 ;
 
 my @optgroup = qw(ph1 ph2 ph3);
@@ -181,8 +156,8 @@ is $generator->select( %by_col, optgroup => \@optgroup ),
     "select() optgroup param works"
 ;
 
-is $generator->select( %by_col, labels => 1, optgroup => \@optgroup ),
+is $generator->select( %by_col, values => 1, optgroup => \@optgroup ),
     '<select><optgroup label="ph1" /><option value="id1">lb1</option><option value="id2">lb2</option><optgroup label="ph2" /><option value="id3">lb3</option><option value="id4">lb4</option><optgroup label="ph3" /><option value="id5">lb5</option></select>',
-    "select() optgroup param works with labels"
+    "select() optgroup param works with values"
 ;
 

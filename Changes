@@ -1,9 +1,11 @@
 Revision history for Spreadsheet-HTML
 
 1.09
+    - renamed some params for select() (see docs)
     - mktable help option can now inform about methods and parameters
     - select() option attr properly handles code refs & default items
     - added headless param for list() and select()
+    - select() is no longer exported
 
 1.08
     - reminder: animate has been deprecated since v1.05
