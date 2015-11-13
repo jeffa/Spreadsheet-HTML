@@ -84,12 +84,40 @@ mktable - generate an HTML table.
 mktable method [options]
 
  Options:
-   --param          parameters, multiple allowed
-   --display        display results via HTML::Display
-   --help           list usage
-   --man            print man page
+   --param      parameters, multiple allowed
+   --display    display results via HTML::Display
+   --help       list usage for methods and parameters
+   --man        print man page
 
-Example:
+=head1 OPTIONS
+
+=over 8
+
+=item B<--param>
+
+The params. Use the B<--help> option to display
+documentation about a particular parameter (or method).
+
+=item B<--display>
+
+Display results to your browser via L<HTML::Display>.
+
+=item B<--help>
+
+Will attempt to look up option value as a method
+or parameter, display it and exit.
+
+=item B<--man>
+
+Prints the manual page and exits.
+
+=item B<--version>
+
+Prints the versions of the core modules used.
+
+=back
+
+=head1 EXAMPLES
 
   mktable portrait --param file=data.xls > out.html
 
@@ -108,31 +136,5 @@ Example:
 
   # wrap references with quotes:
   mktable --param -r1='{class=>"foo"}'
-
-=head1 OPTIONS
-
-=over 8
-
-=item B<--param>
-
-The params. See perldoc L<Spreadsheet::HTML> for more documentation.
-
-=item B<--display>
-
-Display results to your browser via L<HTML::Display>.
-
-=item B<--help>
-
-Print a brief help message and exits.
-
-=item B<--man>
-
-Prints the manual page and exits.
-
-=item B<--version>
-
-Prints the versions of the core modules used.
-
-=back
 
 =cut
