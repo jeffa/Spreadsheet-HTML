@@ -70,7 +70,7 @@ sub help {
     return "can't find docs for $which\n" unless $found;
 
     $found =~ s/C<([^>]+)>/$1/g;
-    $found =~ s{\s+=\w+ .*}{$/}ms;
+    $found =~ s{\s+=\w+.*}{$/}ms;
     return $found;
 }
 
