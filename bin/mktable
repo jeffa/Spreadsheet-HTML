@@ -1,7 +1,6 @@
 #!/usr/bin/env perl 
-
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use Spreadsheet::HTML;
 
 use Safe;
@@ -88,7 +87,7 @@ sub _lookup_help {
                 last;
             }
         }
-        ($found) = grep / \* C<$preset_param/, @{ $chunks{$file} || [] };
+        ($found) = grep / \* C<$preset_param/, @{ $chunks{$file || ''} || [] };
         return $unfound unless $found;
     }
 
