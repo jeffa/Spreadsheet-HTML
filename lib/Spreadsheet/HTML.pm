@@ -584,16 +584,22 @@ counter-clockwise for negative values. Default to 0:
 headers at top.  90: headers at right. 180: headers at bottom.
 270: headers at left. To achieve landscape, use -270.
 
-=item * C<flip: 0 or 1>
+  theta => -270
 
-Flips table horizontally from the perspective of the headings
-"row" by negating the value of C<theta>.
+=item * C<flip>
 
-=item * C<pinhead: 0 or 1>
+Boolean Flips table horizontally from the perspective of
+the headings "row" by negating the value of C<theta>.
 
-Works in conjunction with C<theta> to ensure reporting
+  flip => 1
+
+=item * C<pinhead>
+
+Boolean. Works in conjunction with C<theta> to ensure reporting
 readability. Without it, C<south()> and C<east()> would
 have data cells arranged in reverse order.
+
+  pinhead => 1
 
 =item * C<indent>
 
@@ -618,7 +624,7 @@ repetition operator to the value of C<indent> 4 times.
 
 =item * C<encode>
 
-Encode HTML entities. Boolean. Defaults to false, which produces no encoding.
+Boolean. Encode HTML entities. Defaults to false, which produces no encoding.
 If set to true without further specifying a value for C<encodes> (see below),
 will encode all control chars, high bit chars and '<', '&', '>', ''' and '"'.
 
@@ -638,16 +644,20 @@ Set value to C<undef> to avoid any substitutions.
 
   empty => '&#160;'
 
-=item * C<tgroups: 0, 1 or 2>
+=item * C<tgroups>
 
-Group table rows into <thead>, <tbody> and <tfoot> sections.
+Integer. Group table rows into <thead>, <tbody> and <tfoot> sections.
 
 When C<tgroups> is set to 1, the <tfoot> section is
 omitted. The last row of the data is found at the end
 of the <tbody> section instead. (loose)
 
+  tgroups => 1
+
 When C<tgroups> is set to 2, the <tfoot> section is found
 in between the <thead> and <tbody> sections. (strict)
+
+  tgroups => 2
 
 =item * C<group>
 
@@ -657,24 +667,32 @@ Will chunk body rows into tbody groups of size C<group>.
 
 Currently only accepts integers (not column names).
 
-=item * C<cache: 0 or 1>
+=item * C<cache>
 
-Preserve data after it has been processed (and loaded).
+Boolean. Preserve data after it has been processed (and loaded).
 Useful for loading data from files only once.
 
-=item * C<matrix: 0 or 1>
+  cache => 1
 
-Render the headings row with only <td> tags, no <th> tags.
+=item * C<matrix>
 
-=item * C<headless: 0 or 1>
+Boolean. Render the headings row with only <td> tags, no <th> tags.
 
-Render the table with without the headings row at all. 
+  matrix => 1
+
+=item * C<headless>
+
+Boolean. Render the table with without the headings row at all. 
 The first row after the headings is still C<-r1>, and
 any configuration to C<headings> or C<-r0> will be discarded.
 
-=item * C<scroll: 0 or 1>
+  headless => 1
 
-Scrolls the table cells. See L<Spreadsheet::HTML::Presets::Scroll>.
+=item * C<scroll>
+
+Boolean. Scrolls the table cells. See L<Spreadsheet::HTML::Presets::Scroll>.
+
+  scroll => 1
 
 =item * C<headings>
 
@@ -695,11 +713,13 @@ C<-r0>, it could be considered as a dynamic parameter. Be
 careful not to prepend a dash to C<headings> ... only dynamic
 parameters use leading dashes.
 
-=item * C<sorted_attrs: 0 or 1>
+=item * C<sorted_attrs>
 
-This is useful for ensuring that attributes within tags are
+Boolean. This is useful for ensuring that attributes within tags are
 rendered in alphabetical ordering, for consistancy. You will
 most likely never need this feature.
+
+  sorted_attrs
 
 =back
 
@@ -772,17 +792,31 @@ share the names of the actual HTML table tags.
 
 =item * C<table>
 
+Hash ref. Apply these attributes to the specified tag.
+
+  table => { border => 1 }
+
 =item * C<thead>
+
+Hash ref. Apply these attributes to the specified tag.
+
+  thead => { class => 'heading' }
 
 =item * C<tfoot>
 
+Hash ref. Apply these attributes to the specified tag.
+
+  tfoot => { class => 'footing' }
+
 =item * C<tbody>
+
+Hash ref. Apply these attributes to the specified tag.
+
+  tbody => { class => 'body' }
 
 =item * C<tr>
 
 Hash ref. Apply these attributes to the specified tag.
-
-  table => { class => 'spreadsheet' }
 
   tr => { style => { background => [qw( color1 color2 )]' } }
 
@@ -791,14 +825,23 @@ Does not apply to <tr> groups found within <thead> or <tfoot>.
 
 =item * C<th>
 
-=item * C<td>
+Hash ref, sub ref or array ref containing either.
 
-<th> and <td> are the only Tag Parameters that may
-additionally accept callback subroutines.
+  th => { class => 'heading' }
 
   th => sub { uc shift }
 
-  td => [ sub { uc shift }, { class => 'foo' } ]
+  th => [ sub { uc shift }, { class => 'heading' } ]
+
+=item * C<td>
+
+Hash ref, sub ref or array ref containing either.
+
+  td => { class => 'cell' }
+
+  td => sub { uc shift }
+
+  td => [ sub { uc shift }, { class => 'cell' } ]
 
 =item * C<caption>
 
@@ -832,10 +875,14 @@ tags within a colgroup tag. Same usage as C<colgroup>.
 When C<tgroups> is 1 or 2, this tag parameter is available to control
 the attributes of the <tr> tag within the <thead> group.
 
+  'tr.head' => { class => 'heading-row' }
+
 =item * C<tfoot.tr>
 
 When C<tgroups> is 2, this tag parameter is available to control
 the attributes of the <tr> tag within the <tfoot> group.
+
+  'tr.foot' => { class => 'footing-row' }
 
 =back
 

@@ -151,7 +151,9 @@ Renders ordered <ol> and unordered <ul> lists.
 
 =item * C<headless>
 
-Discard first element. Useful for datasets that include headings.
+Boolean. Discard first element. Useful for datasets that include headings.
+
+  headless => 1
 
 =item * C<ordered>
 
@@ -161,15 +163,15 @@ Boolean. Uses <ol> instead of <ul> container when true.
 
 =item * C<col>
 
-Emit this column. Default 0. (Zero index based.)
-If neither C<col> nor C<row> are specified then the first column (0) is used.
+Integer. Start at this column. If neither C<col> nor C<row> is specified,
+then the first column (0) is used.
 
   col => 2
 
 =item * C<row>
 
-Emit this row. (Zero index based.)
-If neither C<col> nor C<row> are specified then the first column (0) is used.
+Integer. Start at this row. If neither C<row> nor C<col> is specified,
+then the first column (0) is used (not the first row).
 
   row => 0
 
@@ -269,6 +271,12 @@ only key is the CDATA for the <label> and the only value is the attributes as a 
 
   label => 'Label with no attributes'
   label => { 'Label with attributes' => { class => 'label' } }
+
+=item * C<optgroup>
+
+Optional array ref of scalars.
+
+  optgroup => [ 'Group 1:', 'Group 2:', 'Group 3:' ]
 
 =back
 

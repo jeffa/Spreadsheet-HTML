@@ -92,8 +92,8 @@ sub _lookup_help {
     }
 
     $found =~ s/C<([^>]+)>/$1/g;
-    $found =~ s{\s+=\w+.*}{$/}ms;
-    return $found;
+    $found =~ s{\s+=\w+.*}{}ms;
+    return "\n$found\n\n";
 }
 
 sub _chunk {
