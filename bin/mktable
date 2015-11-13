@@ -18,15 +18,17 @@ $method ||= 'generate';
 GetOptions (
     'param=s'   => \my %params,
     'display'   => \my $display,
-    'help'      => \my $help,
+    'help:s'    => \my $help,
     'man'       => \my $man,
     'version'   => \my $version,
 );
-pod2usage( -verbose => 0 ) if $help;
+print help( $help ) and exit if $help;
+pod2usage( -verbose => 0 ) if defined $help;
 pod2usage( -verbose => 2 ) if $man;
 
 if ($version) {
     print "$_\n" for 
+        "      Spreadsheet::HTML path: " . $INC{'Spreadsheet/HTML.pm'},
         "   Spreadsheet::HTML version: $Spreadsheet::HTML::VERSION",
         "       HTML::AutoTag version: $HTML::AutoTag::VERSION",
         "Tie::Hash::Attribute version: $Tie::Hash::Attribute::VERSION",
@@ -57,6 +59,20 @@ if ($display) {
 }
 
 print $generator->$method( %args ), $/;
+
+sub help {
+    my $which = lc shift;
+
+    open my $fh, '<', $INC{'Spreadsheet/HTML.pm'} or die "cannot read lib file\n";
+    my @pod     = do{ local $/ = "\n=item"; <$fh> };
+    my ($found) = grep / \* C<$which/, @pod;
+    close $fh;
+    return "can't find docs for $which\n" unless $found;
+
+    $found =~ s/C<([^>]+)>/$1/g;
+    $found =~ s{\s+=\w+ .*}{$/}ms;
+    return $found;
+}
 
 __END__
 =head1 NAME
