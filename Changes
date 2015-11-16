@@ -2,6 +2,7 @@ Revision history for Spreadsheet-HTML
 
 1.10
     - reminder: animate has been deprecated since v1.05
+    - moved select() and list() tests out of distro
 
 1.09
     - renamed some params for select() (see docs)
