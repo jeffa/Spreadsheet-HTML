@@ -3,6 +3,14 @@ use strict;
 use warnings FATAL => 'all';
 use Test::More tests => 30;
 
+eval "use Spreadsheet::Read";
+plan skip_all => "Spreadsheet::Read required" if $@;
+
+eval "use Text::CSV";
+eval "use Text::CSV_XS";
+eval "use Text::CSV_PP";
+plan skip_all => "Text::CSV, Text::CSV_XS or Text::CSV_PP required" if $@;
+
 use Spreadsheet::HTML;
 
 my $generator = Spreadsheet::HTML->new( sorted_attrs => 1 );
