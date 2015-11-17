@@ -3,6 +3,7 @@ Revision history for Spreadsheet-HTML
 1.11
     - reminder: animate has been deprecated since v1.05
     - trying to render invalid datastructures gracefully fails
+    - require HTML::AutoTag v1.04
 
 1.10
     - moved select() and list() tests out of distro
