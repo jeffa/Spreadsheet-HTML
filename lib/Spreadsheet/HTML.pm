@@ -296,8 +296,8 @@ sub _args {
 
     $args->{worksheet} ||= 1;
     $data = Spreadsheet::HTML::File::Loader::_parse( $args ) if $args->{file};
-    $data = [ $data ] unless ref($data);
-    $data = [ $data ] unless ref($data->[0]);
+    $data = [ $data ] unless ref($data) eq 'ARRAY';
+    $data = [ $data ] unless ref($data->[0]) eq 'ARRAY';
 
     if ($args->{wrap} and defined $data->[0][0]) {
         my @flat = map @$_, @$data;
