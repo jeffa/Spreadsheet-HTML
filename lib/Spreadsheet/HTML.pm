@@ -312,11 +312,10 @@ sub _args {
     $args->{_max_rows} = scalar @{ $data }      || 1;
     $args->{_max_cols} = scalar @{ $data->[0] } || 1;
 
-    my %fill;
     if ($args->{fill}) {
-        ($fill{row},$fill{col}) = split /\D/, $args->{fill};
-        $args->{_max_rows} = $fill{row} if (int($fill{row} || 0)) > ($args->{_max_rows});
-        $args->{_max_cols} = $fill{col} if (int($fill{col} || 0)) > ($args->{_max_cols});
+        my ($row,$col) = split /\D/, $args->{fill};
+        $args->{_max_rows} = $row if (int($row || 0)) > ($args->{_max_rows});
+        $args->{_max_cols} = $col if (int($col || 0)) > ($args->{_max_cols});
     }
 
     return ( $self, [ map [@$_], @$data], $args );
