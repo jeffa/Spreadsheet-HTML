@@ -16,6 +16,8 @@ sub _parse {
         return Spreadsheet::HTML::File::JSON::_parse( $args );
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::File::YAML::_parse( $args );
+    } elsif ($file =~ /\.(png|jpe?g)$/) {
+        return Spreadsheet::HTML::File::Image::_parse( $args );
     }
 
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file or $file eq '-';
@@ -208,6 +210,47 @@ sub _parse {
     $extract->parse_file( $file );
     my $table = ($extract->tables)[ $args->{worksheet} - 1 ];
     return [ $table ? $table->rows : [undef] ];
+}
+
+1;
+
+
+
+package Spreadsheet::HTML::File::Image;
+use Carp;
+use strict;
+use warnings FATAL => 'all';
+
+eval "use Imager";
+our $NOT_AVAILABLE = $@;
+
+sub _parse {
+    my $args = shift;
+    my $file = $args->{file};
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
+    return [[ "cannot load $file" ],[ 'please install Imager' ]] if $NOT_AVAILABLE;
+
+    my $imager = Imager->new;
+    my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ Imager::errstr() ]];
+
+    $args->{fill} = join( 'x', $image->getwidth, $image->getheight );
+
+    my $block      = 16; # temp
+    $args->{theta} = 90; # need to eliminate need for this
+
+    for my $x (0 .. $image->getwidth - 1) {
+        for my $y (0 .. $image->getheight - 1) {
+
+            my $color = '#' . join '', map { sprintf "%02X", $_ } ($image->getpixel( x => $x, y => $y )->rgba)[0..2];
+            $args->{"-r${x}c${y}"} = {
+                width  => $block,
+                height => $block,
+                style  => { 'background-color' => $color },
+            };
+        }
+    }
+
+    return [];
 }
 
 1;
