@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.11
+    - remove bugtracker from Makefile (issues should go to rt.cpan)
     - reminder: animate has been deprecated since v1.05
     - trying to render invalid datastructures gracefully fails
     - require HTML::AutoTag v1.04

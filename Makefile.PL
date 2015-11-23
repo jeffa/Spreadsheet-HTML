@@ -26,7 +26,6 @@ WriteMakefile(
             resources => {
                 homepage   => 'https://github.com/jeffa/Spreadsheet-HTML',
                 repository => 'https://github.com/jeffa/Spreadsheet-HTML.git',
-                bugtracker => 'https://github.com/jeffa/Spreadsheet-HTML/issues',
             },
         })
     ),

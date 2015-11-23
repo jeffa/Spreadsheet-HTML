@@ -18,10 +18,10 @@ sub _parse {
         return Spreadsheet::HTML::File::YAML::_parse( $args );
     }
 
-    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
+    return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file or $file eq '-';
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
 
-    my $workbook = ReadData( $file,
+    my $workbook = ReadData( $file eq '-' ? *STDIN : $file,
         attr    => $args->{preserve},
         clip    => $args->{clip},
         cells   => $args->{cells},
@@ -31,6 +31,8 @@ sub _parse {
         quote   => $args->{quote},
         parser  => $args->{parser},
     );
+
+    close $file if ref($file) eq 'GLOB';
 
     my $parsed = $workbook->[ $args->{worksheet} ];
 
