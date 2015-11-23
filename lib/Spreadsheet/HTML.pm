@@ -997,6 +997,8 @@ Uses the following optional modules:
 
 =over 4
 
+=item * L<Imager>
+
 =item * L<Text::CSV>
 
 =item * L<Text::CSV_XS>
