@@ -519,35 +519,44 @@ an array ref of array refs.
 
 =item * C<file>
 
-The name of the data file to read. Supported formats
-are XLS, CSV, JSON, YAML, HTML, PNG and JPG.
+String. The name of the data file to read. Supported formats
+are XLS, CSV, JSON, YAML, HTML, GIF, PNG and JPG.
 
   file => 'foo.json'
 
-If you want to decorate your database queries then
-please consider using L<DBIx::HTML> which uses this
-module as its generator.
+See L<Spreadsheet::File::Loader> for more on supported file formats.
+See L<DBIx::HTML> for formatting your SQL database queries.
+
+=item * C<block>
+
+Integer. Can be supplied in conjunction with C<file> for image
+formats (JPEG, PNG and GIF). Defaults to 8. Represented an
+image as an HTML table on a pixel by pixel basis tends to produce
+tables that are too large. This parameter can be used to increase
+and decrease that size.
+
+  block => 4
 
 =item * C<worksheet>
 
-Can be supplied in conjunction with C<file>. If multiple
-worksheets or data tables are present, use this
-parameter to select which one (index 1 based).
+Integer. Can be supplied in conjunction with C<file>. If multiple
+worksheets or data tables are present, use this parameter to select
+which one (index 1 based). Defaults to 1 (first found).
 
   worksheet => 3 # the third data table or worksheet found  
 
 =item * C<preserve>
 
-Can be supplied in conjunction with C<file>. Attempts to copy
+Boolean. Can be supplied in conjunction with C<file>. Attempts to copy
 over all formatting styles from original document to table.
 Styles are not currently deduped, so use with care as the
 final output will contain a lot of redundant cell styles.
 
-  file => 'foo.xls', preserve => 1
+  preserve => 1
 
 =item * C<fill>
 
-Can be supplied instead of C<data> to generate empty
+String. Can be supplied instead of C<data> to generate empty
 cells, or in conjunction with C<data> to pad existing
 cells (currently pads the right and bottom sides only.)
 
@@ -555,7 +564,7 @@ cells (currently pads the right and bottom sides only.)
 
 =item * C<wrap>
 
-Can be supplied in conjunction with a 1D C<data> to
+Integer. Can be supplied in conjunction with a 1D C<data> to
 automatically wrap into a 2D array matrix. Can also
 "rewrap" existed 2D array matrices, but at the expense
 of likely mangling the headings.
@@ -564,7 +573,7 @@ of likely mangling the headings.
 
 =item * C<apply>
 
-Applies formulas parsable by L<Spreadsheet::Engine> to data.
+String. Applies formulas parsable by L<Spreadsheet::Engine> to data.
 
   apply => 'set B6 formula SUM(B2:B5)'
 
@@ -577,7 +586,7 @@ L<Spreadsheet::Engine> for more.
 
 =item * C<theta: 0, 90, 180, 270, -90, -180, -270>
 
-Rotates table clockwise for positive values and 
+Integer. Rotates table clockwise for positive values and 
 counter-clockwise for negative values. Default to 0:
 headers at top.  90: headers at right. 180: headers at bottom.
 270: headers at left. To achieve landscape, use -270.
@@ -586,7 +595,7 @@ headers at top.  90: headers at right. 180: headers at bottom.
 
 =item * C<flip>
 
-Boolean Flips table horizontally from the perspective of
+Boolean. Flips table horizontally from the perspective of
 the headings "row" by negating the value of C<theta>.
 
   flip => 1
@@ -601,7 +610,7 @@ have data cells arranged in reverse order.
 
 =item * C<indent>
 
-Render the table with nested indentation. Defaults to
+String. Render the table with nested indentation. Defaults to
 undefined which produces no indentation. Adds newlines
 when set to any value that is defined.
 
@@ -611,7 +620,7 @@ when set to any value that is defined.
 
 =item * C<level>
 
-Start indentation at this level. Useful for matching
+Integer. Start indentation at this level. Useful for matching
 nesting styles of original HTML text that you may want
 to insert into to.
 
@@ -630,14 +639,13 @@ will encode all control chars, high bit chars and '<', '&', '>', ''' and '"'.
 
 =item * C<encodes>
 
-Encode HTML entities. String. Set value to those characters you wish to
-have encoded.
+String. Set value to those characters you wish to have HTML encoded.
 
   encodes => '<>"'
 
 =item * C<empty>
 
-Replace empty cells with this value. Defaults to C<&nbsp;>.
+String. Replace empty cells with this value. Defaults to C<&nbsp;>.
 Set value to C<undef> to avoid any substitutions.
 
   empty => '&#160;'
@@ -659,7 +667,7 @@ in between the <thead> and <tbody> sections. (strict)
 
 =item * C<group>
 
-Will chunk body rows into tbody groups of size C<group>.
+Integer. Will chunk body rows into tbody groups of size C<group>.
 
   group => 4
 

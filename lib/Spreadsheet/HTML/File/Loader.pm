@@ -16,7 +16,7 @@ sub _parse {
         return Spreadsheet::HTML::File::JSON::_parse( $args );
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::File::YAML::_parse( $args );
-    } elsif ($file =~ /\.(png|jpe?g)$/) {
+    } elsif ($file =~ /\.(gif|png|jpe?g)$/) {
         return Spreadsheet::HTML::File::Image::_parse( $args );
     }
 
@@ -127,6 +127,25 @@ Parses with (requires) L<YAML>.
   generate( file => 'foo.yml' )
   generate( file => 'foo.yaml' )
 
+=item * JPEG
+
+Parses with (requires) L<Imager::File::JPEG>.
+
+  generate( file => 'foo.jpg' )
+  generate( file => 'foo.jpeg' )
+
+=item * PNG
+
+Parses with (requires) L<Imager::File::PNG>.
+
+  generate( file => 'foo.png' )
+
+=item * GIF
+
+Parses with (requires) L<Imager::File::GIF>.
+
+  generate( file => 'foo.gif' )
+
 =back
 
 =head1 SEE ALSO
@@ -233,9 +252,9 @@ sub _parse {
     my $imager = Imager->new;
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{block} ||= 1;
-    $args->{fill}    = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
-    $args->{table}   = { cellspacing => 0, border => 0, cellpadding => 0 };
+    $args->{block} = ($args->{block} =~ /\D/) ? 8 : ($args->{block} < 2) ? 8 : $args->{block};
+    $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
+    $args->{table} = { cellspacing => 0, border => 0, cellpadding => 0 };
 
     my $r = 0;
     for (my $x = 0; $x < $image->getwidth; $x += $args->{block}) {
