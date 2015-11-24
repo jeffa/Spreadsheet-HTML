@@ -23,7 +23,7 @@ sub _parse {
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file or $file eq '-';
     return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
 
-    my $workbook = ReadData( $file eq '-' ? *STDIN : $file,
+    my $workbook = ReadData( $file,
         attr    => $args->{preserve},
         clip    => $args->{clip},
         cells   => $args->{cells},
@@ -233,7 +233,7 @@ sub _parse {
     my $imager = Imager->new;
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{block} ||= 8;
+    $args->{block} ||= 1;
     $args->{fill}    = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
     $args->{table}   = { cellspacing => 0, border => 0, cellpadding => 0 };
 
