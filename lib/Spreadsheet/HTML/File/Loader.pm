@@ -233,21 +233,39 @@ sub _parse {
     my $imager = Imager->new;
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{fill} = join( 'x', $image->getheight, $image->getwidth );
+    $args->{block} ||= 8;
+    $args->{matrix}  = 1;
+    $args->{fill}    = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
 
-    $args->{block} ||= 16;
+    my $r = 0;
+    for (my $x = 0; $x < $image->getwidth; $x += $args->{block}) {
+        my $c = 0;
+        for (my $y = 0; $y < $image->getheight; $y += $args->{block}) {
+            
+            my (@x,@y);
+            for my $i ($x .. $x + $args->{block}) {
+                for my $j ($y .. $y + $args->{block}) {
+                    push @x, $i;
+                    push @y, $j;
+                }
+            }
 
-    for my $x (0 .. $image->getwidth - 1) {
-        for my $y (0 .. $image->getheight - 1) {
+            my %block;
+            for my $pixel ($image->getpixel( x => \@x, y => \@y )) {
+                next unless ref $pixel;
+                my $color = '#' . join '', map sprintf( "%02X", $_ ), ($pixel->rgba)[0..2];
+                $block{$color}++;
+            }
 
-            my $color = '#' . join '', map { sprintf "%02X", $_ } ($image->getpixel( x => $x, y => $y )->rgba)[0..2];
-
-            $args->{"-r${y}c${x}"} = {
+            my $color = (sort { $block{$b} <=> $block{$a} } keys %block)[0];
+            $args->{"-r${c}c${r}"} = {
                 width  => $args->{block},
                 height => $args->{block},
                 style  => { 'background-color' => $color },
             };
+            $c++;
         }
+        $r++;
     }
 
     return [];
