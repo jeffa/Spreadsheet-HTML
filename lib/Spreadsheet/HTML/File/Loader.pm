@@ -231,20 +231,20 @@ sub _parse {
     return [[ "cannot load $file" ],[ 'please install Imager' ]] if $NOT_AVAILABLE;
 
     my $imager = Imager->new;
-    my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ Imager::errstr() ]];
+    my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{fill} = join( 'x', $image->getwidth, $image->getheight );
+    $args->{fill} = join( 'x', $image->getheight, $image->getwidth );
 
-    my $block      = 16; # temp
-    $args->{theta} = 90; # need to eliminate need for this
+    $args->{block} ||= 16;
 
     for my $x (0 .. $image->getwidth - 1) {
         for my $y (0 .. $image->getheight - 1) {
 
             my $color = '#' . join '', map { sprintf "%02X", $_ } ($image->getpixel( x => $x, y => $y )->rgba)[0..2];
-            $args->{"-r${x}c${y}"} = {
-                width  => $block,
-                height => $block,
+
+            $args->{"-r${y}c${x}"} = {
+                width  => $args->{block},
+                height => $args->{block},
                 style  => { 'background-color' => $color },
             };
         }
