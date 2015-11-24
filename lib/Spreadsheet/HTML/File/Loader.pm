@@ -234,8 +234,8 @@ sub _parse {
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
     $args->{block} ||= 8;
-    $args->{matrix}  = 1;
     $args->{fill}    = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
+    $args->{table}   = { cellspacing => 0, border => 0, cellpadding => 0 };
 
     my $r = 0;
     for (my $x = 0; $x < $image->getwidth; $x += $args->{block}) {
@@ -259,7 +259,7 @@ sub _parse {
 
             my $color = (sort { $block{$b} <=> $block{$a} } keys %block)[0];
             $args->{"-r${c}c${r}"} = {
-                width  => $args->{block},
+                width  => $args->{block} * 2,
                 height => $args->{block},
                 style  => { 'background-color' => $color },
             };
