@@ -530,10 +530,10 @@ See L<DBIx::HTML> for formatting your SQL database queries.
 =item * C<block>
 
 Integer. Can be supplied in conjunction with C<file> for image
-formats (JPEG, PNG and GIF). Defaults to 8. Represented an
-image as an HTML table on a pixel by pixel basis tends to produce
-tables that are too large. This parameter can be used to increase
-and decrease that size.
+formats (JPEG, PNG and GIF). Defaults to 8. Must be larger than 1.
+Representing an image as an HTML table on a pixel by pixel basis
+tends to produce tables that are too large. This parameter can be
+used to increase and decrease that size.
 
   block => 4
 

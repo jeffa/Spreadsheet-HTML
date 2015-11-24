@@ -252,7 +252,7 @@ sub _parse {
     my $imager = Imager->new;
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{block} = ($args->{block} =~ /\D/) ? 8 : ($args->{block} < 2) ? 8 : $args->{block};
+    $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 2 ? 8 : $args->{block};
     $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
     $args->{table} = { cellspacing => 0, border => 0, cellpadding => 0 };
 

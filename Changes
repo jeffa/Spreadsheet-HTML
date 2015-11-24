@@ -1,7 +1,8 @@
 Revision history for Spreadsheet-HTML
 
 1.11
-    - can now load JPEG and PNG images (work in progress)
+    - can now load GIF, JPEG and PNG images
+    - added block param for tweaking image2table output
     - remove bugtracker from Makefile (issues should go to rt.cpan)
     - trying to render invalid datastructures gracefully fails
     - require HTML::AutoTag v1.04
