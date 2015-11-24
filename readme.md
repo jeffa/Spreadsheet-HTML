@@ -7,8 +7,8 @@ Description
 Generate HTML tables with ease (HTML4, XHTML and HTML5). Can generate
 landscape and other rotated views, Handsontable tables, HTML calendars,
 checkerboard patterns, games such as sudoku, banners and mazes, and can
-create animations of cell values and backgrounds via jQuery. Can rewrap
-existing tables from Excel, HTML, JSON, CSV and YAML files.
+create animations of cell values and backgrounds via jQuery. Transform
+Excel, HTML, JSON, CSV, YAML, PNG, JPEG and GIF files instantly into HTML tables.
 
 Synopsis
 --------

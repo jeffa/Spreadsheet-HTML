@@ -379,11 +379,11 @@ Procedural interface:
 
 =head1 DESCRIPTION
 
-Generate HTML tables with ease (HTML4, XHTML and HTML5). Generate
-portrait, landscape and other rotated views, Handsontable tables, HTML
-calendars, checkerboard patterns, games such as sudoku, banners and mazes,
-and create animations of cell values and backgrounds via jQuery.
-Rewrap existing tables from Excel, HTML, JSON, CSV and YAML files.
+Generate HTML tables with ease (HTML4, XHTML and HTML5). Generate portrait,
+landscape and other rotated views, Handsontable tables, HTML calendars,
+checkerboard patterns, games such as sudoku, banners and mazes, and create
+animations of cell values and backgrounds via jQuery. Transform Excel, HTML,
+JSON, CSV, YAML, PNG, JPEG and GIF files instantly into HTML tables.
 
 =head1 CLI TOOLS
 
