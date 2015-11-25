@@ -362,7 +362,7 @@ Object oriented interface:
 
     use Spreadsheet::HTML;
 
-    my @data = ( [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] );
+    my @data = ( [qw(foo b&r b&z)], [1,2,3], [4,5,6], [7,8,9] );
     my $gen  = Spreadsheet::HTML->new( data => \@data, encode => 1 );
 
     print $gen->portrait( indent => '   ' );
