@@ -133,18 +133,24 @@ Parses with (requires) L<Imager::File::JPEG>.
 
   generate( file => 'foo.jpg' )
   generate( file => 'foo.jpeg' )
+  generate( file => 'foo.jpeg', block => 2 )
+  generate( file => 'foo.jpeg', block => 2, blend => 1 )
 
 =item * PNG
 
 Parses with (requires) L<Imager::File::PNG>.
 
   generate( file => 'foo.png' )
+  generate( file => 'foo.png', block => 2 )
+  generate( file => 'foo.png', block => 2, blend => 1 )
 
 =item * GIF
 
 Parses with (requires) L<Imager::File::GIF>.
 
   generate( file => 'foo.gif' )
+  generate( file => 'foo.gif', block => 2 )
+  generate( file => 'foo.gif', block => 2, blend => 1 )
 
 =back
 

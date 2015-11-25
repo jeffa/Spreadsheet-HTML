@@ -362,13 +362,14 @@ Object oriented interface:
 
     use Spreadsheet::HTML;
 
-    $generator = Spreadsheet::HTML->new( data => \@data, encode => 1 );
+    my @data = ( [qw(a1 a2 a3)], [qw(b1 b2 b3)], [qw(c1 c2 c3)] );
+    my $gen  = Spreadsheet::HTML->new( data => \@data, encode => 1 );
 
-    print $generator->portrait( indent => '   ' );
-    print $generator->landscape( indent => "\t" );
+    print $gen->portrait( indent => '   ' );
+    print $gen->landscape( indent => "\t" );
 
-    $generator = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
-    print $generator->generate( preserve => 1 );
+    $gen = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
+    print $gen->generate( preserve => 1 );
 
 Procedural interface:
 
@@ -410,7 +411,14 @@ your default browser:
 
   $ mktable beadwork --param preset=dk --display
 
-Run C<mktable --man> for more documentation.
+Run C<mktable --man> for more documentation. You can also use this tool to quickly look
+up documentation for methods and (most) parameters:
+
+  $ mktable --help handson
+
+  $ mktable --help theta
+
+  $ mktable --help td
 
 =item * C<benchmark-spreadsheet-html>
 
@@ -666,6 +674,20 @@ Set value to C<undef> to avoid any substitutions.
 
   empty => '&#160;'
 
+=item * C<matrix>
+
+Boolean. Render the headings row with only <td> tags, no <th> tags.
+
+  matrix => 1
+
+=item * C<headless>
+
+Boolean. Render the table with without the headings row at all. 
+Any configuration to C<headings> or C<-r0> will be discarded with
+the headings row.
+
+  headless => 1
+
 =item * C<tgroups>
 
 Integer. Group table rows into <thead>, <tbody> and <tfoot> sections.
@@ -695,20 +717,6 @@ Boolean. Preserve data after it has been processed (and loaded).
 Useful for loading data from files only once.
 
   cache => 1
-
-=item * C<matrix>
-
-Boolean. Render the headings row with only <td> tags, no <th> tags.
-
-  matrix => 1
-
-=item * C<headless>
-
-Boolean. Render the table with without the headings row at all. 
-The first row after the headings is still C<-r1>, and
-any configuration to C<headings> or C<-r0> will be discarded.
-
-  headless => 1
 
 =item * C<scroll>
 
@@ -1021,8 +1029,6 @@ Uses the following optional modules:
 
 =over 4
 
-=item * L<Imager>
-
 =item * L<Text::CSV>
 
 =item * L<Text::CSV_XS>
@@ -1038,6 +1044,8 @@ Uses the following optional modules:
 =item * L<YAML>
 
 =item * L<HTML::TableExtract>
+
+=item * L<Imager>
 
 =back
 
