@@ -746,8 +746,8 @@ parameters use leading dashes.
 =item * C<sorted_attrs>
 
 Boolean. This is useful for ensuring that attributes within tags are
-rendered in alphabetical ordering, for consistancy. You will
-most likely never need this feature.
+rendered in alphabetical order, for consistancy. You will most likely
+never need this feature.
 
   sorted_attrs
 
@@ -930,7 +930,7 @@ Generate layout tables.
 
 =item * C<list( ordered, col, row, %params )>
 
-Generate <ol> and <ul> list.
+Generate <ol> and <ul> lists.
 
 =item * C<select( col, row, values, selected, placeholder, optgroup, label, %params )>
 

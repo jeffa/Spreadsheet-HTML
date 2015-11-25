@@ -177,4 +177,14 @@ Prints the versions of the core modules used.
   # wrap references with quotes:
   mktable --param -r1='{class=>"foo"}'
 
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Spreadsheet::HTML>
+
+The engine behind this script.
+
+=back
+
 =cut
