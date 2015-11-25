@@ -436,24 +436,24 @@ generating methods below:
 
 =item * C<generate( %params )>
 
-Generate an HTML table with headings positioned at the top.
+Generate an HTML table.
 
   print $generator->generate();
 
 =item * C<portrait( %params )>
 
-Alias for C<generate()>.
+Generate an HTML table with headings positioned at the top.
 
   print $generator->portrait();
 
-=item * C<north( %params )>
-
-Alias for C<generate()>.
-
-  print $generator->north();
-
 =for html
 <table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td></tr><tr><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td></tr><tr><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
+
+=item * C<north( %params )>
+
+Alias for C<portrait()>.
+
+  print $generator->north();
 
 =item * C<landscape( %params )>
 
@@ -461,14 +461,14 @@ Generate an HTML table with headings positioned at the left.
 
   print $generator->landscape();
 
+=for html
+<table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
+
 =item * C<west( %params )>
 
 Alias for C<landscape>.
 
   print $generator->west();
-
-=for html
-<table style="border: 1px dashed #A0A0A0"><tr><td><b>&nbsp;&nbsp;heading1&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col1&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col1&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading2&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col2&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col2&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading3&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col3&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col3&nbsp;&nbsp;</td></tr><tr><td><b>&nbsp;&nbsp;heading4&nbsp;&nbsp;</b></td><td>&nbsp;&nbsp;row1col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row2col4&nbsp;&nbsp;</td><td>&nbsp;&nbsp;row3col4&nbsp;&nbsp;</td></tr></table>
 
 =item * C<south( %params )>
 
