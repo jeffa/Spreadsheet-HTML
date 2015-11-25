@@ -530,12 +530,28 @@ See L<DBIx::HTML> for formatting your SQL database queries.
 =item * C<block>
 
 Integer. Can be supplied in conjunction with C<file> for image
-formats (JPEG, PNG and GIF). Defaults to 8. Must be larger than 1.
+formats (JPEG, PNG and GIF). Defaults to 8. Cannot be less than 1.
 Representing an image as an HTML table on a pixel by pixel basis
 tends to produce tables that are too large. This parameter can be
-used to increase and decrease that size.
+used to increase and decrease that size, by reading in blocks of
+pixels (8x8=64 pixels to be represented by one table cell) and
+determines the pixel color for that block. The smaller the
+block size the longer the processing time.
 
   block => 4
+
+=item * C<blend>
+
+Boolean. Default false. Can be supplied in conjuction with C<block>
+to change the algorithm for determining block's pixel color. When
+set to true, the pixel color is determined by the average color of
+all pixels in that block. When false (default), the pixel color is
+determined by finding the the most use color in the block.
+
+  blend => 1
+
+Turning C<blend> on tends to work better for photo realism. Keep it
+off for producing 1980's style pixel art images.
 
 =item * C<worksheet>
 

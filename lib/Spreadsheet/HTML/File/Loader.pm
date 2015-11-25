@@ -252,7 +252,7 @@ sub _parse {
     my $imager = Imager->new;
     my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
 
-    $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 2 ? 8 : $args->{block};
+    $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 1 ? 8 : $args->{block};
     $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
     $args->{table} = { cellspacing => 0, border => 0, cellpadding => 0 };
 
@@ -269,18 +269,36 @@ sub _parse {
                 }
             }
 
-            my %block;
-            for my $pixel ($image->getpixel( x => \@x, y => \@y )) {
-                next unless ref $pixel;
-                my $color = '#' . join '', map sprintf( "%02X", $_ ), ($pixel->rgba)[0..2];
-                $block{$color}++;
+            my $primary;
+            if ($args->{block} == 1) {
+                $primary = join '', map sprintf( "%02X", $_ ), ($image->getpixel( x => $x[0], y => $y[0] )->rgba)[0..2];
+            } else {
+                if ($args->{blend}) {
+                    my %average = ( r => 0, g => 0, b => 0 );
+                    for my $pixel ($image->getpixel( x => \@x, y => \@y )) {
+                        next unless ref $pixel;
+                        my @rgba = $pixel->rgba;
+                        $average{r} += $rgba[0];
+                        $average{g} += $rgba[1];
+                        $average{b} += $rgba[2];
+                    }
+                    $_ /= ($args->{block} * $args->{block}) for values %average;
+                    $primary = join '', map sprintf( "%02X", $_ ), @average{qw(r g b)};
+                } else {
+                    my %block;
+                    for my $pixel ($image->getpixel( x => \@x, y => \@y )) {
+                        next unless ref $pixel;
+                        my $color = join '', map sprintf( "%02X", $_ ), ($pixel->rgba)[0..2];
+                        $block{$color}++;
+                    }
+                    $primary = (sort { $block{$b} <=> $block{$a} } keys %block)[0];
+                }
             }
 
-            my $color = (sort { $block{$b} <=> $block{$a} } keys %block)[0];
             $args->{"-r${c}c${r}"} = {
                 width  => $args->{block} * 2,
                 height => $args->{block},
-                style  => { 'background-color' => $color },
+                style  => { 'background-color' => '#' . $primary },
             };
             $c++;
         }
