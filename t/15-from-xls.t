@@ -9,7 +9,7 @@ plan skip_all => "Spreadsheet::Read required" if $@;
 eval "use Spreadsheet::ParseExcel";
 plan skip_all => "Spreadsheet:: ParseExcel required" if $@;
 
-plan tests => 9;
+plan tests => 11;
 
 use_ok 'Spreadsheet::HTML';
 
@@ -25,6 +25,16 @@ is $table->generate,
 is Spreadsheet::HTML::generate( %file ),
     '<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>',
     "loaded simple Excel data via procedure"
+;
+
+is $table->generate( data => 1 ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>',
+    "data param does not clobber loaded simple Excel data via method"
+;
+
+is Spreadsheet::HTML::generate( %file, data => 1 ),
+    '<table><tr><th>header1</th><th>header2</th><th>header3</th></tr><tr><td>foo</td><td>bar</td><td>baz</td></tr><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>',
+    "data param does not clobber loaded simple Excel data via procedure"
 ;
 
 $table = Spreadsheet::HTML->new( %file );

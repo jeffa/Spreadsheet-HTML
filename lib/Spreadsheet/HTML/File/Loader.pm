@@ -7,7 +7,7 @@ eval "use Spreadsheet::Read";
 our $NOT_AVAILABLE = $@;
 
 sub _parse {
-    my $args = shift;
+    my ($args,$data) = @_;
     my $file = $args->{file};
 
     if ($file =~ /\.html?$/) {
@@ -17,7 +17,7 @@ sub _parse {
     } elsif ($file =~ /\.ya?ml$/) {
         return Spreadsheet::HTML::File::YAML::_parse( $args );
     } elsif ($file =~ /\.(gif|png|jpe?g)$/) {
-        return Spreadsheet::HTML::File::Image::_parse( $args );
+        return Spreadsheet::HTML::File::Image::_parse( $args, $data );
     }
 
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file or $file eq '-';
@@ -244,7 +244,7 @@ eval "use Imager";
 our $NOT_AVAILABLE = $@;
 
 sub _parse {
-    my $args = shift;
+    my ($args,$data) = @_;
     my $file = $args->{file};
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file;
     return [[ "cannot load $file" ],[ 'please install Imager' ]] if $NOT_AVAILABLE;
@@ -305,7 +305,7 @@ sub _parse {
         $r++;
     }
 
-    return [];
+    return $data;
 }
 
 1;

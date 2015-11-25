@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.12
+    - data param now works with loaded image files
     - block param now can be 1 (previous minimum was 2)
     - added blend param (used in conjunction with block param)
     - reminder: animate has been deprecated since v1.05

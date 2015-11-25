@@ -295,7 +295,7 @@ sub _args {
     return ( $self, $self->{data}, $args ) if $self and $self->{is_cached};
 
     $args->{worksheet} ||= 1;
-    $data = Spreadsheet::HTML::File::Loader::_parse( $args ) if $args->{file};
+    $data = Spreadsheet::HTML::File::Loader::_parse( $args, $data ) if $args->{file};
     $data = [ $data ] unless ref($data) eq 'ARRAY';
     $data = [ $data ] unless ref($data->[0]) eq 'ARRAY';
 
