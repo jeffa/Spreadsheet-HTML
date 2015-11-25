@@ -892,9 +892,9 @@ the attributes of the <tr> tag within the <tfoot> group.
 
 =back
 
-=head2 PRESETS
+=head1 PRESET METHODS
 
-The following presets are availble for creating tables that can be used
+The following preset methods are availble for creating tables that can be used
 with little to no additional coding. All preset methods accept all of the
 above mentioned parameters (%params) in addition to those specific to themselves.
 
