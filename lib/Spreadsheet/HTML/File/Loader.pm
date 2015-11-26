@@ -135,6 +135,7 @@ Parses with (requires) L<Imager::File::JPEG>.
   generate( file => 'foo.jpeg' )
   generate( file => 'foo.jpeg', block => 2 )
   generate( file => 'foo.jpeg', block => 2, blend => 1 )
+  generate( file => 'foo.jpeg', off => 'FFFFFF' )
 
 =item * PNG
 
@@ -143,6 +144,7 @@ Parses with (requires) L<Imager::File::PNG>.
   generate( file => 'foo.png' )
   generate( file => 'foo.png', block => 2 )
   generate( file => 'foo.png', block => 2, blend => 1 )
+  generate( file => 'foo.png', off => 'FFFFFF' )
 
 =item * GIF
 
@@ -151,6 +153,7 @@ Parses with (requires) L<Imager::File::GIF>.
   generate( file => 'foo.gif' )
   generate( file => 'foo.gif', block => 2 )
   generate( file => 'foo.gif', block => 2, blend => 1 )
+  generate( file => 'foo.gif', off => 'FFFFFF' )
 
 =back
 
@@ -260,7 +263,7 @@ sub _parse {
 
     $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 1 ? 8 : $args->{block};
     $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
-    $args->{table} = { cellspacing => 0, border => 0, cellpadding => 0 };
+    $args->{table} ||= { cellspacing => 0, border => 0, cellpadding => 0 };
 
     my $r = 0;
     for (my $x = 0; $x < $image->getwidth; $x += $args->{block}) {
@@ -304,10 +307,12 @@ sub _parse {
             $args->{"-r${c}c${r}"} = {
                 width  => $args->{block} * 2,
                 height => $args->{block},
-                style  => { 'background-color' => '#' . $primary },
-            };
+                style  => { 'background-color' => "#$primary" },
+            } unless $args->{off} and $args->{off} eq $primary;
+
             $c++;
         }
+
         $r++;
     }
 
