@@ -28,9 +28,20 @@ sub conway {
                     class  => 'conway',
                     width  => '30px',
                     height => '30px',
-                    style  => { 'background-color' => $args->{off} },
+                    style  => { 'background-color' => $args->{$cell} ? $args->{on} : $args->{off} },
                 };
         }
+    }
+
+    # remove file (was already processed by _args())
+    if ($args->{file}) {
+        my $index = 0;
+        for (0 .. $#_) {
+            next if ref $_[$_];
+            if ($_[$_] eq $index) { $index = $_; last }
+        }
+        splice @_, $index, 2;
+        push @_, ( fill => $args->{fill} );
     }
 
     my @args = (
