@@ -18,7 +18,7 @@ sub conway {
 
     $args->{interval} ||= 200;
 
-    my @cells;
+    my ( @cells, @ids );
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
         for my $c ( 0 .. $args->{_max_cols} - 1 ) {
             my $cell = sprintf '-r%sc%s', $r, $c;
@@ -30,6 +30,7 @@ sub conway {
                     height => '30px',
                     style  => { 'background-color' => $args->{$cell} ? $args->{on} : $args->{off} },
                 };
+            push @ids, join( '-', $r, $c ) if $args->{$cell};
         }
     }
 
@@ -49,7 +50,7 @@ sub conway {
         @_,
     );
 
-    my $js    = _javascript( %$args );
+    my $js    = _javascript( %$args, ids => \@ids );
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
     return $js . $table;
 }
@@ -61,6 +62,7 @@ sub _javascript {
         $args{_max_rows},
         $args{_max_cols},
         $args{interval},
+        join( ',', map "'$_'", @{ $args{ids} } ),
         $args{off},
         join( ',', map "'$_'", @{ $args{colors} } ),
     ;
@@ -78,6 +80,7 @@ var ROW = %s;
 var COL = %s;
 var INTERVAL = %s;
 var tid;
+var ids = [ %s ];
 
 function Cell (id) {
     this.id         = id;
