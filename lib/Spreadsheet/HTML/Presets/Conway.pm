@@ -33,7 +33,7 @@ sub conway {
         }
     }
 
-    if ($args->{file} =~ /\.(gif|png|jpe?g)$/) {
+    if ($args->{file} and $args->{file} =~ /\.(gif|png|jpe?g)$/) {
         my $index = 0;
         for (0 .. $#_) {
             next if ref $_[$_];
