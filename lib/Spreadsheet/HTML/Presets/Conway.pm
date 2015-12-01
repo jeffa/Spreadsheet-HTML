@@ -28,7 +28,7 @@ sub conway {
                     class  => 'conway',
                     width  => '30px',
                     height => '30px',
-                    style  => { 'background-color' => $args->{$cell} ? $args->{on} : $args->{off} },
+                    style  => { 'background-color' => $args->{off} },
                 };
             push @ids, join( '-', $r, $c ) if $args->{$cell};
         }
@@ -144,6 +144,13 @@ $(document).ready(function(){
         for (var col = 0; col < COL; col++) {
             MATRIX[row][col] = new Cell( row + '-' + col );
         }
+    }
+
+    // activate any "pre-loaded" IDs
+    for (var i = 0; i < ids.length; i++) {
+        var matches  = ids[i].match( /(\d+)-(\d+)/ );
+        var selected = MATRIX[matches[1]][matches[2]];
+        selected.grow( 1 );
     }
 
 });
