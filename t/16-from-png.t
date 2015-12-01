@@ -5,7 +5,7 @@ use Test::More;
 
 eval "use Imager::File::PNG";
 plan skip_all => "Imager::File::PNG required" if $@;
-plan tests => 8;
+plan tests => 10;
 
 use_ok 'Spreadsheet::HTML';
 
@@ -32,6 +32,17 @@ is $table->generate( off => 'FFFFFF' ),
 ;
 
 is Spreadsheet::HTML::generate( %attr, off => 'FFFFFF' ),
+    $html,
+    "off param for image via procedure"
+;
+
+$html = '<table><tr><th height="4" style="background-color: #000000" width="8"></th><th height="4" style="background-color: #000000" width="8"></th><th></th><th></th></tr><tr><td height="4" style="background-color: #000000" width="8"></td><td height="4" style="background-color: #000000" width="8"></td><td></td><td></td></tr><tr><td height="4" style="background-color: #FF0000" width="8"></td><td></td><td height="4" style="background-color: #000000" width="8"></td><td height="4" style="background-color: #000000" width="8"></td></tr><tr><td height="4" style="background-color: #00FF00" width="8"></td><td height="4" style="background-color: #0000FF" width="8"></td><td height="4" style="background-color: #000000" width="8"></td><td height="4" style="background-color: #000000" width="8"></td></tr></table>';
+is $table->generate( off => 'FFFFFF', table => {} ),
+    $html,
+    "off param for image via method"
+;
+
+is Spreadsheet::HTML::generate( %attr, off => 'FFFFFF', table => {} ),
     $html,
     "off param for image via procedure"
 ;
