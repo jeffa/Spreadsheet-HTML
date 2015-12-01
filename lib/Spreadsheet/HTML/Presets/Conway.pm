@@ -226,6 +226,17 @@ activate a fading effect like so:
   # color names via Color::Library
   conway( on => 'red', off => 'gray', fade => 1 )
 
+You can also load a file and pre-populate a game grid if you know which
+color will be used as 'off'. This example uses #F8F8F8 and tweaks the block
+size up to 16:
+
+  conway( file => 'conway.png', off => 'F8F8F8', block => 16 )
+
+Notice that even though a hex coded color was passed, no leading hash mark was
+specified. Work is being done to correct this inconsistent interface. Work is
+also being done to guess the color for 'off' (probably by finding the lightest
+color found).
+
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
 via L<Javascript::Minifier> if it is installed.
