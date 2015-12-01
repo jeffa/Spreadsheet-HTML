@@ -34,11 +34,12 @@ sub conway {
         }
     }
 
+    # find and remove 'file' param and its value if found
     if ($args->{file} and $args->{file} =~ /\.(gif|png|jpe?g)$/) {
         my $index = 0;
         for (0 .. $#_) {
             next if ref $_[$_];
-            if ($_[$_] eq $index) { $index = $_; last }
+            if ($_[$_] eq 'file') { $index = $_; last }
         }
         splice @_, $index, 2;
         push @_, ( fill => $args->{fill} );
