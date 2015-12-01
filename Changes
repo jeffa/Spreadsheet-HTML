@@ -1,10 +1,12 @@
 Revision history for Spreadsheet-HTML
 
+1.14
+    - reminder: animate has been deprecated since v1.05
+
 1.13
     - conway() can preload images now (TODO: guess "off" value)
     - off param now available when loading images
     - can override table param when loading images
-    - reminder: animate has been deprecated since v1.05
 
 1.12
     - data param now works with loaded image files
