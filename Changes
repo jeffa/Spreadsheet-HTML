@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.14
+    - conway() now supplies alpha param (off param reverts to normal)
     - reminder: animate has been deprecated since v1.05
 
 1.13

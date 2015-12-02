@@ -30,6 +30,9 @@ sub conway {
                     height => '30px',
                     style  => { 'background-color' => $args->{off} },
                 };
+            # if alpha param was set to valid value, then
+            # only non-alpha cells will be set here
+            # TODO: determine alpha value (lightest color) for client
             push @ids, join( '-', $r, $c ) if $args->{$cell};
         }
     }
@@ -227,14 +230,16 @@ activate a fading effect like so:
   conway( on => 'red', off => 'gray', fade => 1 )
 
 You can also load a file and pre-populate a game grid if you know which
-color will be used as 'off'. This example uses #F8F8F8 and tweaks the block
+color will be used as C<alpha>. This example uses #F8F8F8 and tweaks the block
 size up to 16:
 
-  conway( file => 'conway.png', off => 'F8F8F8', block => 16 )
+  conway( file => 'conway.png', alpha => 'F8F8F8', block => 16 )
+
+The C<alpha> param is available whenever you supply an image file.
 
 Notice that even though a hex coded color was passed, no leading hash mark was
 specified. Work is being done to correct this inconsistent interface. Work is
-also being done to guess the color for 'off' (probably by finding the lightest
+also being done to guess the color for C<alpha> (probably by finding the lightest
 color found).
 
 Uses Google's jQuery API unless you specify another URI via

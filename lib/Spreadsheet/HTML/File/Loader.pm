@@ -135,7 +135,7 @@ Parses with (requires) L<Imager::File::JPEG>.
   generate( file => 'foo.jpeg' )
   generate( file => 'foo.jpeg', block => 2 )
   generate( file => 'foo.jpeg', block => 2, blend => 1 )
-  generate( file => 'foo.jpeg', off => 'FFFFFF' )
+  generate( file => 'foo.jpeg', alpha => 'FFFFFF' )
 
 =item * PNG
 
@@ -144,7 +144,7 @@ Parses with (requires) L<Imager::File::PNG>.
   generate( file => 'foo.png' )
   generate( file => 'foo.png', block => 2 )
   generate( file => 'foo.png', block => 2, blend => 1 )
-  generate( file => 'foo.png', off => 'FFFFFF' )
+  generate( file => 'foo.png', alpha => 'FFFFFF' )
 
 =item * GIF
 
@@ -153,7 +153,7 @@ Parses with (requires) L<Imager::File::GIF>.
   generate( file => 'foo.gif' )
   generate( file => 'foo.gif', block => 2 )
   generate( file => 'foo.gif', block => 2, blend => 1 )
-  generate( file => 'foo.gif', off => 'FFFFFF' )
+  generate( file => 'foo.gif', alpha => 'FFFFFF' )
 
 =back
 
@@ -308,7 +308,7 @@ sub _parse {
                 width  => $args->{block} * 2,
                 height => $args->{block},
                 style  => { 'background-color' => "#$primary" },
-            } unless $args->{off} and $args->{off} eq $primary;
+            } unless $args->{alpha} and $args->{alpha} eq $primary;
 
             $c++;
         }
