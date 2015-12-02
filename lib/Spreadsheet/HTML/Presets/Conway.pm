@@ -50,7 +50,8 @@ sub conway {
 
     my @args = (
         @cells,
-        caption  => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
+        data    => $data,
+        caption => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
         @_,
     );
 
