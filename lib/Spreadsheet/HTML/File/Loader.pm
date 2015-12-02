@@ -159,7 +159,7 @@ Parses with (requires) L<Imager::File::JPEG>.
   generate( file => 'foo.jpeg' )
   generate( file => 'foo.jpeg', block => 2 )
   generate( file => 'foo.jpeg', block => 2, blend => 1 )
-  generate( file => 'foo.jpeg', alpha => 'FFFFFF' )
+  generate( file => 'foo.jpeg', alpha => '#ffffff' )
 
 =item * PNG
 
@@ -168,7 +168,7 @@ Parses with (requires) L<Imager::File::PNG>.
   generate( file => 'foo.png' )
   generate( file => 'foo.png', block => 2 )
   generate( file => 'foo.png', block => 2, blend => 1 )
-  generate( file => 'foo.png', alpha => 'FFFFFF' )
+  generate( file => 'foo.png', alpha => '#ffffff' )
 
 =item * GIF
 
@@ -177,7 +177,7 @@ Parses with (requires) L<Imager::File::GIF>.
   generate( file => 'foo.gif' )
   generate( file => 'foo.gif', block => 2 )
   generate( file => 'foo.gif', block => 2, blend => 1 )
-  generate( file => 'foo.gif', alpha => 'FFFFFF' )
+  generate( file => 'foo.gif', alpha => '#ffffff' )
 
 =back
 
@@ -326,6 +326,11 @@ sub _parse {
                     }
                     $primary = (sort { $block{$b} <=> $block{$a} } keys %block)[0];
                 }
+            }
+
+            if ($args->{alpha}) {
+                $args->{alpha} =~ s/^#//;
+                $args->{alpha} = uc( $args->{alpha} );
             }
 
             $args->{"-r${c}c${r}"} = {

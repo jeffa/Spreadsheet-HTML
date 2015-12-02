@@ -234,14 +234,9 @@ You can also load a file and pre-populate a game grid if you know which
 color will be used as C<alpha>. This example uses #F8F8F8 and tweaks the block
 size up to 16:
 
-  conway( file => 'conway.png', alpha => 'F8F8F8', block => 16 )
+  conway( file => 'conway.png', alpha => '#f8f8f8', block => 16 )
 
 The C<alpha> param is available whenever you supply an image file.
-
-Notice that even though a hex coded color was passed, no leading hash mark was
-specified. Work is being done to correct this inconsistent interface. Work is
-also being done to guess the color for C<alpha> (probably by finding the lightest
-color found).
 
 Uses Google's jQuery API unless you specify another URI via
 the C<jquery> param. Javascript will be minified
