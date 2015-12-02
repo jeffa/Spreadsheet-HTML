@@ -535,6 +535,11 @@ are XLS, CSV, JSON, YAML, HTML, GIF, PNG and JPG.
 See L<Spreadsheet::File::Loader> for more on supported file formats.
 See L<DBIx::HTML> for formatting your SQL database queries.
 
+If you don't mind having a temp file created on your behalf, you can
+also supply a URI:
+
+  file => 'http://your.site.com/path/to/foo.json'
+
 =item * C<block>
 
 Integer. Can be supplied in conjunction with C<file> for image

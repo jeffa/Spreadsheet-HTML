@@ -4,12 +4,36 @@ use strict;
 use warnings FATAL => 'all';
 
 eval "use Spreadsheet::Read";
-our $NOT_AVAILABLE = $@;
+our $NO_READER = $@;
+
+eval "use URI";
+our $NO_URI = $@;
+eval "use LWP::Simple";
+our $NO_LWP = $@;
+eval "use File::Temp";
+our $NO_TEMP = $@;
+eval "use File::Basename";
+our $NO_BASE = $@;
+
 
 sub _parse {
     my ($args,$data) = @_;
-    my $file = $args->{file};
 
+    if ($args->{file} =~ m{^https?://}) {
+        if ($NO_URI or $NO_LWP or $NO_TEMP or $NO_BASE) {
+            return [[ "cannot download $args->{file}" ],[ 'please install URI, LWP::Simple, File::Basename and/or File::Temp' ]];
+        } else {
+            my $uri = URI->new( $args->{file} );
+            my @ext = qw( .html .htm .json .jsn .yaml .yml .gif .png .jpg .jpeg .csv .xls .xlsx .sxc .ods );
+            my (undef,undef,$suffix) = File::Basename::fileparse( $uri->path, @ext );
+            my (undef,$newfile) = File::Temp::tmpnam();
+            $args->{file} = $newfile . $suffix;
+            my $error = LWP::Simple::getstore( $uri->as_string, $args->{file} );
+            return [[ "cannot download " . $uri->as_string ],[ "RC code $error" ]] if LWP::Simple::is_error( $error );
+        }
+    }
+
+    my $file = $args->{file};
     if ($file =~ /\.html?$/) {
         return Spreadsheet::HTML::File::HTML::_parse( $args );
     } elsif ($file =~ /\.jso?n$/) {
@@ -21,7 +45,7 @@ sub _parse {
     }
 
     return [[ "cannot load $file" ],[ 'No such file or directory' ]] unless -r $file or $file eq '-';
-    return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NOT_AVAILABLE;
+    return [[ "cannot load $file" ],[ 'please install Spreadsheet::Read' ]] if $NO_READER;
 
     my $workbook = ReadData( $file,
         attr    => $args->{preserve},
