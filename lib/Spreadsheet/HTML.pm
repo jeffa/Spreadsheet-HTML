@@ -532,7 +532,7 @@ are XLS, CSV, JSON, YAML, HTML, GIF, PNG and JPG.
 
   file => 'foo.json'
 
-See L<Spreadsheet::File::Loader> for more on supported file formats.
+See L<Spreadsheet::HTML::File::Loader> for more on supported file formats.
 See L<DBIx::HTML> for formatting your SQL database queries.
 
 If you don't mind having a temp file created on your behalf, you can
