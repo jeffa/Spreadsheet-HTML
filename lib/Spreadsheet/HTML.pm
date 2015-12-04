@@ -295,6 +295,7 @@ sub _args {
     return ( $self, $self->{data}, $args ) if $self and $self->{is_cached};
 
     $args->{worksheet} ||= 1;
+    $args->{worksheet} = 1 if $args->{worksheet} < 1;
     if ($args->{file}) {
         $data = Spreadsheet::HTML::File::Loader::_parse( $args, $data );
         unlink $args->{file} if $args->{_unlink};

@@ -285,8 +285,9 @@ sub _parse {
     return [[ "cannot load $file" ],[ 'please install Imager' ]] if $NOT_AVAILABLE;
 
     my $imager = Imager->new;
-    my $image  = $imager->read( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
-
+    my @images = $imager->read_multi( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
+    my $image = $images[ $args->{worksheet} - 1 ];
+    
     $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 1 ? 8 : $args->{block};
     $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
     $args->{table} ||= { cellspacing => 0, border => 0, cellpadding => 0 };

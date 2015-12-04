@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.15
+    - worksheet param now selects specified image from animated PNG/GIF files
     - downloaded temp files are unlinked
     - reminder: animate has been deprecated since v1.05
 
