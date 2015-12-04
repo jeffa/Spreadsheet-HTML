@@ -286,7 +286,7 @@ sub _parse {
 
     my $imager = Imager->new;
     my @images = $imager->read_multi( file => $file ) or return [[ "cannot load $file" ],[ $imager->errstr ]];
-    my $image = $images[ $args->{worksheet} - 1 ];
+    my $image = $images[ $args->{worksheet} - 1 ] || $images[0];
     
     $args->{block} = $args->{block} && $args->{block} =~ /\D/ ? 8 : ($args->{block} || 0) < 1 ? 8 : $args->{block};
     $args->{fill}  = join( 'x', int( $image->getheight / $args->{block} ), int( $image->getwidth / $args->{block} ) );
