@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.15
+    - downloaded temp files are unlinked
     - reminder: animate has been deprecated since v1.05
 
 1.14

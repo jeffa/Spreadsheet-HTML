@@ -27,9 +27,11 @@ sub _parse {
             my @ext = qw( .html .htm .json .jsn .yaml .yml .gif .png .jpg .jpeg .csv .xls .xlsx .sxc .ods );
             my (undef,undef,$suffix) = File::Basename::fileparse( $uri->path, @ext );
             my (undef,$newfile) = File::Temp::tmpnam();
+            unlink $newfile;
             $args->{file} = $newfile . $suffix;
             my $error = LWP::Simple::getstore( $uri->as_string, $args->{file} );
             return [[ "cannot download " . $uri->as_string ],[ "RC code $error" ]] if LWP::Simple::is_error( $error );
+            $args->{_unlink} = 1 unless int( $args->{_unlink} ) == 0;
         }
     }
 
