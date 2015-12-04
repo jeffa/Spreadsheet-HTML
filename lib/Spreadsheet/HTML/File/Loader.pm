@@ -31,7 +31,7 @@ sub _parse {
             $args->{file} = $newfile . $suffix;
             my $error = LWP::Simple::getstore( $uri->as_string, $args->{file} );
             return [[ "cannot download " . $uri->as_string ],[ "RC code $error" ]] if LWP::Simple::is_error( $error );
-            $args->{_unlink} = 1 unless int( $args->{_unlink} ) == 0;
+            $args->{_unlink} = 1 unless defined( $args->{_unlink} ) and int( $args->{_unlink} ) == 0;
         }
     }
 
