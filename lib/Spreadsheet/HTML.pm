@@ -544,6 +544,11 @@ also supply a URI:
 
   file => 'http://your.site.com/path/to/foo.json'
 
+The temp file will be unlinked unless you set the super secret hidden
+param C<_unlink> to zero (0):
+
+  _unlink => 0
+
 =item * C<block>
 
 Integer. Can be supplied in conjunction with C<file> for image
