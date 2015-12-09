@@ -56,7 +56,6 @@ is $table->generate( col => undef, colgroup => [{},{},{}] ),
     '<table><colgroup /><colgroup /><colgroup /><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>',
     "no cols against multiple colgroups";
 
-$table = Spreadsheet::HTML->new( data => $data, col => [{},{},{}] );
 is $table->generate( colgroup => [{},{},{}] ),
     '<table><colgroup><col /><col /><col /></colgroup><colgroup><col /><col /><col /></colgroup><colgroup><col /><col /><col /></colgroup><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>',
     "multiple cols against multiple colgroups";
