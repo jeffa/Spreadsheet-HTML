@@ -215,54 +215,6 @@ sub _make_table {
     return $args{_auto}->tag( tag => 'table', attr => $args{table}, cdata => \@cdata );
 }
 
-sub _tag {
-    my %args = @_;
-
-    my $tag;
-    if (ref($args{ $args{tag} }) eq 'HASH') {
-        (my $cdata) = keys %{ $args{ $args{tag} } };
-        (my $attr)  = values %{ $args{ $args{tag} } };
-        $tag = { tag => $args{tag}, attr => $attr, cdata => $cdata };
-    } elsif (defined $args{ $args{tag} } ) {
-        $tag = { tag => $args{tag}, cdata => $args{ $args{tag} } };
-    } 
-    
-    return $tag;
-}
-
-sub _colgroup {
-    my %args = @_;
-
-    my @colgroup;
-    $args{col} = [ $args{col} ] if ref($args{col}) eq 'HASH';
-
-    if (ref($args{col}) eq 'ARRAY') {
-
-        if (ref $args{colgroup} eq 'ARRAY') {
-            @colgroup = map {
-                tag   => 'colgroup',
-                attr  => $_,
-                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
-            }, @{ $args{colgroup} }; 
-        } else {
-            @colgroup = {
-                tag   => 'colgroup',
-                attr  => $args{colgroup},
-                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
-            }; 
-        }
-
-    } else {
-
-        $args{colgroup} = [ $args{colgroup} ] if ref($args{colgroup}) eq 'HASH';
-        if (ref $args{colgroup} eq 'ARRAY') {
-            @colgroup = map { tag => 'colgroup', attr => $_ }, @{ $args{colgroup} };
-        }
-    }
-
-    return @colgroup;
-}
-
 sub _args {
     my ($self,@data,$data,@args,$args);
     $self = shift if UNIVERSAL::isa( $_[0], __PACKAGE__ );
@@ -339,6 +291,53 @@ sub _extrapolate {
     }
     $attr = { %{ $attr || {} }, %{ $new_attr || {} } };
     return ( $cdata, $attr );
+}
+
+sub _colgroup {
+    my %args = @_;
+
+    my @colgroup;
+    $args{col} = [ $args{col} ] if ref($args{col}) eq 'HASH';
+
+    if (ref($args{col}) eq 'ARRAY') {
+
+        if (ref $args{colgroup} eq 'ARRAY') {
+            @colgroup = map {
+                tag   => 'colgroup',
+                attr  => $_,
+                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
+            }, @{ $args{colgroup} }; 
+        } else {
+            @colgroup = {
+                tag   => 'colgroup',
+                attr  => $args{colgroup},
+                cdata => [ map { tag => 'col', attr => $_ }, @{ $args{col} } ]
+            }; 
+        }
+
+    } else {
+
+        $args{colgroup} = [ $args{colgroup} ] if ref($args{colgroup}) eq 'HASH';
+        if (ref $args{colgroup} eq 'ARRAY') {
+            @colgroup = map { tag => 'colgroup', attr => $_ }, @{ $args{colgroup} };
+        }
+    }
+
+    return @colgroup;
+}
+
+sub _tag {
+    my %args = @_;
+    my $tag;
+    my $value = $args{ $args{tag} };
+    if (ref $value eq 'HASH') {
+        (my $cdata) = keys %$value;
+        (my $attr)  = values %$value;
+        $tag = { tag => $args{tag}, attr => $attr, cdata => $cdata };
+    } elsif (defined $args{ $args{tag} } ) {
+        $tag = { tag => $args{tag}, cdata => $value };
+    } 
+    return $tag;
 }
 
 # credit: Math::Matrix
