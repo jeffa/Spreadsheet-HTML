@@ -507,9 +507,9 @@ and C<landscape> (headings at left) are all you need.
 
 =head1 PARAMETERS
 
-All methods/procedures accept the same named parameters. With the
-exception of presets, all parameters are initally undefined. If
-they are defined, they may be overrided. You do not necessarily have
+All methods/procedures accept the same named parameters. Some methods
+pre-define parameters on your behalf, for convenience. If these parameters
+are defined, they may be overriden. You do not necessarily have
 to specify C<data>, any bare array references will be collected
 and assigned to C<data>. Just because you can, however, does not
 mean you should. Everything is meant to be convenient.
@@ -535,6 +535,12 @@ String. The name of the data file to read. Supported formats
 are XLS, CSV, JSON, YAML, HTML, GIF, PNG and JPG.
 
   file => 'foo.json'
+
+C<file> overrides C<data>. You generally either specify C<data>
+or C<file> but not both (unless the file is an image in which the
+two can be combined). 
+
+  data => \@data, file => 'background.png'
 
 See L<Spreadsheet::HTML::File::Loader> for more on supported file formats.
 See L<DBIx::HTML> for formatting your SQL database queries.
