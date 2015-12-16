@@ -128,9 +128,9 @@ mktable method [options]
 The params. Use the B<--help> option to display
 documentation about a particular parameter (or method).
 
-  --param --file=/path/to/file.csv
-  --param --indent='"    "'
-  --param --table='{class=>"foo"}'
+  --param file=/path/to/file.csv
+  --param indent='"    "'
+  --param table='{class=>"foo"}'
 
 =item B<--display>
 
