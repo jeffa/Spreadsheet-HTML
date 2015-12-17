@@ -1,6 +1,6 @@
-Spreadsheet-HTML
-================
-Just another HTML table generator. [![CPAN version](https://badge.fury.io/pl/Spreadsheet-HTML.svg)](https://badge.fury.io/pl/Spreadsheet-HTML)
+Spreadsheet::HTML
+=================
+Just another HTML table generator. [![CPAN Version](https://badge.fury.io/pl/Spreadsheet-HTML.svg)](https://metacpan.org/pod/Spreadsheet::HTML) [![Build Status](https://api.travis-ci.org/jeffa/Spreadsheet-HTML.svg?branch=master)](https://travis-ci.org/jeffa/Spreadsheet-HTML)
 
 Description
 -----------
