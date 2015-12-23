@@ -582,10 +582,10 @@ off for producing 1980's style pixel art images.
 =item * C<worksheet>
 
 Integer. Can be supplied in conjunction with C<file>. If multiple
-worksheets or data tables are present, use this parameter to select
-which one (index 1 based). Defaults to 1 (first found).
+worksheets or data tables (or image frames) are present, use this
+parameter to select which one (index 1 based). Defaults to 1 (first found).
 
-  worksheet => 3 # the third data table or worksheet found  
+  worksheet => 3 # the third worksheet, data table or image frame found  
 
 =item * C<preserve>
 
