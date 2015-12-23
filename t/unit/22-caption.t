@@ -1,7 +1,7 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use Spreadsheet::HTML;
 
@@ -24,3 +24,7 @@ is $table->generate( tgroups => 2 ),
 is $table->generate( caption => 0 ),
     '<table><caption>0</caption><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>',
     "caption can be overriden";
+
+is $table->generate( caption => {} ),
+    '<table><caption /><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>',
+    "caption as empty hash ref";
