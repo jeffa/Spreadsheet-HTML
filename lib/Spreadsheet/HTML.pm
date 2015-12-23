@@ -507,8 +507,8 @@ and C<landscape> (headings at left) are all you need.
 
 All methods/procedures accept the same named parameters. Some methods
 pre-define parameters on your behalf, for convenience. If these parameters
-are defined, they may be overriden. You do not necessarily have
-to specify C<data>, any bare array references will be collected
+are defined, they may be overriden where applicable. You do not necessarily
+have to specify C<data>, any bare array references will be collected
 and assigned to C<data>. Just because you can, however, does not
 mean you should. Everything is meant to be convenient.
 
