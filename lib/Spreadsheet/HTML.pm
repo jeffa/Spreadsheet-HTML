@@ -328,15 +328,13 @@ sub _colgroup {
 
 sub _tag {
     my %args = @_;
-    my $tag;
-    my $value = $args{ $args{tag} };
-    if (ref $value eq 'HASH') {
-        (my $cdata) = keys %$value;
-        (my $attr)  = values %$value;
-        $tag = { tag => $args{tag}, attr => $attr, cdata => $cdata };
-    } elsif (defined $args{ $args{tag} } ) {
-        $tag = { tag => $args{tag}, cdata => $value };
-    } 
+    my $thingy = $args{ $args{tag} };
+    return unless defined $thingy;
+    my $tag = { tag => $args{tag}, cdata => $thingy };
+    if (ref $thingy eq 'HASH') {
+        $tag->{cdata} = ( keys   %$thingy )[0];
+        $tag->{attr}  = ( values %$thingy )[0];
+    }
     return $tag;
 }
 
