@@ -561,8 +561,8 @@ Representing an image as an HTML table on a pixel by pixel basis
 tends to produce tables that are too large. This parameter can be
 used to increase and decrease that size, by reading in blocks of
 pixels (8x8=64 pixels to be represented by one table cell) and
-determines the pixel color for that block. The smaller the
-block size the longer the processing time.
+determining the pixel color for that block (see C<blend> below).
+The smaller the block size the longer the processing time.
 
   block => 4
 
@@ -570,9 +570,9 @@ block size the longer the processing time.
 
 Boolean. Default false. Can be supplied in conjuction with C<block>
 to change the algorithm for determining block's pixel color. When
-set to true, the pixel color is determined by the average color of
+set to true, the pixel color is determined by averaging the colors of
 all pixels in that block. When false (default), the pixel color is
-determined by finding the the most use color in the block.
+determined by finding the the most used color in the block.
 
   blend => 1
 
