@@ -328,7 +328,7 @@ sub _js_wrapper {
     unless ($NO_MINIFY) {
         $args{code} = JavaScript::Minifier::minify(
             input      => $args{code},
-            copyright  => $args{copyright} || 'Copyright (C) 2015 Jeff Anderson',
+            copyright  => $args{copyright} || 'Copyright 2016 Jeff Anderson',
             stripDebug => 1,
         );
     }
@@ -401,7 +401,7 @@ will silently fail and produce no banner.
 
 Generates a static calendar. Defaults to current month and year.
 
-  calendar( month => 7, year, 2015 )
+  calendar( month => 7, year, 2012 )
 
 Mark a day of the month like so:
 
@@ -491,7 +491,7 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2015 Jeff Anderson.
+Copyright 2016 Jeff Anderson.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

@@ -78,7 +78,7 @@ sub _javascript {
 sub _js_tmpl {
     return <<'END_JAVASCRIPT';
 
-/* Copyright (C) 2015 Jeff Anderson */
+/* Copyright (C) 2016 Jeff Anderson */
 /* install JavaScript::Minifier to minify this code */
 var ROW = %s;
 var COL = %s;
@@ -258,7 +258,7 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2015 Jeff Anderson.
+Copyright 2016 Jeff Anderson.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a

@@ -39,7 +39,7 @@ sub _javascript {
 
     $args{css} ||= 'http://handsontable.com/dist/handsontable.full.css';
     $args{handsonjs} ||= 'http://handsontable.com/dist/handsontable.full.js';
-    $args{copyright} = 'Copyright (c) 2012-2014 Marcin Warpechowski | Copyright (c) 2015 Handsoncode sp. z o.o.';
+    $args{copyright} = 'Copyright (c) 2012-2014 Marcin Warpechowski | Copyright 2016 Handsoncode sp. z o.o.';
 
     return Spreadsheet::HTML::Presets::_js_wrapper( code => $js, %args );
 }
@@ -47,8 +47,8 @@ sub _javascript {
 sub _js_tmpl {
     return <<'END_JAVASCRIPT';
 
-/* Copyright (c) 2012-2014 Marcin Warpechowski */
-/* Copyright (c) 2015 Handsoncode sp. z o.o. */
+/* Copyright 2012-2014 Marcin Warpechowski */
+/* Copyright 2016 Handsoncode sp. z o.o. */
 /* install JavaScript::Minifier to minify this code */
 
 var id = '%s';
@@ -143,8 +143,8 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 =head1 LICENSE AND COPYRIGHT
 
 The MIT License effective as of January 12, 2015.
-Copyright (c) 2012-2014 Marcin Warpechowski
-Copyright (c) 2015 Handsoncode sp. z o.o.
+Copyright 2012-2014 Marcin Warpechowski
+Copyright 2016 Handsoncode sp. z o.o.
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be

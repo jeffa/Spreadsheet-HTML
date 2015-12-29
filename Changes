@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.16
+    - update copyright date
     - minor refactor of _tag() to improve readability
     - reminder: animate has been deprecated since v1.05
 
