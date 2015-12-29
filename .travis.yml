@@ -1,7 +1,7 @@
 language: perl
 script: prove -lrj6
 before_install:
-    - cpanm --notest JSON YAML Text::CSV HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read
+    - cpanm --notest JSON YAML Text::CSV HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read Spreadsheet::Engine Imager
 perl:
   - "5.20"
   - "5.18"
