@@ -25,18 +25,28 @@ sub beadwork {
     }
 
     unless (defined $args->{art} and defined $args->{map}) {
-        $args->{data} = [[ 'Error' ],[ 'art is required' ]] unless defined $args->{art};
-        $args->{data} ||= [[ 'Error' ],[ 'map is required' ]] unless defined $args->{map};
+        if (defined $args->{art}) {
+            $args->{data} = [[ 'Error' ],[ 'map is required' ]];
+        } elsif (defined $args->{map}) {
+            $args->{data} = [[ 'Error' ],[ 'art is required' ]];
+        } else {
+            $args->{data} = [[ 'Error' ],[ 'art is required' ],[ 'map is required' ]];
+        }
         return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
     }
 
-    if ($args->{art} !~ /\n/ and -r $args->{art}) {
-        open FH, '<', $args->{art} or die "Cannot read $args->{art}\n";
-        $args->{art} = do{ local $/; <FH> };
+    if ($args->{art} !~ /\n/) {
+        if (open FH, '<', $args->{art}) {
+            $args->{art} = do{ local $/; <FH> };
+            close FH;
+        } else {
+            $args->{data} = [[ 'Error' ], ["Cannot read $args->{art}"]];
+            return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
+        }
     }
 
     if (!ref $args->{map} and -r $args->{map}) {
-        $args->{map} = Spreadsheet::HTML::File::Loader::parse({ file => $args->{map} });
+        $args->{map} = Spreadsheet::HTML::File::Loader::_parse({ file => $args->{map} });
     }
 
     unless (ref $args->{map}) {
