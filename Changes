@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.16
+    - require HTML::AutoTag v1.04
     - fixed JSON file load bug in Beadwork
     - update copyright date
     - minor refactor of _tag() to improve readability
