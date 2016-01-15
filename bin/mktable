@@ -164,6 +164,12 @@ Prints the versions of the core modules used.
   # portrait is default generation method
   mktable --param file=data.xls --param preserve=1 > out.html
 
+  # wrap references with quotes:
+  mktable --param -r1='{class=>"foo"}'
+
+  # wrap pure whitespace with quotes:
+  mktable --param indent='"    "'
+
   # display output to browser with HTML::Display
   mktable landscape --param data=[[a..d],[1..4],[5..8]] --display
 
@@ -173,9 +179,6 @@ Prints the versions of the core modules used.
 
   # banner requires you to install and configure Text::FIGlet
   mktable banner --param text="'hello world'" --param scroll=1 --param bx=1 --display
-
-  # wrap references with quotes:
-  mktable --param -r1='{class=>"foo"}'
 
 =head1 SEE ALSO
 
