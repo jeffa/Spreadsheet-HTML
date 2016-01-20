@@ -59,7 +59,6 @@ if ($display) {
 
 print $generator->$method( %args ), $/;
 
-use Data::Dumper;
 sub _lookup_help {
     my $value = shift;
     my $preset_param;
