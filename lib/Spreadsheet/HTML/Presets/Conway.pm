@@ -5,6 +5,9 @@ use warnings FATAL => 'all';
 eval "use Color::Spectrum";
 our $NO_SPECTRUM = $@;
 
+eval "use Encode::Wechsler";
+our $NO_WECHSLER = $@;
+
 sub conway {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
@@ -17,6 +20,15 @@ sub conway {
         : [ Color::Spectrum::generate( 10, $args->{on}, $args->{off} ) ];
 
     $args->{interval} ||= 200;
+
+    if ($args->{wechsler} and not $NO_WECHSLER) {
+        my $wechsler = Encode::Wechsler->new( pad => 1 );
+        eval { $data = [ $wechsler->decode( $args->{wechsler} ) ] };
+        if ($@) {
+            $args->{data} = [[ 'Error' ],[ $@ ]];
+            return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
+        }
+    }
 
     my ( @cells, @ids );
     for my $r ( 0 .. $args->{_max_rows} - 1 ) {
@@ -38,6 +50,7 @@ sub conway {
     }
 
     # find and remove 'file' param and its value if found
+    # because it was already processed via ::File::Loader by way of _args()
     if ($args->{file} and $args->{file} =~ /\.(gif|png|jpe?g)$/) {
         my $index = 0;
         for (0 .. $#_) {
