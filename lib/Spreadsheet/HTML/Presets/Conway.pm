@@ -237,7 +237,7 @@ Instead, use the Spreadsheet::HTML interface:
 
 =over 4
 
-=item * C<conway( on, off, colors, fade, interval, jquery, %params )>
+=item * C<conway( wechsler, on, off, colors, fade, interval, jquery, %params )>
 
 Game of life. From an implementation i wrote back in college.
 
@@ -247,8 +247,12 @@ Set the timer with C<interval> (defaults to 200 miliseconds).
 
   conway( interval => 75 )
 
-If you have L<Color::Spectrum> installed then you can
-activate a fading effect like so:
+If you have L<Encode::Wechsler> installed then you can preload the game board
+with any valid Wechsler Code:
+
+  conway( wechsler => 'xp3_0ggmligkcz32w46' )
+
+If you have L<Color::Spectrum> installed then you can activate a fading effect like so:
 
   conway( on => '#FF0000', off => '#999999', fade => 1 )
 
@@ -280,6 +284,10 @@ The interface for this functionality.
 =item L<Spreadsheet::HTML::Presets>
 
 More presets.
+
+=item L<Encode::Wechsler>
+
+Wechsler encoder/decoder for Conway's Game of Life boards.
 
 =item L<Color::Spectrum>
 
