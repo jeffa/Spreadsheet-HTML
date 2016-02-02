@@ -24,7 +24,7 @@ sub conway {
     if ($args->{wechsler} and not $NO_WECHSLER) {
         my $wechsler = Encode::Wechsler->new( pad => 1 );
         my @grid;
-        eval { @grid = $wechsler->decode( $args->{wechsler} ); $data = [ $wechsler->decode( $args->{wechsler} ) ] };
+        eval { @grid = $wechsler->decode( $args->{wechsler} ) };
         if ($@) {
             $args->{data} = [[ 'Error' ],[ $@ ]];
             return $self ? $self->generate( %$args ) : Spreadsheet::HTML::generate( %$args );
@@ -32,7 +32,6 @@ sub conway {
 
         $args->{_max_rows} = scalar @grid;
         $args->{_max_cols} = scalar @{ $grid[0] };
-        #$args->{fill} = join 'x', $args->{_max_rows}, $args->{_max_cols};
 
         for my $row (0 .. $#grid) {
             for my $col (0 .. $#{ $grid[$row] } ) {
@@ -75,6 +74,8 @@ sub conway {
     my @args = (
         @cells,
         data    => $data,
+        ( $args->{wechsler} ? (matrix => 1) : () ),
+        ( $args->{wechsler} ? (fill => join 'x', $args->{_max_rows}, $args->{_max_cols}) : () ),
         caption => { '<button id="toggle" onClick="toggle()">Start</button>' => { align => 'bottom' } },
         @_,
     );
