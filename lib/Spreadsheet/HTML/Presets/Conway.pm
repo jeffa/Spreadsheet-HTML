@@ -254,11 +254,11 @@ with any valid Wechsler Code:
 
 Some codes require additional padding in order to sustain properly.
 
-  conway( wechsler => 'xp30_ccx8k2s3yagzy3103yaheha4xcczyk1', pad => 4 )
+  conway( wechsler => 'xp30_ccx8k2s3zy3103y531e8', pad => 2 )
 
-Padding default to 1, so if you don't need it:
+Padding defaults to 1, so you may turn it off if you don't need it:
 
-  conway( wechsler => 'xp3_0ggmligkcz32w46', pad => 0 )
+  conway( wechsler => 'xp2_25a4owo4a52zy01221', pad => 0 )
 
 If you have L<Color::Spectrum> installed then you can activate a fading effect like so:
 
