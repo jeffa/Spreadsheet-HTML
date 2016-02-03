@@ -22,7 +22,7 @@ sub conway {
     $args->{interval} ||= 200;
 
     if ($args->{wechsler} and not $NO_WECHSLER) {
-        my $wechsler = Encode::Wechsler->new( pad => 1 );
+        my $wechsler = Encode::Wechsler->new( pad => defined $args->{pad} ? $args->{pad} : 1 );
         my @grid;
         eval { @grid = $wechsler->decode( $args->{wechsler} ) };
         if ($@) {
@@ -251,6 +251,14 @@ If you have L<Encode::Wechsler> installed then you can preload the game board
 with any valid Wechsler Code:
 
   conway( wechsler => 'xp3_0ggmligkcz32w46' )
+
+Some codes require additional padding in order to sustain properly.
+
+  conway( wechsler => 'xp30_ccx8k2s3yagzy3103yaheha4xcczyk1', pad => 4 )
+
+Padding default to 1, so if you don't need it:
+
+  conway( wechsler => 'xp3_0ggmligkcz32w46', pad => 0 )
 
 If you have L<Color::Spectrum> installed then you can activate a fading effect like so:
 

@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.18
+    - added pad param for conway (used with wechsler)
 
 1.17
     - added wechsler param for conway
