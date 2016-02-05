@@ -76,7 +76,7 @@ is Spreadsheet::HTML::calendar( %attrs, -Mon => { class => ':(' }, -Wed => { cla
 
 eval "use Test::MockObject";
 SKIP: {
-skip "Test::MockObject not available", 2 if $@;
+skip "Test::MockObject not available", 3 if $@;
 
 my $mock = Test::MockObject->new;
 $mock->fake_module( 'Time::Piece', mday => sub { 4 } );
