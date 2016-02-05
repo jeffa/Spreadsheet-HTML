@@ -402,7 +402,7 @@ will silently fail and produce no banner.
 
 Generates a static calendar. Defaults to current month and year.
 
-  calendar( month => 7, year, 2012 )
+  calendar( month => 7, year => 2012 )
 
 Mark a day of the month like so:
 
