@@ -229,7 +229,8 @@ sub calendar {
         
         push @cal_args, ( data => \@flat );
 
-        $args->{ '-' . Time::Piece->new->mday } = $args->{today};
+        my $mday = '-' . Time::Piece->new->mday;
+        $args->{$mday} = exists $args->{$mday} ? $args->{$mday} : $args->{today};
         my %day_args = map {($_ => $args->{$_})} grep /^-\d+$/, keys %$args;
         for (keys %day_args) {
             my $day = abs($_);
