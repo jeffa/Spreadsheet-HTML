@@ -38,6 +38,8 @@ sub conway {
                 $args->{"-r${row}c${col}"} = $grid[$row][$col] if $grid[$row][$col];
             }
         }
+    } elsif ($args->{wechsler} and $NO_WECHSLER) {
+        warn "You specified an argument for wechsler but Encode::Wechsler is not installed\n";
     }
 
     my ( @cells, @ids );
