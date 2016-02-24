@@ -37,7 +37,7 @@ print $gen->landscape( indent => "\t" );
 
 # load from file
 $gen = Spreadsheet::HTML->new( file => 'data.xls', worksheet => 2 );
-print $gen preserve => 1 );
+print $gen->generate( preserve => 1 );
 ```
 
 Installation
