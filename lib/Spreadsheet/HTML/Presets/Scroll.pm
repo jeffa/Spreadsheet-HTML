@@ -2,11 +2,6 @@ package Spreadsheet::HTML::Presets::Scroll;
 use strict;
 use warnings FATAL => 'all';
 
-sub animate {
-    warn "animate() is deprecated, use scroll() instead\n";
-    scroll( @_ ); 
-}
-
 sub scroll {
     my ($self,$data,$args);
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
@@ -201,10 +196,6 @@ Instead, use the Spreadsheet::HTML interface:
 =head1 METHODS
 
 =over 4
-
-=item * C<animate( fgdirection, bgdirection, interval, jquery, %params )>
-
-Deprecated. Use C<scroll()> instead.
 
 =item * C<scroll( fgdirection, bgdirection, interval, jquery, %params )>
 

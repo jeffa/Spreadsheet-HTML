@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(
     layout checkerboard scroll
     chess checkers conway sudoku
     calculator calendar banner maze
-    beadwork animate list
+    beadwork list
 );
 
 use HTML::AutoTag;
@@ -39,7 +39,6 @@ sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
 sub calendar        { Spreadsheet::HTML::Presets::calendar(         @_ ) }
 sub scroll          { Spreadsheet::HTML::Presets::Scroll::scroll(   @_ ) }
-sub animate         { Spreadsheet::HTML::Presets::Scroll::animate(  @_ ) }
 sub maze            { Spreadsheet::HTML::Presets::maze(             @_ ) }
 sub banner          { Spreadsheet::HTML::Presets::banner(           @_ ) }
 sub beadwork        { Spreadsheet::HTML::Presets::Beadwork::beadwork( @_ ) }
@@ -86,11 +85,6 @@ sub generate {
     } elsif ($args{theta} == 270) {
 
         $args{data} = [ CORE::reverse @{ _transpose( $args{data} ) }];
-    }
-
-    if ($args{animate}) {
-        warn "animate is deprecated, use scroll instead\n";
-        $args{scroll} = $args{animate};
     }
 
     if ($args{scroll}) {
@@ -969,10 +963,6 @@ Generate banners via Text::FIGlet.
 =item * C<scroll( fgdirection, fx, fy, bgdirection, bx, by, interval, jquery, %params )>
 
 Scroll table cell foregrounds and backgrounds.
-
-=item * C<animate( fgdirection, fx, fy, bgdirection, bx, by, interval, jquery, %params )>
-
-Deprecated. Use C<scroll()> instead.
 
 =item * C<calendar( month, year, today, -day, %params )>
 

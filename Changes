@@ -3,6 +3,7 @@ Revision history for Spreadsheet-HTML
 1.19
     - conway() warns if wechsler specified by module is not installed
     - fixed minor bug in calendar() when 'today' is actually today
+    - removed animate() method/preset
 
 1.18
     - added pad param for conway (used with wechsler)
