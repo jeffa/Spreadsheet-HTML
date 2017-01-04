@@ -1,5 +1,7 @@
 Revision history for Spreadsheet-HTML
 
+1.21
+
 1.20
     - update copyright
     - require HTML::AutoTag v1.06
