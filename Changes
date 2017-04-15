@@ -1,6 +1,7 @@
 Revision history for Spreadsheet-HTML
 
 1.21
+    - sudoku javascript updated to check neighbors of current cell
 
 1.20
     - update copyright
