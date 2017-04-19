@@ -952,9 +952,10 @@ Generate <select> form elements.
 
 Generate Handsontable tables. (Excel like interface for browsers.)
 
-=item * C<checkerboard( colors, %params )>
+=item * C<checkerboard( colors || class, %params )>
 
-Generate checkerboard patterns in cell backgrounds.
+Generate checkerboard patterns in cell backgrounds. Specify an array of colors to be
+arranged in checkerboard pattern or array of class names (for external CSS).
 
 =item * C<banner( on, off, text, font, dir, emboss, %params )>
 

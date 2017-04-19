@@ -47,12 +47,13 @@ sub checkerboard {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my $colors = $args->{colors} ? $args->{colors} : [qw(red green)];
+    my $colors = $args->{colors} ? $args->{colors} : $args->{class} ? $args->{class} : [qw(red green)];
     $colors = [ $colors ] unless ref $colors;
 
     my @rows;
     for my $row (0 .. $args->{_max_rows} - 1) {
-        push @rows, ( "-r$row" => { style => { 'background-color' => [@$colors] } } );
+        my $attr = $args->{class} ? { class => [@$colors] } : { style => { 'background-color' => [@$colors] } };
+        push @rows, ( "-r$row" => $attr );
         Tie::Hash::Attribute::_rotate( $colors );
     }
 
@@ -385,6 +386,10 @@ Preset for tables with checkerboard colors.
 
 Forms diagonal patterns by alternating the starting background
 colors for each row. C<colors> defaults to red and green.
+
+  checkerboard( class => [qw(foo bar baz)] )
+
+Same thing but alternate class names (for external CSS).
 
 =item * C<banner( dir, text, emboss, on, off, fill, %params )>
 
