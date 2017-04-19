@@ -20,11 +20,8 @@ is scrub_js( @{ [ Spreadsheet::HTML::generate( scroll => 1, %attr ) ] }[0] ), $s
 
 # the following presets are too random to test output
 # we can still catch compilation errors with these tests
-SKIP: {
-skip "timing out in 5.10", 2;
 ok $table->sudoku( attempts => 0 ),             "sudoku by method";
 ok Spreadsheet::HTML::sudoku( attempts => 0 ),  "sudoku by procedure";
-};
 
 ok $table->maze,                                "maze by method";
 ok Spreadsheet::HTML::maze,                     "maze by procedure";
