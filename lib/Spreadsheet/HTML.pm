@@ -8,7 +8,7 @@ our @EXPORT_OK = qw(
     generate portrait landscape
     north east south west handson
     layout checkerboard scroll
-    chess checkers conway sudoku
+    chess checkers draughts conway sudoku
     calculator calendar banner maze
     beadwork list
 );
@@ -32,8 +32,9 @@ sub select          { Spreadsheet::HTML::Presets::List::select(     @_ ) }
 sub handson         { Spreadsheet::HTML::Presets::Handson::handson( @_ ) }
 sub conway          { Spreadsheet::HTML::Presets::Conway::conway(   @_ ) }
 sub calculator      { Spreadsheet::HTML::Presets::Calculator::calculator( @_ ) }
-sub chess           { Spreadsheet::HTML::Presets::Chess::chess(     @_ ) }
-sub checkers        { Spreadsheet::HTML::Presets::checkers(         @_ ) }
+sub chess           { Spreadsheet::HTML::Presets::Chess::chess(         @_ ) }
+sub checkers        { Spreadsheet::HTML::Presets::Draughts::draughts(   @_ ) }
+sub draughts        { Spreadsheet::HTML::Presets::Draughts::draughts(   @_ ) }
 sub tictactoe       { Spreadsheet::HTML::Presets::TicTacToe::tictactoe( @_ ) }
 sub sudoku          { Spreadsheet::HTML::Presets::Sudoku::sudoku(   @_ ) }
 sub checkerboard    { Spreadsheet::HTML::Presets::checkerboard(     @_ ) }
@@ -993,9 +994,11 @@ Generates a static maze.
 
 Creates a playable Tic-Tac-Toe game board.
 
+=item * C<draughts( on, off, jquery, %params )>
+
 =item * C<checkers( on, off, jquery, %params )>
 
-Creates a NON playable Checkers game board.
+Creates a NON playable Draughts/Checkers game board.
 
 =item * C<chess( on, off, jquery, jqueryui, %params )>
 
