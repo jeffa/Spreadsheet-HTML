@@ -7,64 +7,52 @@ sub draughts {
     $self = shift if ref($_[0]) =~ /^Spreadsheet::HTML/;
     ($self,$data,$args) = $self ? $self->_args( @_ ) : Spreadsheet::HTML::_args( @_ );
 
-    my @data = (
-        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
-        [ '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;', '' ],
-        [ '', '&#9922;', '', '&#9922;', '', '&#9922;', '', '&#9922;' ],
-        [ ('') x 8 ], [ ('') x 8 ],
-        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
-        [ '', '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;' ],
-        [ '&#9920;', '', '&#9920;', '', '&#9920;', '', '&#9920;', '' ],
-    );
-
     my $on  = $args->{on}  || 'red';
     my $off = $args->{off} || 'white';
 
+    $args->{size} = 8;
+    my $id   = 1;
+    my (@data, @cells);
+    for my $r (0 .. $args->{size} - 1) {
+        for my $c (0 .. $args->{size} - 1) {
+            my $cell = sprintf '-r%sc%s', $r, $c;
+            if ($r % 2 xor $c % 2) {
+                push @cells, $cell => { id => $id++, class => 'cell on' };
+                push @data, ($r == 3 || $r == 4) ? '' : '&#9814';
+            } else {
+                push @cells, $cell => { class => 'cell off' };
+                push @data, '';
+            }
+        }
+    }
+
     my @args = (
-        table => {
-            width => '65%',
-            style => {
-                border => 'thick outset',
-                %{ $args->{table}{style} || {} },
-            },
-            %{ $args->{table} || {} },
-        },
         @_,
-        td => [
-            {
-                height => 65,
-                width  => 65,
-                align  => 'center',
-                style  => { 
-                    'font-size'         => 'xx-large',
-                    border              => 'thin inset',
-                    'background-color'  => [ ($off, $on)x4, ($on, $off)x4 ],
-                    %{ $args->{td}{style} || {} },
-                },
-                %{ $args->{td} || {} },
-            }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' }
-        ],
+        table => { id => 'checkers', %{ $args->{table} || {} }, },
+        #td => [ { %{ $args->{td} || {} } }, sub { $_[0] ? qq(<div class="game-piece">$_[0]</div>) : '' } ],
+        @cells,
         tgroups  => 0,
         headless => 0,
         pinhead  => 0,
         matrix   => 1,
-        wrap     => 0,
-        fill     => '8x8',
+        wrap     => $args->{size},
         data     => \@data,
     );
 
     my $js    = Spreadsheet::HTML::Presets::Draughts::_javascript( %$args );
+    my $css   = Spreadsheet::HTML::Presets::Draughts::_css_tmpl();
     my $table = $self ? $self->generate( @args ) : Spreadsheet::HTML::generate( @args );
-    return $js . $table;
+    return $js . $css . $table;
 }
 
 sub _javascript {
     my %args = @_;
 
     my $js = sprintf _js_tmpl(),
+        $args{size},
     ;
 
-    $args{jqueryui} = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
+    #$args{jqueryui} = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
 
     return Spreadsheet::HTML::Presets::_js_wrapper( code => $js, %args );
 }
@@ -74,16 +62,47 @@ sub _js_tmpl {
 
 /* Copyright 2017 Jeff Anderson */
 /* install JavaScript::Minifier to minify this code */
+var MATRIX;
+var SELECTED;
+var SIZE = %s;
 
 $(document).ready(function(){
 
-    $(function() {
-        $( '.game-piece' ).draggable();
+    //$(function() { $( '.game-piece' ).draggable() });
+
+    $('td.on').click( function( data ) {
+        if (this.className == 'cell on' && SELECTED) {
+            $('#'+SELECTED).removeClass( 'curr' );
+            $('#'+SELECTED).addClass( 'on' );
+            this.innerHTML = $('#'+SELECTED).html();
+            $('#'+SELECTED).html('&nbsp;');
+            SELECTED = 0;
+        } else if (this.className == 'cell on') {
+            this.className = 'cell curr';
+            SELECTED = this.id;
+        } else {
+            this.className = 'cell on';
+            SELECTED = 0;
+        }
     });
 
 });
 
 END_JAVASCRIPT
+}
+
+sub _css_tmpl {
+    return <<'END_CSS';
+<style type="text/css">
+.cell { height: 64px; width: 64px; text-align: center; border: thin inset; }
+.off  { background-color: white; }
+.on   { background-color: red; font-size: x-large;  }
+.curr { background-color: green; font-size: xx-large; }
+.p1   { color: cyan; position: relative; }
+.p2   { color: yellow; position: relative; }
+#checkers { border: thick outset; }
+</style>
+END_CSS
 }
 
 =head1 NAME
