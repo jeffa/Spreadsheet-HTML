@@ -1,13 +1,16 @@
 #!perl -T
 use strict;
 use warnings FATAL => 'all';
-use Test::More tests => 17;
+use Test::More;
 
 eval "use Spreadsheet::Read";
+plan skip_all => "Spreadsheet::Read required" if $@;
+
 eval "use Text::CSV";
 eval "use Text::CSV_XS";
 eval "use Text::CSV_PP";
-plan skip_all => "Spreadsheet::Read and Text::CSV, Text::CSV_XS or Text::CSV_PP required" if $@;
+plan skip_all => "Text::CSV, Text::CSV_XS or Text::CSV_PP required" if $@;
+plan tests => 17;
 
 use Spreadsheet::HTML;
 
