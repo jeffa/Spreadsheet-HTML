@@ -1,7 +1,7 @@
 language: perl
 script: prove -lrj6
 before_install:
-    - cpanm --notest JSON YAML Text::CSV HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read Spreadsheet::Engine Imager Test::MockObject
+    - cpanm --notest JSON YAML Text::CSV HTML::TableExtract Spreadsheet::ParseExcel Spreadsheet::Read Spreadsheet::Engine Imager Test::MockObject HTML::AutoTag
 perl:
   - "5.22"
   - "5.18"
