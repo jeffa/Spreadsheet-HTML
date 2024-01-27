@@ -275,7 +275,7 @@ sub _js_wrapper {
     unless ($NO_MINIFY) {
         $args{code} = JavaScript::Minifier::minify(
             input      => $args{code},
-            copyright  => $args{copyright} || 'Copyright 2017 Jeff Anderson',
+            copyright  => $args{copyright} || 'Copyright 2024 Jeff Anderson',
             stripDebug => 1,
         );
     }
@@ -438,7 +438,7 @@ Jeff Anderson, C<< <jeffa at cpan.org> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2017 Jeff Anderson.
+Copyright 2024 Jeff Anderson.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
